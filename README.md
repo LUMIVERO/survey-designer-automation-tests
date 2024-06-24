@@ -1,20 +1,46 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+The **Survey Designer Automation Tests** project aims to automate the testing process for the Survey Designer application. This ensures that the application functions correctly and consistently meets the required quality standards. By automating tests, we can quickly identify issues and improve the efficiency of the development process.
+## Installation Process
+Follow these steps to get the project up and running on your local machine:
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+1. Clone the repository:
+    ```bash
+    git clone https://Dooblo@dev.azure.com/Dooblo/Survey%20Designer/_git/survey-designer-automation-tests
+    cd survey-designer-automation-tests
+    ```
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Software Dependencies
+Ensure you have the following software installed:
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+- Node.js (version 18)
+- Playwright (version 1.44)
+- Any other dependencies can be installed via `npm install`
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Running Tests
+Execute the test suite with the following commands and examples:
+
+1. **Run all tests**:
+    ```bash
+    npx playwright test
+    ```
+
+2. **Run tests in a specific file**:
+    ```bash
+    npx playwright test src/tests/example.spec.ts
+    ```
+
+3. **Run tests with a specific project** (e.g., chromium, firefox, webkit):
+    ```bash
+    npx playwright test --project=chromium
+    ```
+
+4. **Run tests in headed mode**:
+    ```bash
+    npm run headed
+    ```
+
+
