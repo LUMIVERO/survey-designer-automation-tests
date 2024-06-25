@@ -12,6 +12,14 @@ Follow these steps to get the project up and running on your local machine:
     ```bash
     npm install
     ```
+## Configuration
+
+1. Provide user credentials to the `.env` file:
+    ```env
+    USERNAME='your-username'
+    PASSWORD='your-password'
+    TENANT='your-tenant'
+    ```
 
 ## Software Dependencies
 Ensure you have the following software installed:
