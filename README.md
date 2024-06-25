@@ -12,10 +12,17 @@ Follow these steps to get the project up and running on your local machine:
     ```bash
     npm install
     ```
+
 ## Configuration
 
-1. Provide user credentials to the `.env` file:
+1. Duplicate the `.env.example` file and rename it to `.env`:
+    ```bash
+    cp .env.example .env
+    ```
+
+2. Add the `BASE_URL` and user credentials to the `.env` file:
     ```env
+    BASE_URL='https://qdtstaging.dooblo.net'
     USERNAME='your-username'
     PASSWORD='your-password'
     TENANT='your-tenant'
