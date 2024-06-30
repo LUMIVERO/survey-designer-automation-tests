@@ -36,7 +36,5 @@ steps:
   displayName: 'Publish Playwright report'
 
 - script: |
-    if [ -d "playwright-report" ]; then
-      echo "Playwright report available at: $(Build.ArtifactStagingDirectory)/playwright-report/index.html"
-    fi
+    echo "Playwright report available at: $(Build.ArtifactStagingDirectory)/playwright-report/index.html"
   displayName: 'Check Playwright report'
