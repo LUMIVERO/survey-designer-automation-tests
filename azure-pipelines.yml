@@ -16,7 +16,8 @@ steps:
 
 - task: JavaToolInstaller@0
   inputs:
-    versionSpec: '8'
+    versionSpec: '1.8'
+    jdkArchitectureOption: 'x64'
   displayName: 'Install Java 8'
 
 - script: npm install

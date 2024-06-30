@@ -6,9 +6,9 @@
   "scripts": {
     "clean": "rimraf allure-report/ && rimraf allure-results && rimraf test-results",
     "open": "npx allure open",
-    "generate-allure-report": "npx allure generate ./allure-results",
+    "generate-allure-report": "npx allure generate --clean",
     "headed": "npx playwright test --headed",
-    "chromium": "npm run clean && npx playwright test --project=chromium && npm run generate-allure-report"
+    "chromium": "npx playwright test --project=chromium && npm run generate-allure-report"
   },
   "keywords": [],
   "author": "",
