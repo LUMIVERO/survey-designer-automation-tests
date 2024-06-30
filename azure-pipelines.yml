@@ -13,12 +13,6 @@ steps:
     versionSpec: '18.x'
   displayName: 'Install Node.js'
 
-
-- task: UseJavaVersion@1
-  inputs:
-    versionSpec: '11'
-  displayName: 'Install Java 11'
-
 - script: npm install
   displayName: 'Install NPM dependencies'
 
@@ -38,6 +32,6 @@ steps:
 - task: PublishPipelineArtifact@1
   condition: succeededOrFailed()
   inputs:
-    targetPath: 'allure-report'
-    artifact: 'allure-report'
-  displayName: 'Publish Allure report'
+    targetPath: 'playwright-report'
+    artifact: 'playwright-report'
+  displayName: 'Publish Playwright report'
