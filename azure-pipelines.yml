@@ -1,0 +1,42 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+  displayName: 'Checkout Repo'
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+  displayName: 'Install Node.js'
+
+- script: npm install
+  displayName: 'Install NPM dependencies'
+
+- script: npx playwright install
+  displayName: 'Install Playwright browsers'
+
+- script: |
+    echo BASE_URL='https://qdtstaging.dooblo.net' >> .env
+    echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
+    echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
+    echo TENANT1='$(TENANT1)' >> .env
+  displayName: 'Create .env file'
+
+- script: npx playwright test
+  displayName: 'Run Playwright tests'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: 'playwright-report'
+    artifact: 'playwright-report'
+  displayName: 'Publish Playwright report'
+
+- script: |
+    if [ -d "playwright-report" ]; then
+      echo "Playwright report available at: $(Build.ArtifactStagingDirectory)/playwright-report/index.html"
+    fi
+  displayName: 'Check Playwright report'
