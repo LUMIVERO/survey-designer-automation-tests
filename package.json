@@ -4,17 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "clean": "rimraf allure-report/ && rimraf allure-results && rimraf test-results",
+    "open": "npx allure open",
+    "generate-allure-report": "npx allure generate ./allure-results",
     "headed": "npx playwright test --headed",
-    "chromium": "npx playwright test --project=chromium"
+    "chromium": "npm run clean && npx playwright test --project=chromium && npm run generate-allure-report"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.44.1",
-    "@types/node": "^20.14.8"
+    "@types/node": "^20.14.8",
+    "allure-commandline": "^2.29.0",
+    "allure-playwright": "^3.0.0-beta.4"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "rimraf": "^5.0.7"
   }
 }

@@ -6,3 +6,5 @@ node_modules/
 .env
 /playwright/.auth/
 .idea/
+/allure-report/
+/allure-results/
