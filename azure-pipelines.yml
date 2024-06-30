@@ -30,11 +30,8 @@ steps:
   displayName: 'Run Playwright tests'
 
 - task: PublishPipelineArtifact@1
+  condition: succeededOrFailed()
   inputs:
     targetPath: 'playwright-report'
     artifact: 'playwright-report'
   displayName: 'Publish Playwright report'
-
-- script: |
-    echo "Playwright report available at: $(Build.ArtifactStagingDirectory)/playwright-report/index.html"
-  displayName: 'Check Playwright report'
