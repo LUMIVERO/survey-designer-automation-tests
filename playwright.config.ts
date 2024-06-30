@@ -22,7 +22,7 @@ export default defineConfig({
   timeout: 100 * 1000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', {open: 'on-failure'}],
+    ['html', {open: 'never'}],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
