@@ -29,9 +29,12 @@ steps:
 - script: npm run chromium
   displayName: 'Run Playwright tests'
 
-- task: PublishPipelineArtifact@1
-  condition: succeededOrFailed()
-  inputs:
-    targetPath: 'playwright-report'
-    artifact: 'playwright-report'
-  displayName: 'Publish Playwright report'
+- task: PublishAllureReport@1
+  displayName: "Publish allure report"
+
+#- task: PublishPipelineArtifact@1
+#  condition: succeededOrFailed()
+#  inputs:
+#    targetPath: 'playwright-report'
+#    artifact: 'playwright-report'
+#  displayName: 'Publish Playwright report'
