@@ -30,11 +30,11 @@ steps:
   displayName: 'Run Playwright tests'
 
 - task: PublishAllureReport@1
-  displayName: "Publish allure report"
+  displayName: "Publish Allure report"
 
-#- task: PublishPipelineArtifact@1
-#  condition: succeededOrFailed()
-#  inputs:
-#    targetPath: 'playwright-report'
-#    artifact: 'playwright-report'
-#  displayName: 'Publish Playwright report'
+- task: PublishPipelineArtifact@1
+  condition: succeededOrFailed()
+  inputs:
+    targetPath: 'playwright-report'
+    artifact: 'playwright-report'
+  displayName: 'Publish Playwright report'
