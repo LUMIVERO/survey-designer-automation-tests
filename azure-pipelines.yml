@@ -30,6 +30,7 @@ steps:
   displayName: 'Run Playwright tests'
 
 - task: PublishAllureReport@1
+  condition: succeededOrFailed()
   displayName: "Publish Allure report"
 
 - task: PublishPipelineArtifact@1
