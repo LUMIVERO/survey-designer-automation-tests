@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf allure-report/ && rimraf allure-results && rimraf test-results",
-    "open-allure-report": "npx allure open",
     "generate-allure-report": "npx allure generate --clean",
+    "open-allure-report": "npm run generate-allure-report && npx allure open",
     "headed": "npx playwright test --headed",
     "chromium": "npx playwright test --project=chromium"
   },
