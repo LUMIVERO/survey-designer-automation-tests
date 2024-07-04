@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "casual": "^1.6.2",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "rimraf": "^5.0.7"
   }

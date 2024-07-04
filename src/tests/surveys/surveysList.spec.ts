@@ -20,10 +20,13 @@ test.describe("Surveys list", async () => {
 		await adminAPP.surveyDetailsPage.waitForOpened();
 		surveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
 
-		//TODO:
-		// Add checks for survey name
-		// Go to the survey list
-		// Assert survey name and last modified date in the surveys list
+		await adminAPP.surveyDetailsPage.assertSurveyNameCorrect(surveyName);
+		await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs();
+
+		await adminAPP.surveysPage.waitForOpened();
+		await adminAPP.surveysPage.surveysTable.assertSurveyInList(surveyName);
+		const surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(surveyName);
+		await surveyRow.assertSurveyCreatedAt();
 	});
 
 	test.describe.skip("Edit survey's name and duplicate the survey", async () => {
