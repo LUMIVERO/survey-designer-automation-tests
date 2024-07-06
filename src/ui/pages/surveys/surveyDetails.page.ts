@@ -1,8 +1,8 @@
-import { surveyUrl } from "../../../data/urls/uiUrls";
+import { surveyUrl } from "@data/urls/uiUrls";
 import { BaseDetailsPage } from "../baseDetails.page";
-import { surveysUrl } from "../../../data/urls/apiUrls";
+import { surveysUrl } from "@data/urls/apiUrls";
 import { expect, Locator, test } from "@playwright/test";
-import { FoldersBreadCrumbs } from "../../components/breadCrumbs";
+import { FoldersBreadCrumbs } from "@ui/components/breadCrumbs";
 
 export class SurveyDetailsPage extends BaseDetailsPage {
 	url = surveyUrl.surveysDetails;

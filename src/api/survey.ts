@@ -1,8 +1,8 @@
 import { APIRequestContext } from "@playwright/test";
-import { CreateSurveyOptions, SurveyResponse, DeleteSurveyOptions } from "../typedefs/api/survey.typedefs";
-import { surveysUrl } from "../data/urls/apiUrls";
-import { raiseForStatus } from "../helpers/apiHelpers";
-import { setIdOnUrl } from "../helpers/idOnUrl";
+import { CreateSurveyOptions, SurveyResponse, DeleteSurveyOptions } from "@typedefs/api/survey.typedefs";
+import { surveysUrl } from "@data/urls/apiUrls";
+import { raiseForStatus } from "@helpers/api.helpers";
+import { setIdOnUrl } from "@helpers/url.helpers";
 
 export async function createSurvey(
 	request: APIRequestContext,

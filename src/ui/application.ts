@@ -1,7 +1,7 @@
-import { LoginPage } from "./login/login.page";
+import { LoginPage } from "./pages/login/login.page";
 import { Page } from "@playwright/test";
-import { SurveysDashboardPage } from "./surveys/surveysDashboard.page";
-import { SurveyDetailsPage } from "./surveys/surveyDetails.page";
+import { SurveysDashboardPage } from "./pages/surveys/surveysDashboard.page";
+import { SurveyDetailsPage } from "./pages/surveys/surveyDetails.page";
 
 export class Application {
 	readonly loginPage: LoginPage;

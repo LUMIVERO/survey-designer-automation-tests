@@ -1,4 +1,4 @@
-import { getIdFromString, setIdOnUrl } from "../../helpers/idOnUrl";
+import { getIdFromString, setIdOnUrl } from "@helpers/url.helpers";
 import { test } from "@playwright/test";
 import { LoggedInBasePage } from "./loggedIn.base.page";
 
