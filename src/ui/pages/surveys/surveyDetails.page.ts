@@ -1,8 +1,9 @@
-import { surveyUrl } from "@data/urls/uiUrls";
-import { BaseDetailsPage } from "../baseDetails.page";
 import { surveysUrl } from "@data/urls/apiUrls";
+import { surveyUrl } from "@data/urls/uiUrls";
 import { expect, Locator, test } from "@playwright/test";
+import { Url } from "@typedefs/ui/surveyPage.typedefs";
 import { FoldersBreadCrumbs } from "@ui/components/breadCrumbs";
+import { BaseDetailsPage } from "../baseDetails.page";
 
 export class SurveyDetailsPage extends BaseDetailsPage {
 	url = surveyUrl.surveysDetails;
@@ -10,8 +11,11 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	readonly pageContentHeader: Locator = this.page.locator(".page-content-header");
 	readonly surveyName: Locator = this.pageContentHeader.locator(".title");
 
-	async waitForOpened(url?: string | RegExp): Promise<void> {
-		await super.waitForOpened(url);
+	async waitForOpened(options?: Url): Promise<void> {
+		const { url, waitForResponse = true } = options ?? {};
+		await super.waitForOpened({ url });
+
+		waitForResponse &&
 		await this.page.waitForResponse(new RegExp(surveysUrl.survey));
 	}
 
