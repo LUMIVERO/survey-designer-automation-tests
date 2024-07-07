@@ -1,9 +1,9 @@
-import { LoggedInBasePage } from "../loggedIn.base.page";
-import { surveyUrl } from "../../../data/urls/uiUrls";
+import { foldersUrl } from "@data/urls/apiUrls";
+import { surveyUrl } from "@data/urls/uiUrls";
 import { Locator, test } from "@playwright/test";
-import { PopupWithInput } from "../../components/popups/popupWithInput";
-import { foldersUrl } from "../../../data/urls/apiUrls";
-import { SurveysTable } from "../../components/tables/surveys/surveysTable";
+import { PopupWithInput } from "@ui/components/popups/popupWithInput";
+import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
+import { LoggedInBasePage } from "../loggedIn.base.page";
 
 export class SurveysDashboardPage extends LoggedInBasePage {
 	url = surveyUrl.surveysTab;
@@ -26,4 +26,5 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 		waitForFoldersResponse &&
 		await this.page.waitForResponse(new RegExp(foldersUrl.folder));
 	}
+
 }

@@ -1,6 +1,6 @@
-import { test } from "../../fixtures/testScope.fixture";
-import { getRandomName } from "../../helpers/random.data";
-import { deleteSurvey } from "../../api/survey";
+import { test } from "@fixtures/testScope.fixture";
+import { getRandomName } from "@helpers/random.helpers";
+import { deleteSurvey } from "@api/survey";
 
 test.describe("Surveys list", async () => {
 	let surveyId: string;
@@ -9,13 +9,14 @@ test.describe("Surveys list", async () => {
 		await deleteSurvey(adminAPP.page.request, { surveyId });
 	});
 
-	test("User is able to create survey in the root folder", async ({ adminAPP }) => {
+	test.only("User is able to create survey in the root folder", async ({ adminAPP }) => {
 		const surveyName: string = getRandomName("SurveyAUT");
 
 		await adminAPP.surveysPage.visit();
 		await adminAPP.surveysPage.clickCreateSurveyBtn();
 		await adminAPP.surveysPage.createSurveyPopup.fillItemName(surveyName);
 		await adminAPP.surveysPage.createSurveyPopup.clickSubmitBtn();
+		const surveyCreationTime = new Date;
 		await adminAPP.surveysPage.createSurveyPopup.waitForPopupHidden();
 		await adminAPP.surveyDetailsPage.waitForOpened();
 		surveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
@@ -26,7 +27,9 @@ test.describe("Surveys list", async () => {
 		await adminAPP.surveysPage.waitForOpened();
 		await adminAPP.surveysPage.surveysTable.assertSurveyInList(surveyName);
 		const surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(surveyName);
-		await surveyRow.assertSurveyCreatedAt();
+		await surveyRow.assertSurveyCreatedAt(surveyCreationTime);
+		await surveyRow.assertCommentCount(0);
+		await surveyRow.assertSurveyUpdatedAt(surveyCreationTime);
 	});
 
 	test.describe.skip("Edit survey's name and duplicate the survey", async () => {
