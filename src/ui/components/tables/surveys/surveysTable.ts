@@ -10,9 +10,9 @@ export class SurveysTable {
 	constructor(readonly page: Page) {
 	}
 
-	async assertSurveyInList(name: string): Promise<void> {
+	async assertSurveyInList(name: string, options?: { exact?: boolean }): Promise<void> {
 		await test.step(`Assert survey '${name}' is displayed in the survey list`, async () => {
-			await expect(this.rows.getByTitle(name)).toBeVisible();
+			await expect(this.rows.getByTitle(name, options)).toBeVisible();
 		});
 	}
 

@@ -1,18 +1,13 @@
 import { test, Page, Locator, expect } from "@playwright/test";
 
 export class BasePopup {
-	protected popup: Locator;
-	protected popupHeader: Locator;
-	protected xBtn: Locator;
-	protected submitBtn: Locator;
-	protected cancelBtn: Locator;
+	readonly popup: Locator = this.page.locator(".k-window.k-dialog");
+	readonly popupHeader: Locator = this.popup.locator(".k-window-titlebar");
+	readonly xBtn: Locator = this.popup.locator(".k-button-icon");
+	readonly submitBtn: Locator = this.popup.locator(".k-button-solid");
+	readonly cancelBtn: Locator = this.popup.locator(".k-button-outline");
 
 	constructor(protected readonly page: Page) {
-		this.popup = page.locator(".k-window.k-dialog");
-		this.popupHeader = this.popup.locator(".k-window-titlebar");
-		this.xBtn = this.popup.locator(".k-button-icon");
-		this.submitBtn = this.popup.locator(".k-button-solid");
-		this.cancelBtn = this.popup.locator(".k-button-outline");
 	};
 
 	async waitForPopupVisible() {

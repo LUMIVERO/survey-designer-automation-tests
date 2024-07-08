@@ -10,7 +10,7 @@ export class AbstractSurveyRow {
 	readonly nameInput: Locator = this.name.locator("input");
 	readonly timestamp: Locator = this.rowContainer.locator(".time-stamp");
 	readonly comments: Locator = this.rowContainer.locator(".comments");
-	readonly actionsMenu: Locator = this.rowContainer.locator(".actions-menu");
+	readonly actionsMenu: Locator = this.rowContainer.locator(".actions-menu>i");
 
 	constructor(readonly rowContainer: Locator) {
 		this.page = rowContainer.page();

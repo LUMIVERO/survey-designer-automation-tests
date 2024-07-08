@@ -18,10 +18,10 @@ test.describe("Surveys list", async () => {
 		const surveyName: string = getRandomName("SurveyAUT");
 
 		await adminAPP.surveysPage.clickCreateSurveyBtn();
-		await adminAPP.surveysPage.createSurveyPopup.fillItemName(surveyName);
-		await adminAPP.surveysPage.createSurveyPopup.clickSubmitBtn();
+		await adminAPP.surveysPage.popupWithInput.fillItemName(surveyName);
+		await adminAPP.surveysPage.popupWithInput.clickSubmitBtn();
 		const surveyCreationTime = new Date;
-		await adminAPP.surveysPage.createSurveyPopup.waitForPopupHidden();
+		await adminAPP.surveysPage.popupWithInput.waitForPopupHidden();
 		await adminAPP.surveyDetailsPage.waitForOpened();
 		surveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
 
@@ -61,8 +61,24 @@ test.describe("Surveys list", async () => {
 			await surveyRow.assertSurveyNameCorrect(newSurveyName);
 			await surveyRow.assertSurveyUpdatedAt(surveyUpdatedDate);
 		});
-		test.skip("User is able to duplicate the survey", async ({ adminAPP }) => {
-		});
 
+		test("User is able to duplicate the survey", async ({ adminAPP, apiService }) => {
+			const { name } = survey;
+			const duplicatedSurveyName: string = name + "_copy";
+
+			await surveyRow.assertSurveyNameCorrect(name);
+			await adminAPP.surveysPage.duplicateSurvey({ surveyName: name });
+
+			await adminAPP.surveyDetailsPage.waitForOpened();
+			const duplicatedSurveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
+			await adminAPP.surveyDetailsPage.assertSurveyNameCorrect(duplicatedSurveyName);
+			await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs();
+
+			await adminAPP.surveysPage.waitForOpened();
+			await adminAPP.surveysPage.surveysTable.assertSurveyInList(duplicatedSurveyName);
+			await adminAPP.surveysPage.surveysTable.assertSurveyInList(name, { exact: true });
+
+			await apiService.survey.deleteSurvey({ surveyId: duplicatedSurveyId });
+		});
 	});
 });
