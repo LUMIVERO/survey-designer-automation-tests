@@ -1,6 +1,6 @@
 import { BasePage } from "../base.page";
 import { Locator, test } from "@playwright/test";
-import { loginUrl } from "@data/urls/uiUrls";
+import { loginUrl } from "src/constants/urls/uiUrls";
 
 export class LoginPage extends BasePage {
 	url = loginUrl;

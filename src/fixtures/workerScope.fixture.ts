@@ -1,6 +1,6 @@
 import { ApiApplication } from "@api/apiApplication";
 import { BrowserContext, test as base } from "@playwright/test";
-import { adminAuthFile } from "@data/authPath.data";
+import { adminAuthFile } from "src/constants/authPath.data";
 import { getTokenFromFile } from "@helpers/api.helpers";
 
 export const test = base.extend<{}, {

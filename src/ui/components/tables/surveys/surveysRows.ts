@@ -1,9 +1,9 @@
-import { dateTimeFormat, dateFormat } from "@data/dateTime.data";
+import { dateTimeFormat, dateFormat } from "src/constants/dateTime.data";
 import { isTimeWithinTolerance } from "@helpers/dateTime.helpers";
 import { expect, Locator, Page, test } from "@playwright/test";
 import { format, parse } from "date-fns";
 
-export class AbstractSurveyRow {
+export class BaseSurveyRow {
 	readonly page: Page;
 	readonly itemType: Locator = this.rowContainer.locator(".item-type");
 	readonly name: Locator = this.rowContainer.locator(".name");
@@ -17,14 +17,14 @@ export class AbstractSurveyRow {
 	}
 }
 
-export class HeaderRow extends AbstractSurveyRow {
+export class HeaderRow extends BaseSurveyRow {
 	readonly timestamp: Locator = this.rowContainer.locator(".updated");
 	readonly nameSort: Locator = this.name.locator(".sort-trigger");
 	readonly timestampSort: Locator = this.timestamp.locator(".sort-trigger");
 	readonly commentsSort: Locator = this.comments.locator(".sort-trigger");
 }
 
-export class SurveyRow extends AbstractSurveyRow {
+export class SurveyRow extends BaseSurveyRow {
 	readonly surveyCreatedAt: Locator = this.rowContainer.locator(".created-at");
 	readonly folderSurveysCount: Locator = this.rowContainer.locator(".surveys-count");
 

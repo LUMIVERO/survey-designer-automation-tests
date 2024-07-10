@@ -18,10 +18,10 @@ test.describe("Surveys list", async () => {
 		const surveyName: string = getRandomName("SurveyAUT");
 
 		await adminAPP.surveysPage.clickCreateSurveyBtn();
-		await adminAPP.surveysPage.popupWithInput.fillItemName(surveyName);
-		await adminAPP.surveysPage.popupWithInput.clickSubmitBtn();
+		await adminAPP.surveysPage.dialogWithInput.fillItemName(surveyName);
+		await adminAPP.surveysPage.dialogWithInput.clickSubmitBtn();
 		const surveyCreationTime = new Date;
-		await adminAPP.surveysPage.popupWithInput.waitForPopupHidden();
+		await adminAPP.surveysPage.dialogWithInput.waitForDialogHidden();
 		await adminAPP.surveyDetailsPage.waitForOpened();
 		surveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
 

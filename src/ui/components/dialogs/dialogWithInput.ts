@@ -1,8 +1,8 @@
 import { Locator, test, expect } from "@playwright/test";
-import { BasePopup } from "./basePopup";
+import { BaseDialog } from "@ui/components/dialogs/baseDialog";
 
-export class PopupWithInput extends BasePopup {
-	readonly nameField: Locator = this.popup.locator(".k-input-inner");
+export class DialogWithInput extends BaseDialog {
+	readonly nameField: Locator = this.dialog.locator(".k-input-inner");
 
 	async fillItemName(name: string) {
 		await test.step("Fill the name of the item", async () => {

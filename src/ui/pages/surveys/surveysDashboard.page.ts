@@ -1,8 +1,8 @@
-import { foldersUrl } from "@data/urls/apiUrls";
-import { surveyUrl } from "@data/urls/uiUrls";
+import { foldersUrl } from "src/constants/urls/apiUrls";
+import { surveyUrl } from "src/constants/urls/uiUrls";
 import { Locator, test } from "@playwright/test";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
-import { PopupWithInput } from "@ui/components/popups/popupWithInput";
+import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
 import { LoggedInBasePage } from "../loggedIn.base.page";
 
@@ -10,7 +10,7 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 	url = surveyUrl.surveysTab;
 	readonly createSurveyBtn: Locator = this.page.locator(".qdt-btn-primary", { hasText: "New Survey" });
 	readonly createFolderBtn: Locator = this.page.locator(".qdt-btn-primary-outlined", { hasText: "New Folder" });
-	readonly popupWithInput: PopupWithInput = new PopupWithInput(this.page);
+	readonly dialogWithInput: DialogWithInput = new DialogWithInput(this.page);
 	readonly surveysTable: SurveysTable = new SurveysTable(this.page);
 	readonly actionMenuPopover: Locator = this.page.locator(".k-popover-body");
 	readonly popoverActionBtn: Locator = this.actionMenuPopover.locator("button");
@@ -18,16 +18,16 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 	async clickCreateSurveyBtn(): Promise<void> {
 		await test.step("Click [New Survey] button and assert it is opened", async () => {
 			await this.createSurveyBtn.click();
-			await this.popupWithInput.waitForPopupVisible();
-			await this.popupWithInput.assertPopHeaderIsCorrect("Create new survey");
+			await this.dialogWithInput.waitForDialogVisible();
+			await this.dialogWithInput.assertDialogHeaderIsCorrect("Create new survey");
 		});
 	}
 
 	async clickPopoverActionBtn(actionName: string = "Action"): Promise<void> {
 		await test.step(`Click ${actionName} button`, async () => {
 			await this.popoverActionBtn.filter({ has: this.page.locator(":visible") }).click();
-			await this.popupWithInput.waitForPopupVisible();
-			await this.popupWithInput.assertPopHeaderIsCorrect("Duplicate survey");
+			await this.dialogWithInput.waitForDialogVisible();
+			await this.dialogWithInput.assertDialogHeaderIsCorrect("Duplicate survey");
 		});
 	}
 
@@ -40,10 +40,10 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 			await this.waitForPopover();
 			await this.clickPopoverActionBtn("Duplicate");
 
-			await this.popupWithInput.asserInputDataIsCorrect(surveyName + "_copy");
-			newSurveyName && await this.popupWithInput.fillItemName(newSurveyName);
-			await this.popupWithInput.clickSubmitBtn();
-			await this.popupWithInput.waitForPopupHidden();
+			await this.dialogWithInput.asserInputDataIsCorrect(surveyName + "_copy");
+			newSurveyName && await this.dialogWithInput.fillItemName(newSurveyName);
+			await this.dialogWithInput.clickSubmitBtn();
+			await this.dialogWithInput.waitForDialogHidden();
 		});
 	}
 
