@@ -1,31 +1,35 @@
+import { surveysUrl } from "@data/urls/apiUrls";
+import { raiseForStatus } from "@helpers/api.helpers";
+import { setIdOnUrl } from "@helpers/url.helpers";
 import { APIRequestContext } from "@playwright/test";
-import { CreateSurveyOptions, SurveyResponse, DeleteSurveyOptions } from "../typedefs/api/survey.typedefs";
-import { surveysUrl } from "../data/urls/apiUrls";
-import { raiseForStatus } from "../helpers/apiHelpers";
-import { setIdOnUrl } from "../helpers/idOnUrl";
+import { CreateSurveyOptions, SurveyResponse, DeleteSurveyOptions } from "@typedefs/api/survey.typedefs";
 
-export async function createSurvey(
-	request: APIRequestContext,
-	options: CreateSurveyOptions
-): Promise<SurveyResponse> {
+export class Survey {
 
-	const response = await request.post(surveysUrl.surveys, {
-		data: options
-	});
+	constructor(readonly request: APIRequestContext) {
+	}
 
-	await raiseForStatus(response);
+	async createSurvey(
+		options: CreateSurveyOptions
+	): Promise<SurveyResponse> {
 
-	return (await response.json()).body;
-}
+		const response = await this.request.post(surveysUrl.surveys, {
+			data: options
+		});
 
-export async function deleteSurvey(
-	request: APIRequestContext,
-	options: DeleteSurveyOptions
-): Promise<void> {
+		await raiseForStatus(response);
 
-	const response = await request.delete(
-		setIdOnUrl(surveysUrl.survey, options.surveyId)
-	);
+		return await response.json();
+	}
 
-	await raiseForStatus(response);
+	async deleteSurvey(
+		options: DeleteSurveyOptions
+	): Promise<void> {
+
+		const response = await this.request.delete(
+			setIdOnUrl(surveysUrl.survey, options.surveyId)
+		);
+
+		await raiseForStatus(response);
+	}
 }

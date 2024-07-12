@@ -1,5 +1,5 @@
 import { test, BrowserContext } from "@playwright/test";
-import { Application } from "../ui/pages/application";
+import { Application } from "@ui/application";
 
 test.describe("Authentication", () => {
 	let APP: Application;

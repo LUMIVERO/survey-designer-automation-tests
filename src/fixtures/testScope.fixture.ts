@@ -1,5 +1,5 @@
 import { test as base } from "./workerScope.fixture";
-import { Application } from "../ui/pages/application";
+import { Application } from "@ui/application";
 
 export const test = base.extend<{
 	adminAPP: Application;

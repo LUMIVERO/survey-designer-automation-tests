@@ -1,4 +1,5 @@
 import { Page, test, expect } from "@playwright/test";
+import { Url } from "@typedefs/ui/basePage.typedefs";
 
 export abstract class BasePage {
 	abstract url: string;
@@ -7,24 +8,30 @@ export abstract class BasePage {
 	};
 
 	async visit(url?: string): Promise<void> {
-		await test.step(`Visit '${url ?? this.url}' page`, async () => {
-			await this.goto(url ?? this.url);
-			await this.waitForOpened(url ?? this.url);
+		url = url ?? this.url;
+
+		await test.step(`Visit '${url}' page`, async () => {
+			await this.goto(url);
+			await this.waitForOpened({ url });
 		});
 	}
 
 	async goto(url?: string): Promise<void> {
-		await test.step(`Go to '${url ?? this.url}' page `, async () => {
-			await this.page.goto(url ?? this.url);
+		url = url ?? this.url;
+
+		await test.step(`Go to '${url}' page `, async () => {
+			await this.page.goto(url);
 		});
 	}
 
 	async assertIsOpened(url?: string | RegExp): Promise<void> {
-		expect(this.page.url()).toMatch(new RegExp(url ?? this.url));
+		url = url ?? this.url;
+		expect(this.page.url()).toMatch(new RegExp(url));
 	}
 
-	async waitForOpened(url?: string | RegExp): Promise<void> {
-		await this.page.waitForURL(new RegExp(url ?? this.url));
+	async waitForOpened(options?: Url): Promise<void> {
+		const url = options?.url ?? this.url;
+		await this.page.waitForURL(new RegExp(url));
 	}
 
 	async reload(): Promise<void> {

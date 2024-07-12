@@ -1,9 +1,10 @@
-import { LoggedInBasePage } from "../loggedIn.base.page";
-import { surveyUrl } from "../../../data/urls/uiUrls";
+import { foldersUrl } from "@data/urls/apiUrls";
+import { surveyUrl } from "@data/urls/uiUrls";
 import { Locator, test } from "@playwright/test";
-import { PopupWithInput } from "../../components/popups/popupWithInput";
-import { foldersUrl } from "../../../data/urls/apiUrls";
-import { SurveysTable } from "../../components/tables/surveys/surveysTable";
+import { Url } from "@typedefs/ui/surveyPage.typedefs";
+import { PopupWithInput } from "@ui/components/popups/popupWithInput";
+import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
+import { LoggedInBasePage } from "../loggedIn.base.page";
 
 export class SurveysDashboardPage extends LoggedInBasePage {
 	url = surveyUrl.surveysTab;
@@ -20,10 +21,17 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 		});
 	}
 
-	async waitForOpened(url?: string | RegExp, waitForFoldersResponse?: boolean): Promise<void> {
-		await super.waitForOpened(url);
+	async waitForOpened(options?: Url): Promise<void> {
+		const { url, waitForResponse } = options ?? {};
+		await super.waitForOpened({ url });
 
-		waitForFoldersResponse &&
-		await this.page.waitForResponse(new RegExp(foldersUrl.folder));
+		waitForResponse &&
+		await this.waitForFoldersResponse();
+	}
+
+	async waitForFoldersResponse(): Promise<void> {
+		await test.step("Wait for folders", async () => {
+			await this.page.waitForResponse(new RegExp(foldersUrl.folder));
+		});
 	}
 }

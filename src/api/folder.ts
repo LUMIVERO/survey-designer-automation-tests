@@ -1,12 +1,18 @@
+import { foldersUrl } from "@data/urls/apiUrls";
+import { raiseForStatus } from "@helpers/api.helpers";
 import { APIRequestContext } from "@playwright/test";
-import { foldersUrl } from "../data/urls/apiUrls";
-import { raiseForStatus } from "../helpers/apiHelpers";
-import { GetFolderResponse } from "../typedefs/api/folder.typedefs";
+import { GetFolderResponse } from "@typedefs/api/folder.typedefs";
 
-export async function getFolders(request: APIRequestContext): Promise<GetFolderResponse> {
-	const response = await request.get(foldersUrl.folders);
+export class Folder {
 
-	await raiseForStatus(response);
+	constructor(readonly request: APIRequestContext) {
+	}
 
-	return (await response.json()).data;
+	async getFolders(): Promise<GetFolderResponse> {
+		const response = await this.request.get(foldersUrl.folders);
+
+		await raiseForStatus(response);
+
+		return await response.json();
+	}
 }

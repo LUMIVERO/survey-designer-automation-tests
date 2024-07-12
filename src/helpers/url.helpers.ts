@@ -1,4 +1,4 @@
-import { complexId } from "../data/idRegExp";
+import { complexId } from "@data/idRegExp";
 
 export function setIdOnUrl(
 	url: string,
