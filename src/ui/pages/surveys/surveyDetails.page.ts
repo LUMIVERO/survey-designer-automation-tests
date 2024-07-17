@@ -1,5 +1,5 @@
-import { surveysUrl } from "@data/urls/apiUrls";
-import { surveyUrl } from "@data/urls/uiUrls";
+import { surveysUrl } from "src/constants/urls/apiUrls";
+import { surveyUrl } from "src/constants/urls/uiUrls";
 import { expect, Locator, test } from "@playwright/test";
 import { Url } from "@typedefs/ui/surveyPage.typedefs";
 import { FoldersBreadCrumbs } from "@ui/components/breadCrumbs";

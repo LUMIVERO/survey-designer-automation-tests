@@ -23,9 +23,7 @@ export async function getTokenFromFile(filePath: string): Promise<string> {
 
 export function parseToken(data: Record<string, any>): string {
 	try {
-		const { origins } = data;
-		const [{ localStorage }] = origins;
-		const [{ value: auth }] = localStorage;
+		const { origins: [{ localStorage: [{ value: auth }] }] } = data;
 		return `Bearer ${auth.slice(1, -1)}`;
 	} catch (error) {
 		console.error("Failed to get token:", error);

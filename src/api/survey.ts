@@ -1,4 +1,4 @@
-import { surveysUrl } from "@data/urls/apiUrls";
+import { surveysUrl } from "src/constants/urls/apiUrls";
 import { raiseForStatus } from "@helpers/api.helpers";
 import { setIdOnUrl } from "@helpers/url.helpers";
 import { APIRequestContext } from "@playwright/test";

@@ -1,4 +1,4 @@
-import { foldersUrl } from "@data/urls/apiUrls";
+import { foldersUrl } from "src/constants/urls/apiUrls";
 import { raiseForStatus } from "@helpers/api.helpers";
 import { APIRequestContext } from "@playwright/test";
 import { GetFolderResponse } from "@typedefs/api/folder.typedefs";

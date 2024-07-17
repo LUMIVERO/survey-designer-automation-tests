@@ -1,9 +1,9 @@
-import { complexId } from "@data/idRegExp";
+import { guid } from "src/constants/idRegExp";
 
 export function setIdOnUrl(
 	url: string,
 	id: number | string,
-	pattern: string = complexId
+	pattern: string = guid
 ): string {
 	const idString = `${id}`;
 
@@ -20,7 +20,7 @@ export function setIdOnUrl(
 	throw new Error(`URL '${url}' does not contain a match for the provided ID pattern '${pattern}'.`);
 }
 
-export function getIdFromString(str: string, pattern: string = complexId): string {
+export function getIdFromString(str: string, pattern: string = guid): string {
 	const matches = new RegExp(pattern).exec(str);
 
 	if (matches) {
