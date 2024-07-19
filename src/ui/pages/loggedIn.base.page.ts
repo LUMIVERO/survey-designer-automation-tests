@@ -13,6 +13,7 @@ export abstract class LoggedInBasePage extends BasePage {
 	readonly userName: Locator = this.userInfoContainer.locator(".name");
 	readonly userEmail: Locator = this.userInfoContainer.locator(".email");
 	readonly signOutBtn: Locator = this.userInfoContainer.locator(".logout-userinfo-signout");
+	readonly emptyState: Locator = this.page.locator(".surveys-list-empty-state");
 
 	async clickUserInfoDetailsBtn(open: boolean = true): Promise<void> {
 		await test.step(`${open ? "Open" : "Close"} user info details`, async () => {
@@ -38,6 +39,13 @@ export abstract class LoggedInBasePage extends BasePage {
 		await test.step("Sign out user", async () => {
 			await this.clickUserInfoDetailsBtn();
 			await this.clickSignOutBtn();
+		});
+	}
+
+	async assertEmptyStateIsDisplayed(): Promise<void> {
+		await test.step("Assert empty state is displayed", async () => {
+			await this.emptyState.waitFor({ state: "visible" });
+			expect(await this.emptyState.innerText()).toContain("There are no items.");
 		});
 	}
 }

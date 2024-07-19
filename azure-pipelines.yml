@@ -1,45 +1,53 @@
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- checkout: self
-  displayName: 'Checkout Repo'
+  - checkout: self
+    displayName: 'Checkout Repo'
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
 
-- script: npm install
-  displayName: 'Install NPM dependencies'
+  - script: npm install
+    displayName: 'Install NPM dependencies'
 
-- script: npx playwright install
-  displayName: 'Install Playwright browsers'
+  - script: npx playwright install
+    displayName: 'Install Playwright browsers'
 
-- script: |
-    echo BASE_URL='https://qdtstaging.dooblo.net' >> .env
-    echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
-    echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
-    echo TENANT1='$(TENANT1)' >> .env
-  displayName: 'Create .env file'
+  - script: |
+      echo BASE_URL='https://qdtstaging.dooblo.net' >> .env
+      echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
+      echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
+      echo TENANT1='$(TENANT1)' >> .env
+    displayName: 'Create .env file'
 
-- script: npm run chromium
-  displayName: 'Run Playwright tests'
+  - script: npm run chromium
+    displayName: 'Run Playwright tests'
 
-- task: PublishAllureReport@1
-  condition: succeededOrFailed()
-  displayName: "Publish Allure report"
+  - task: PublishAllureReport@1
+    condition: succeededOrFailed()
+    displayName: "Publish Allure report"
 
-- script: |
-    echo "##vso[task.setvariable variable=timestamp]$(date +'%Y%m%d%H%M%S')"
-  displayName: 'Generate timestamp'
+  - script: |
+      timestamp=$(date +'%Y%m%d%H%M%S')
+      echo "##vso[task.setvariable variable=timestamp]$timestamp"
+      echo "Timestamp: $timestamp"
+    displayName: 'Generate timestamp'
 
-- task: PublishPipelineArtifact@1
-  condition: succeededOrFailed()
-  inputs:
-    targetPath: 'playwright-report'
-    artifact: 'playwright-report-$(Build.BuildId)-$(timestamp)'
-  displayName: 'Publish Playwright report'
+  - script: |
+      artifactName="playwright-report-$(Build.BuildId)-$(timestamp)"
+      echo "##vso[task.setvariable variable=artifactName]$artifactName"
+      echo "Artifact name: $artifactName"
+    displayName: 'Set artifact name'
+
+  - task: PublishPipelineArtifact@1
+    condition: succeededOrFailed()
+    inputs:
+      targetPath: 'playwright-report'
+      artifact: '$(artifactName)'
+    displayName: 'Publish Playwright report'

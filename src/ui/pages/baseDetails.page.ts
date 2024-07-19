@@ -1,9 +1,11 @@
-import { getIdFromString, setIdOnUrl } from "@helpers/url.helpers";
+import { setIdOnUrl, getIdFromString } from "@helpers/url.helpers";
 import { test } from "@playwright/test";
+import { FoldersBreadCrumbs } from "@ui/components/breadCrumbs";
 import { LoggedInBasePage } from "./loggedIn.base.page";
 
 export abstract class BaseDetailsPage extends LoggedInBasePage {
 	public pageId: string | number;
+	readonly breadCrumbs = new FoldersBreadCrumbs(this.page.locator(".breadcrumbs-wrapper"));
 
 	setId(pageId: number | string): string {
 		this.pageId = `${pageId}`;
@@ -31,5 +33,11 @@ export abstract class BaseDetailsPage extends LoggedInBasePage {
 
 	async getIdFromPageUrl(): Promise<string> {
 		return getIdFromString(this.page.url());
+	}
+
+	async clickMainFolderInBreadCrumbs(): Promise<void> {
+		await test.step("Click All in folder breadcrumbs", async () => {
+			await this.breadCrumbs.clickOnBaseItem();
+		});
 	}
 }
