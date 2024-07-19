@@ -1,7 +1,12 @@
 import { raiseForStatus } from "@helpers/api.helpers";
 import { setIdOnUrl } from "@helpers/url.helpers";
 import { APIRequestContext } from "@playwright/test";
-import { GetFolderResponse, DeleteFolderOptions } from "@typedefs/api/folder.typedefs";
+import {
+	GetFolderResponse,
+	DeleteFolderOptions,
+	CreateFolderOptions,
+	FolderResponse
+} from "@typedefs/api/folder.typedefs";
 import { foldersUrl } from "src/constants/urls/apiUrls";
 
 export class Folder {
@@ -26,5 +31,18 @@ export class Folder {
 		);
 
 		await raiseForStatus(response);
+	}
+
+	async createFolder(
+		options: CreateFolderOptions
+	): Promise<FolderResponse> {
+
+		const response = await this.request.post(foldersUrl.folders, {
+			data: options
+		});
+
+		await raiseForStatus(response);
+
+		return await response.json();
 	}
 }
