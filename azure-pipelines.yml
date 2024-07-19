@@ -34,17 +34,20 @@ steps:
     displayName: "Publish Allure report"
 
   - script: |
-      echo "##vso[task.setvariable variable=timestamp]$(date +'%Y%m%d%H%M%S')"
+      timestamp=$(date +'%Y%m%d%H%M%S')
+      echo "##vso[task.setvariable variable=timestamp;isOutput=true]$timestamp"
+      echo "Timestamp: $timestamp"
     displayName: 'Generate timestamp'
+    name: setTimestamp
 
   - script: |
-      echo "Timestamp: $(timestamp)"
-      echo "##vso[task.setvariable variable=artifactName]playwright-report-$(Build.BuildId)-$(timestamp)"
+      echo "##vso[task.setvariable variable=artifactName;isOutput=true]playwright-report-$(Build.BuildId)-$(setTimestamp.timestamp)"
     displayName: 'Set artifact name'
+    name: setArtifactName
 
   - task: PublishPipelineArtifact@1
     condition: succeededOrFailed()
     inputs:
       targetPath: 'playwright-report'
-      artifact: '$(artifactName)'
+      artifact: '$(setArtifactName.artifactName)'
     displayName: 'Publish Playwright report'
