@@ -1,17 +1,18 @@
 import { SurveyResponse } from "./survey.typedefs";
 
 export type GetFolderResponse = {
-	items: Array<Folder>;
+	items: Array<FolderResponse>;
 }
 
-export type Folder = {
+export type FolderResponse = {
 	id: string;
 	name: string;
 	order: number;
 	tenantId: string;
+	parentFolderId?: string;
 	createdAt: string;
 	updatedAt?: string;
-	childFolders: Array<Folder>;
+	childFolders: Array<FolderResponse>;
 	surveys: Array<SurveyResponse>;
 	commentsCount: number;
 	unreadCommentsCount?: number;
@@ -19,4 +20,9 @@ export type Folder = {
 
 export type DeleteFolderOptions = {
 	folderId: string;
+}
+
+export type CreateFolderOptions = {
+	name: string;
+	parentFolderId: string;
 }
