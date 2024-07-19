@@ -16,3 +16,7 @@ export type Folder = {
 	commentsCount: number;
 	unreadCommentsCount?: number;
 }
+
+export type DeleteFolderOptions = {
+	folderId: string;
+}

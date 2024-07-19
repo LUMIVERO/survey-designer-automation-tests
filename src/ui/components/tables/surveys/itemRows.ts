@@ -1,9 +1,9 @@
-import { dateTimeFormat, dateFormat } from "src/constants/dateTime.data";
 import { isTimeWithinTolerance } from "@helpers/dateTime.helpers";
 import { expect, Locator, Page, test } from "@playwright/test";
 import { format, parse } from "date-fns";
+import { dateTimeFormat, dateFormat } from "src/constants/dateTime.data";
 
-export class BaseSurveyRow {
+export class BaseItemRow {
 	readonly page: Page;
 	readonly itemType: Locator = this.rowContainer.locator(".item-type");
 	readonly name: Locator = this.rowContainer.locator(".name");
@@ -15,16 +15,22 @@ export class BaseSurveyRow {
 	constructor(readonly rowContainer: Locator) {
 		this.page = rowContainer.page();
 	}
+
+	async click() {
+		await test.step("Click on item row", async () => {
+			await this.rowContainer.click();
+		});
+	}
 }
 
-export class HeaderRow extends BaseSurveyRow {
+export class HeaderRow extends BaseItemRow {
 	readonly timestamp: Locator = this.rowContainer.locator(".updated");
 	readonly nameSort: Locator = this.name.locator(".sort-trigger");
 	readonly timestampSort: Locator = this.timestamp.locator(".sort-trigger");
 	readonly commentsSort: Locator = this.comments.locator(".sort-trigger");
 }
 
-export class SurveyRow extends BaseSurveyRow {
+export class ItemRow extends BaseItemRow {
 	readonly surveyCreatedAt: Locator = this.rowContainer.locator(".created-at");
 	readonly folderSurveysCount: Locator = this.rowContainer.locator(".surveys-count");
 
@@ -32,8 +38,8 @@ export class SurveyRow extends BaseSurveyRow {
 		return await this.name.getAttribute("title");
 	}
 
-	async renameSurvey(name: string): Promise<void> {
-		await test.step("Rename survey", async () => {
+	async renameItem(name: string): Promise<void> {
+		await test.step("Rename item", async () => {
 			await this.nameInput.fill(name);
 			await this.page.waitForTimeout(500);
 			await this.nameInput.press("Enter");
@@ -41,8 +47,8 @@ export class SurveyRow extends BaseSurveyRow {
 		});
 	}
 
-	async assertSurveyNameCorrect(name: string): Promise<void> {
-		await test.step(`Assert survey name is correct`, async () => {
+	async assertItemNameCorrect(name: string): Promise<void> {
+		await test.step(`Assert item name is correct`, async () => {
 			expect(await this.getName()).toEqual(name);
 		});
 	}
@@ -54,14 +60,20 @@ export class SurveyRow extends BaseSurveyRow {
 		});
 	}
 
+	async assertSurveyCountInFolder(surveysCount: number): Promise<void> {
+		await test.step("Assert survey's count in folder is correct", async () => {
+			await expect(this.folderSurveysCount).toContainText(`${surveysCount} survey${surveysCount === 1 ? '' : 's'}`);
+		});
+	}
+
 	async assertCommentCount(commentCount: number): Promise<void> {
-		await test.step("Assert survey's comment count equals passed count", async () => {
+		await test.step("Assert survey's or folder's comment count equals passed count", async () => {
 			await expect(this.comments).toHaveText(commentCount.toString());
 		});
 	}
 
-	async assertSurveyUpdatedAt(date: Date = new Date()): Promise<void> {
-		await test.step("Assert survey's updatedAt date equals passed date", async () => {
+	async assertItemUpdatedAt(date: Date = new Date()): Promise<void> {
+		await test.step("Assert item's updatedAt date equals passed date", async () => {
 			const actualDate = parse(
 				await this.timestamp.textContent(),
 				dateTimeFormat,

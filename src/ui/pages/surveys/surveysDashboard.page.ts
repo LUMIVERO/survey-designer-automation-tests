@@ -1,9 +1,9 @@
-import { foldersUrl } from "src/constants/urls/apiUrls";
-import { surveyUrl } from "src/constants/urls/uiUrls";
 import { Locator, test } from "@playwright/test";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
+import { foldersUrl } from "src/constants/urls/apiUrls";
+import { surveyUrl } from "src/constants/urls/uiUrls";
 import { LoggedInBasePage } from "../loggedIn.base.page";
 
 export class SurveysDashboardPage extends LoggedInBasePage {
@@ -20,6 +20,14 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 			await this.createSurveyBtn.click();
 			await this.dialogWithInput.waitForDialogVisible();
 			await this.dialogWithInput.assertDialogHeaderIsCorrect("Create new survey");
+		});
+	}
+
+	async clickCreateFolderBtn(): Promise<void> {
+		await test.step("Click [New Folder] button and assert it is opened", async () => {
+			await this.createFolderBtn.click();
+			await this.dialogWithInput.waitForDialogVisible();
+			await this.dialogWithInput.assertDialogHeaderIsCorrect("Create new folder");
 		});
 	}
 
