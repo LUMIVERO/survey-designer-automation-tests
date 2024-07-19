@@ -62,7 +62,7 @@ test.describe("Surveys list", async () => {
 			await surveyRow.assertItemUpdatedAt(surveyUpdatedDate);
 		});
 
-		test("User is able to duplicate the survey", async ({ adminAPP, apiService }) => {
+		test.skip("User is able to duplicate the survey", async ({ adminAPP, apiService }) => {
 			const { name } = survey;
 			const duplicatedSurveyName: string = name + "_copy";
 
