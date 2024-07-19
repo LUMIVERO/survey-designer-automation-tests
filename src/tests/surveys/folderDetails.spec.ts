@@ -25,7 +25,6 @@ test.describe("Folder details", async () => {
 		const folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(folderName);
 		await folderRow.click();
 
-		await adminAPP.folderDetailsPage.waitForOpened();
 		folderId = await adminAPP.folderDetailsPage.getIdFromPageUrl();
 		await adminAPP.folderDetailsPage.assertEmptyStateIsDisplayed();
 		await adminAPP.folderDetailsPage.assertFolderNameCorrect(folderName);
