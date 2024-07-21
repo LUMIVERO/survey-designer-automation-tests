@@ -1,12 +1,14 @@
 import { raiseForStatus } from "@helpers/api.helpers";
 import { setIdOnUrl } from "@helpers/url.helpers";
-import { APIRequestContext } from "@playwright/test";
+import { APIRequestContext, expect } from "@playwright/test";
 import {
 	GetFolderResponse,
 	DeleteFolderOptions,
 	CreateFolderOptions,
-	FolderResponse
+	FolderResponse,
+	GetFolderOptions
 } from "@typedefs/api/folder.typedefs";
+import { NetworkError } from "@typedefs/api/request.typedefs";
 import { foldersUrl } from "src/constants/urls/apiUrls";
 
 export class Folder {
@@ -16,6 +18,16 @@ export class Folder {
 
 	async getFolders(): Promise<GetFolderResponse> {
 		const response = await this.request.get(foldersUrl.folders);
+
+		await raiseForStatus(response);
+
+		return await response.json();
+	}
+
+	async getFolderById({ folderId }: GetFolderOptions): Promise<FolderResponse> {
+		const response = await this.request.get(
+			setIdOnUrl(foldersUrl.folder, folderId)
+		);
 
 		await raiseForStatus(response);
 
@@ -45,4 +57,19 @@ export class Folder {
 
 		return await response.json();
 	}
+
+	async assertFolderWasDeleted(folderId: string): Promise<void> {
+		try {
+			const response = await this.getFolderById({ folderId });
+			expect(response.id).toBeFalsy();
+		} catch (error) {
+			if (error instanceof NetworkError) {
+				expect(error.status).toBe(404);
+				return;
+			} else {
+				throw error;
+			}
+		}
+	}
+
 }

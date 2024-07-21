@@ -1,4 +1,5 @@
 import { Locator, test } from "@playwright/test";
+import { DeleteFolderOptions } from "@typedefs/ui/folder.typedefs";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
@@ -31,11 +32,17 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 		});
 	}
 
-	async clickPopoverActionBtn(actionName: string = "Action"): Promise<void> {
-		await test.step(`Click ${actionName} button`, async () => {
+	async clickPopoverDuplicateBtn(): Promise<void> {
+		await test.step(`Click duplicate button`, async () => {
 			await this.popoverActionBtn.filter({ has: this.page.locator(":visible") }).click();
 			await this.dialogWithInput.waitForDialogVisible();
 			await this.dialogWithInput.assertDialogHeaderIsCorrect("Duplicate survey");
+		});
+	}
+
+	async clickPopoverDeleteBtn(): Promise<void> {
+		await test.step(`Click delete button`, async () => {
+			await this.popoverActionBtn.filter({ has: this.page.locator(":visible") }).click();
 		});
 	}
 
@@ -46,12 +53,25 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 
 			await surveyRow.actionsMenu.click();
 			await this.waitForPopover();
-			await this.clickPopoverActionBtn("Duplicate");
+			await this.clickPopoverDuplicateBtn();
 
 			await this.dialogWithInput.asserInputDataIsCorrect(surveyName + "_copy");
 			newSurveyName && await this.dialogWithInput.fillItemName(newSurveyName);
 			await this.dialogWithInput.clickSubmitBtn();
 			await this.dialogWithInput.waitForDialogHidden();
+		});
+	}
+
+	async deleteFolder({ name }: DeleteFolderOptions) {
+		await test.step("Delete folder", async () => {
+			const folderRow = await this.surveysTable.getRowByName(name);
+			await folderRow.actionsMenu.click();
+			await this.waitForPopover();
+			await this.clickPopoverDeleteBtn();
+			await this.page.waitForResponse((response) => {
+				return response.request().method() === "DELETE"
+					&& new RegExp(foldersUrl.folder).test(response.url());
+			});
 		});
 	}
 

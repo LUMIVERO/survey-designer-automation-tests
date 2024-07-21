@@ -8,7 +8,6 @@ export class FolderDetailsPage extends BaseDetailsPage {
 	url = folderUrl.folderDetails;
 	readonly backBtn: Locator = this.page.locator(".nav-back");
 	readonly folderName: Locator = this.backBtn.locator("span");
-
 	async waitForOpened(options?: Url): Promise<void> {
 		const { url, waitForResponse = true } = options ?? {};
 		await super.waitForOpened({ url });

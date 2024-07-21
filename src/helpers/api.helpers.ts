@@ -1,13 +1,14 @@
 import { APIResponse, BrowserContext } from "@playwright/test";
+import { HttpError, InvalidStatusCodeError } from "@typedefs/api/request.typedefs";
 import { readFile } from "fs/promises";
 
 export async function raiseForStatus(response: APIResponse, statusCode?: number) {
 	if (!response.ok()) {
-		throw new Error(`HTTP Error: ${response.status()} ${response.statusText()}`);
+		throw new HttpError(response);
 	}
 
 	if (statusCode && response.status() !== statusCode) {
-		throw new Error(`Failed to make request with status ${statusCode}. Status: ${response.status()}`);
+		throw new InvalidStatusCodeError(response, statusCode);
 	}
 }
 

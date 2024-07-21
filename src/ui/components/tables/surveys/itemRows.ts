@@ -38,6 +38,12 @@ export class ItemRow extends BaseItemRow {
 		return await this.name.getAttribute("title");
 	}
 
+	async assertActionMenuNotVisible(): Promise<void> {
+		await test.step("Assert action menu is not visible", async () => {
+			await expect(this.actionsMenu).toBeHidden();
+		});
+	}
+
 	async renameItem(name: string): Promise<void> {
 		await test.step("Rename item", async () => {
 			await this.nameInput.fill(name);
@@ -62,7 +68,7 @@ export class ItemRow extends BaseItemRow {
 
 	async assertSurveyCountInFolder(surveysCount: number): Promise<void> {
 		await test.step("Assert survey's count in folder is correct", async () => {
-			await expect(this.folderSurveysCount).toContainText(`${surveysCount} survey${surveysCount === 1 ? '' : 's'}`);
+			await expect(this.folderSurveysCount).toContainText(`${surveysCount} survey${surveysCount === 1 ? "" : "s"}`);
 		});
 	}
 

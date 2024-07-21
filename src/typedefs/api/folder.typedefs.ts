@@ -1,5 +1,9 @@
 import { SurveyResponse } from "./survey.typedefs";
 
+export type GetFolderOptions = {
+	folderId: string;
+}
+
 export type GetFolderResponse = {
 	items: Array<FolderResponse>;
 }

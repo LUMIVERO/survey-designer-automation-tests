@@ -16,6 +16,12 @@ export class SurveysTable {
 		});
 	}
 
+	async assertItemNotInList(name: string, options?: { exact?: boolean }): Promise<void> {
+		await test.step(`Assert item '${name}' is displayed in the survey list`, async () => {
+			await expect(this.rows.getByTitle(name, options)).toBeHidden();
+		});
+	}
+
 	async getRowByName(name: string): Promise<ItemRow> {
 		return new ItemRow(this.rows.filter({ has: this.page.getByTitle(name) }));
 	}
