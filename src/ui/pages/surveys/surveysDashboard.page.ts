@@ -51,8 +51,9 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 			const { surveyName, newSurveyName } = options;
 			const surveyRow = await this.surveysTable.getRowByName(surveyName);
 
+			const waitForPopover = this.waitForPopover();
 			await surveyRow.actionsMenu.click();
-			await this.waitForPopover();
+			await waitForPopover;
 			await this.clickPopoverDuplicateBtn();
 
 			await this.dialogWithInput.asserInputDataIsCorrect(surveyName + "_copy");
