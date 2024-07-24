@@ -3,7 +3,7 @@ import { getRandomName } from "@helpers/random.helpers";
 import { SurveyResponse } from "@typedefs/api/survey.typedefs";
 import { ItemRow } from "@ui/components/tables/surveys/itemRows";
 
-test.describe.only("Surveys list", async () => {
+test.describe("Surveys list", async () => {
 	let surveyId: string;
 
 	test.beforeEach(async ({ adminAPP }) => {
@@ -62,7 +62,7 @@ test.describe.only("Surveys list", async () => {
 			await surveyRow.assertItemUpdatedAt(surveyUpdatedDate);
 		});
 
-		test.only("User is able to duplicate the survey", async ({ adminAPP, apiService }) => {
+		test("User is able to duplicate the survey", async ({ adminAPP, apiService }) => {
 			const { name } = survey;
 			const duplicatedSurveyName: string = name + "_copy";
 
