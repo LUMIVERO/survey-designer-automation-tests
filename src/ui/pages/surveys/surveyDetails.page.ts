@@ -10,7 +10,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	readonly surveyName: Locator = this.pageContentHeader.locator(".title");
 
 	async waitForOpened(options?: Url): Promise<void> {
-		const { url, waitForResponse = true } = options ?? {};
+		const { url, waitForResponse } = options ?? {};
 		await super.waitForOpened({ url });
 
 		waitForResponse &&
