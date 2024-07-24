@@ -43,6 +43,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
       },
       dependencies: ["setup"],
+      timeout: 10 * 1000,
     },
 
     {
