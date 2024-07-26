@@ -62,7 +62,7 @@ test.describe("Surveys list", async () => {
 			await surveyRow.assertItemUpdatedAt(surveyUpdatedDate);
 		});
 
-		test.skip("User is able to duplicate the survey", async ({ adminAPP, apiService }) => {
+		test("User is able to duplicate the survey", async ({ adminAPP, apiService }) => {
 			const { name } = survey;
 			const duplicatedSurveyName: string = name + "_copy";
 
@@ -72,9 +72,9 @@ test.describe("Surveys list", async () => {
 			await adminAPP.surveyDetailsPage.waitForOpened();
 			const duplicatedSurveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
 			await adminAPP.surveyDetailsPage.assertSurveyNameCorrect(duplicatedSurveyName);
+			const waitForSurveysPageOpened = adminAPP.surveysPage.waitForOpened({ waitForResponse: true });
 			await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs();
-
-			await adminAPP.surveysPage.waitForOpened();
+			await waitForSurveysPageOpened;
 			await adminAPP.surveysPage.surveysTable.assertItemInList(duplicatedSurveyName);
 			await adminAPP.surveysPage.surveysTable.assertItemInList(name, { exact: true });
 
