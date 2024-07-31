@@ -1,10 +1,10 @@
-export async function waitForPromise<T>(
+export async function waitAfterAction<T>(
 	action: () => Promise<T>,
-	promise: () => Promise<void>,
+	waitAfter: () => Promise<void>,
 ): Promise<T> {
-	const waiting = promise();
+	const promise = waitAfter();
 	const result = await action();
-	await waiting;
+	await promise;
 
 	return result;
 }

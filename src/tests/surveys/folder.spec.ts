@@ -48,11 +48,10 @@ test.describe("Folder", async () => {
 		let folder: FolderResponse;
 		let folderRow: ItemRow;
 
-		test.beforeEach(async ({ apiService, adminAPP }) => {
-			const { items: [{ id: rootFolderId }] } = await apiService.folder.getFolders();
+		test.beforeEach(async ({ apiService, adminAPP, rootFolder }) => {
 			const name: string = getRandomName("FolderAUT");
 			folder = await apiService.folder.createFolder({
-				name, parentFolderId: rootFolderId
+				name, parentFolderId: rootFolder.id
 			});
 			await adminAPP.surveysPage.waitForFoldersResponse();
 

@@ -1,27 +1,11 @@
 import { test } from "@fixtures/testScope.fixture";
-import { getRandomName } from "@helpers/random.helpers";
-import { SurveyResponse } from "@typedefs/api/survey.typedefs";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 
 test.describe("Create questions of all types", async () => {
-	let survey: SurveyResponse;
-	let surveyId: string;
-	let name: string;
 
-	test.beforeEach(async ({ apiService, adminAPP }) => {
-		const { items: [{ id: folderId }] } = await apiService.folder.getFolders();
-		name = getRandomName("SurveyAUT");
-		survey = await apiService.survey.createSurvey({
-			name, folderId
-		});
-
-		surveyId = survey.id;
-		await adminAPP.surveyDetailsPage.visit(surveyId);
+	test.beforeEach(async ({ adminAPP, survey }) => {
+		await adminAPP.surveyDetailsPage.visit(survey.id);
 		await adminAPP.surveyDetailsPage.waitForOpened();
-	});
-
-	test.afterEach(async ({ apiService }) => {
-		await apiService.survey.deleteSurvey({ surveyId });
 	});
 
 	Object.values(QuestionType).forEach((questionType) => {

@@ -1,4 +1,4 @@
-import { waitForPromise } from "@helpers/promise.helpers";
+import { waitAfterAction } from "@helpers/promise.helpers";
 import { expect, Locator, test } from "@playwright/test";
 import { Url, QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { BaseDialog } from "@ui/components/dialogs/baseDialog";
@@ -57,14 +57,14 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 
 		await test.step(`Delete question ${await question.getQuestionText()}`, async () => {
 
-			await waitForPromise(
+			await waitAfterAction(
 				async () => await question.clickDeleteQuestion(),
 				async () => await this.dialog.waitForDialogVisible()
 			);
 
 			await this.dialog.assertDialogHeaderIsCorrect("Delete Question");
 
-			await waitForPromise(
+			await waitAfterAction(
 				async () => await this.dialog.clickSubmitBtn(),
 				async () => await this.dialog.waitForDialogHidden()
 			);
