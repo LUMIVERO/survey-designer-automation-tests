@@ -1,20 +1,15 @@
 import { test } from "@fixtures/testScope.fixture";
+import { waitAfterAction } from "@helpers/promise.helpers";
 import { getRandomName } from "@helpers/random.helpers";
-import { SurveyResponse } from "@typedefs/api/survey.typedefs";
 import { ItemRow } from "@ui/components/tables/surveys/itemRows";
 
 test.describe("Surveys list", async () => {
-	let surveyId: string;
 
 	test.beforeEach(async ({ adminAPP }) => {
 		await adminAPP.surveysPage.visit();
 	});
 
-	test.afterEach(async ({ apiService }) => {
-		await apiService.survey.deleteSurvey({ surveyId });
-	});
-
-	test("User is able to create survey in the root folder", async ({ adminAPP }) => {
+	test("User is able to create survey in the root folder", async ({ adminAPP, apiService }) => {
 		const surveyName: string = getRandomName("SurveyAUT");
 
 		await adminAPP.surveysPage.clickCreateSurveyBtn();
@@ -23,7 +18,7 @@ test.describe("Surveys list", async () => {
 		const surveyCreationTime = new Date();
 		await adminAPP.surveysPage.dialogWithInput.waitForDialogHidden();
 		await adminAPP.surveyDetailsPage.waitForOpened();
-		surveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
+		const surveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
 
 		await adminAPP.surveyDetailsPage.assertSurveyNameCorrect(surveyName);
 		await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs();
@@ -34,24 +29,17 @@ test.describe("Surveys list", async () => {
 		await surveyRow.assertSurveyCreatedAt(surveyCreationTime);
 		await surveyRow.assertCommentCount(0);
 		await surveyRow.assertItemUpdatedAt(surveyCreationTime);
+		await apiService.survey.deleteSurvey({ surveyId });
 	});
 
 	test.describe("Edit survey's name and duplicate the survey", async () => {
-		let survey: SurveyResponse;
 		let surveyRow: ItemRow;
 
-		test.beforeEach(async ({ apiService, adminAPP }) => {
-			const { items: [{ id: folderId }] } = await apiService.folder.getFolders();
-			const name: string = getRandomName("SurveyAUT");
-			survey = await apiService.survey.createSurvey({
-				name, folderId
-			});
-
-			surveyId = survey.id;
+		test.beforeEach(async ({ adminAPP, survey }) => {
 			surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(survey.name);
 		});
 
-		test("User is able to edit survey's name", async ({ adminAPP }) => {
+		test("User is able to edit survey's name", async ({ adminAPP, survey }) => {
 			await adminAPP.surveysPage.waitForFoldersResponse();
 			const { name } = survey;
 			await surveyRow.assertItemNameCorrect(name);
@@ -62,7 +50,7 @@ test.describe("Surveys list", async () => {
 			await surveyRow.assertItemUpdatedAt(surveyUpdatedDate);
 		});
 
-		test("User is able to duplicate the survey", async ({ adminAPP, apiService }) => {
+		test("User is able to duplicate the survey", async ({ adminAPP, apiService, survey }) => {
 			const { name } = survey;
 			const duplicatedSurveyName: string = name + "_copy";
 
@@ -72,9 +60,12 @@ test.describe("Surveys list", async () => {
 			await adminAPP.surveyDetailsPage.waitForOpened();
 			const duplicatedSurveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
 			await adminAPP.surveyDetailsPage.assertSurveyNameCorrect(duplicatedSurveyName);
-			const waitForSurveysPageOpened = adminAPP.surveysPage.waitForOpened({ waitForResponse: true });
-			await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs();
-			await waitForSurveysPageOpened;
+
+			await waitAfterAction(
+				async () => await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs(),
+				async () => await adminAPP.surveysPage.waitForOpened({ waitForResponse: true })
+			);
+
 			await adminAPP.surveysPage.surveysTable.assertItemInList(duplicatedSurveyName);
 			await adminAPP.surveysPage.surveysTable.assertItemInList(name, { exact: true });
 

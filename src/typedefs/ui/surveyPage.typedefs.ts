@@ -8,3 +8,12 @@ export type DuplicateSurveyOptions = {
 	surveyName: string;
 	newSurveyName?: string;
 }
+
+export enum QuestionType {
+	RadioButton = "Radio Button",
+	Slider = "Slider",
+	OpenEnded = "Open-ended",
+	List = "List",
+	Grid = "Grid",
+	Empty = "Empty",
+}
