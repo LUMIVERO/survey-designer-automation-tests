@@ -1,5 +1,4 @@
 import { test } from "@fixtures/testScope.fixture";
-import { waitAfterAction } from "@helpers/promise.helpers";
 import { getRandomName } from "@helpers/random.helpers";
 import { ItemRow } from "@ui/components/tables/surveys/itemRows";
 
@@ -61,10 +60,8 @@ test.describe("Surveys list", async () => {
 			const duplicatedSurveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
 			await adminAPP.surveyDetailsPage.assertSurveyNameCorrect(duplicatedSurveyName);
 
-			await waitAfterAction(
-				async () => await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs(),
-				async () => await adminAPP.surveysPage.waitForOpened({ waitForResponse: true })
-			);
+			await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs();
+			await adminAPP.surveysPage.waitForOpened();
 
 			await adminAPP.surveysPage.surveysTable.assertItemInList(duplicatedSurveyName);
 			await adminAPP.surveysPage.surveysTable.assertItemInList(name, { exact: true });

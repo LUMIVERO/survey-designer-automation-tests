@@ -38,7 +38,6 @@ export default defineConfig({
 	projects: [
 		{ name: "setup", testMatch: /.*\.setup\.ts/ },
 		{
-			retries: 3,
 			name: "chromium",
 			use: {
 				...devices["Desktop Chrome"],
