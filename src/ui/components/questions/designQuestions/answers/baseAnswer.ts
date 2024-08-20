@@ -27,13 +27,13 @@ export abstract class BaseAnswer {
 	}
 
 	async assertAnswerText(text: string = "Option #1"): Promise<void> {
-		await test.step(`Assert question text is "${text}"`, async () => {
+		await test.step(`Assert answer text is "${text}"`, async () => {
 			expect(await this.getAnswerText()).toEqual(text);
 		});
 	}
 
 	async assertAnswerVariableText(text: string = "A_1_Q_1"): Promise<void> {
-		await test.step(`Assert question variable text is "${text}"`, async () => {
+		await test.step(`Assert answer variable text is "${text}"`, async () => {
 			expect(await this.getAnswerVariableText()).toEqual(text);
 		});
 	}

@@ -12,11 +12,11 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	readonly pageContentHeader: Locator = this.page.locator(".page-content-header");
 	readonly chapterContainer: Locator = this.page.locator(".chapter-container");
 	readonly surveyName: Locator = this.pageContentHeader.locator(".title");
-	readonly previewsList: Locator = this.page.locator(".previews-list");
-	readonly questionTypeButtons: Locator = this.previewsList.locator(".question-button-preview");
+	readonly questionTypesList: Locator = this.page.locator(".question-types-list");
+	readonly questionTypeButtons: Locator = this.questionTypesList.locator(".question-button-preview");
 	readonly questions: Locator = this.page.locator(".question-editor");
 	readonly chapterFooter: Locator = this.page.locator(".container-footer");
-	readonly addQuestionBtn: Locator = this.chapterFooter.locator(".qdt-btn-primary");
+	readonly addQuestionBtn: Locator = this.chapterFooter.locator(".question-btn");
 	readonly dialog: BaseDialog = new BaseDialog(this.page);
 
 	async waitForOpened(options?: Url): Promise<void> {
@@ -29,7 +29,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 
 	async clickQuestionTypeButton(questionType: QuestionType): Promise<void> {
 		await test.step(`Click on the ${questionType} question type`, async () => {
-			await this.previewsList.isVisible();
+			await this.questionTypesList.isVisible();
 			await this.questionTypeButtons.filter({ hasText: questionType }).click();
 		});
 	}
