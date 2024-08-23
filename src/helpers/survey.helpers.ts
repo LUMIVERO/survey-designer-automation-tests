@@ -10,6 +10,7 @@ import {
 	GridAnswer,
 	EmptyAnswer
 } from "@ui/components/questions/designQuestions/answers";
+import { HighlightBordersAnswer } from "@ui/components/questions/designQuestions/answers/highlightBordersAnswer";
 
 export function getAnswerType(questionType: QuestionType): new (container: Locator) => BaseAnswer {
 	switch (questionType) {
@@ -25,6 +26,8 @@ export function getAnswerType(questionType: QuestionType): new (container: Locat
 			return GridAnswer;
 		case QuestionType.Empty:
 			return EmptyAnswer;
+		case QuestionType.HighlightBorders:
+			return HighlightBordersAnswer;
 		default:
 			throw new Error(`Unknown question type: ${questionType}`);
 	}

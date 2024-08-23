@@ -16,4 +16,5 @@ export enum QuestionType {
 	List = "List",
 	Grid = "Grid",
 	Empty = "Empty",
+	HighlightBorders = "Highlight Borders",
 }
