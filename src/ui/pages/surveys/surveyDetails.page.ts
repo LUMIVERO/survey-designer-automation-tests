@@ -30,7 +30,8 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	async clickQuestionTypeButton(questionType: QuestionType): Promise<void> {
 		await test.step(`Click on the ${questionType} question type`, async () => {
 			await this.questionTypesList.isVisible();
-			await this.questionTypeButtons.filter({ hasText: questionType }).click();
+
+			this.questionTypeButtons.filter({ hasText: new RegExp(`[^a-zA-Z]. ${questionType}`) }).click();
 		});
 	}
 
