@@ -45,17 +45,20 @@ steps:
       echo "##vso[task.setvariable variable=timestamp]$timestamp"
       echo "Timestamp: $timestamp"
     displayName: 'Generate timestamp'
+    condition: succeededOrFailed()
 
   - script: |
       artifactName="playwright-report-$(Build.BuildId)-$(timestamp)"
       echo "##vso[task.setvariable variable=artifactName]$artifactName"
       echo "Artifact name: $artifactName"
     displayName: 'Set artifact name'
+    condition: succeededOrFailed()
+
 
   - task: PublishPipelineArtifact@1
     condition: succeededOrFailed()
     inputs:
       targetPath: playwright-report
-      artifact: '$artifactName'
+      artifact: '$(artifactName)'
       publishLocation: 'pipeline'
     displayName: 'Publish Playwright report'
