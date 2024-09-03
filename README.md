@@ -22,10 +22,11 @@ Follow these steps to get the project up and running on your local machine:
 
 2. Add the `BASE_URL` and user credentials to the `.env` file:
     ```env
-    BASE_URL='https://qdtstaging.dooblo.net'
+    BASE_URL='https://staging.stg.qllaborate.com'
     USERNAME='your-username'
     PASSWORD='your-password'
     TENANT='your-tenant'
+    AZURE_TOKEN='your-azure-token'
     ```
 
 ## Software Dependencies

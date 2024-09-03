@@ -1,4 +1,5 @@
 import { test } from "@fixtures/testScope.fixture";
+import { getQuestionTestCaseId } from "@helpers/survey.helpers";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 
 test.describe("Create questions of all types", async () => {
@@ -9,7 +10,7 @@ test.describe("Create questions of all types", async () => {
 	});
 
 	Object.values(QuestionType).forEach((questionType) => {
-		test(`User is able to create & delete ${questionType} question type in the root chapter`, async ({ adminAPP }) => {
+		test(`[${getQuestionTestCaseId(questionType)}] User is able to create & delete ${questionType} question type in the root chapter`, async ({ adminAPP }) => {
 			await adminAPP.surveyDetailsPage.clickAddQuestionBtn();
 			await adminAPP.surveyDetailsPage.clickQuestionTypeButton(questionType);
 			const question = adminAPP.surveyDetailsPage.getFirstQuestion(questionType);

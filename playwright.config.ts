@@ -1,5 +1,5 @@
+import { AzureReporterOptions } from "@alex_neo/playwright-azure-reporter/dist/playwright-azure-reporter";
 import { defineConfig, devices } from "@playwright/test";
-import { AzureReporterOptions } from '@alex_neo/playwright-azure-reporter/dist/playwright-azure-reporter';
 import * as process from "node:process";
 
 
@@ -28,23 +28,22 @@ export default defineConfig({
 		["html", { open: "never" }],
 		["allure-playwright"],
 		[
-			'@alex_neo/playwright-azure-reporter',
+			"@alex_neo/playwright-azure-reporter",
 			{
-				orgUrl: 'https://dev.azure.com/Dooblo',
+				orgUrl: "https://dev.azure.com/Dooblo",
 				token: process.env.AZURE_TOKEN,
 				planId: 48439,
-				projectName: 'Survey Designer',
-				environment: 'AQA',
-				logging: true,
-				testRunTitle: 'Playwright Test Run',
-				publishTestResultsMode: 'testRun',
+				projectName: "Survey Designer",
+				environment: "AQA",
+				testRunTitle: "Playwright Test Run",
+				publishTestResultsMode: "testRun",
 				uploadAttachments: true,
-				attachmentsType: ['screenshot', 'video', 'trace'],
+				attachmentsType: ["screenshot", "video", "trace"],
 				testRunConfig: {
 					owner: {
-						displayName: 'Marina Bidenko',
+						displayName: "Marina Bidenko",
 					},
-					comment: 'Playwright Test Run',
+					comment: "Playwright Test Run",
 					configurationIds: [7],
 				},
 			} as AzureReporterOptions,

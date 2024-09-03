@@ -9,7 +9,8 @@ import {
 	ListAnswer,
 	GridAnswer,
 	EmptyAnswer,
-	HighlightBordersAnswer, AutoCompleteList
+	HighlightBordersAnswer,
+	AutoCompleteList
 } from "@ui/components/questions/designQuestions/answers";
 
 export function getAnswerType(questionType: QuestionType): new (container: Locator) => BaseAnswer {
@@ -30,6 +31,29 @@ export function getAnswerType(questionType: QuestionType): new (container: Locat
 			return HighlightBordersAnswer;
 		case QuestionType.AutocompleteList:
 			return AutoCompleteList;
+		default:
+			throw new Error(`Unknown question type: ${questionType}`);
+	}
+}
+
+export function getQuestionTestCaseId(questionType: QuestionType): number {
+	switch (questionType) {
+		case QuestionType.RadioButton:
+			return 48450;
+		case QuestionType.Slider:
+			return 49511;
+		case QuestionType.OpenEnded:
+			return 49512;
+		case QuestionType.List:
+			return 49510;
+		case QuestionType.Grid:
+			return 49513;
+		case QuestionType.Empty:
+			return 49514;
+		case QuestionType.HighlightBorders:
+			return 49515;
+		case QuestionType.AutocompleteList:
+			return 49516;
 		default:
 			throw new Error(`Unknown question type: ${questionType}`);
 	}

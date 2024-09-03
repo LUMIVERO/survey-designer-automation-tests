@@ -20,7 +20,7 @@ steps:
     displayName: 'Install Playwright browsers'
 
   - script: |
-      echo BASE_URL='https://qdtstaging.dooblo.net' >> .env
+      echo BASE_URL='https://staging.stg.qllaborate.com' >> .env
       echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
       echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
       echo TENANT1='$(TENANT1)' >> .env
