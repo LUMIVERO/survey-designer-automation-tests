@@ -33,20 +33,20 @@ export default defineConfig({
 				orgUrl: 'https://dev.azure.com/Dooblo',
 				token: process.env.AZURE_TOKEN,
 				planId: 48439,
-				projectName: 'Survey%20Designer',
+				projectName: 'Survey Designer',
 				environment: 'AQA',
 				logging: true,
 				testRunTitle: 'Playwright Test Run',
 				publishTestResultsMode: 'testRun',
 				uploadAttachments: true,
 				attachmentsType: ['screenshot', 'video', 'trace'],
-				// testRunConfig: {
-				// 	owner: {
-				// 		displayName: 'Marina Bidenko',
-				// 	},
-				// 	comment: 'Playwright Test Run',
-				// 	configurationIds: [7],
-				// },
+				testRunConfig: {
+					owner: {
+						displayName: 'Marina Bidenko',
+					},
+					comment: 'Playwright Test Run',
+					configurationIds: [7],
+				},
 			} as AzureReporterOptions,
 		],
 	],
