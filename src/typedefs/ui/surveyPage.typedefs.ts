@@ -17,5 +17,5 @@ export enum QuestionType {
 	Grid = "Grid",
 	Empty = "Empty",
 	HighlightBorders = "Highlight Borders",
-	AutocompleteList = "Autocomplete list",
+	// AutocompleteList = "Autocomplete List",
 }

@@ -31,6 +31,13 @@ steps:
 
   - task: PublishAllureReport@1
     condition: succeededOrFailed()
+    inputs:
+      searchFolder: 'allure-results'
+      testResultsFormat: 'allure'
+      testResultsFiles: '*-result.json'
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+      testRunTitle: 'My End-To-End Tests'
     displayName: "Publish Allure report"
 
   - script: |
@@ -48,6 +55,7 @@ steps:
   - task: PublishPipelineArtifact@1
     condition: succeededOrFailed()
     inputs:
-      targetPath: 'playwright-report'
+      targetPath: playwright-report
       artifact: '$(artifactName)'
+      publishLocation: 'pipeline'
     displayName: 'Publish Playwright report'
