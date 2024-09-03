@@ -24,6 +24,7 @@ steps:
       echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
       echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
       echo TENANT1='$(TENANT1)' >> .env
+      echo AZURE_TOKEN='$(AZURE_TOKEN)' >> .env
     displayName: 'Create .env file'
 
   - script: npm run chromium
