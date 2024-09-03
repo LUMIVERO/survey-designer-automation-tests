@@ -55,7 +55,7 @@ steps:
   - task: PublishPipelineArtifact@1
     condition: succeededOrFailed()
     inputs:
-      targetPath: 'allure-report'
-      artifact: 'allure-report'
+      targetPath: playwright-report
+      artifact: '$artifactName'
       publishLocation: 'pipeline'
     displayName: 'Publish Playwright report'
