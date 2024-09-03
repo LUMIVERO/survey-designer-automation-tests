@@ -1,5 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 import { AzureReporterOptions } from '@alex_neo/playwright-azure-reporter/dist/playwright-azure-reporter';
+import * as process from "node:process";
 
 
 /**
@@ -39,13 +40,13 @@ export default defineConfig({
 				publishTestResultsMode: 'testRun',
 				uploadAttachments: true,
 				attachmentsType: ['screenshot', 'video', 'trace'],
-				testRunConfig: {
-					owner: {
-						displayName: 'Marina Bidenko',
-					},
-					comment: 'Playwright Test Run',
-					configurationIds: [7],
-				},
+				// testRunConfig: {
+				// 	owner: {
+				// 		displayName: 'Marina Bidenko',
+				// 	},
+				// 	comment: 'Playwright Test Run',
+				// 	configurationIds: [7],
+				// },
 			} as AzureReporterOptions,
 		],
 	],
