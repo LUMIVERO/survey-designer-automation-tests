@@ -19,7 +19,7 @@ test.describe("Folder", async () => {
 		skipDelete = false;
 	});
 
-	test("User is able to create folder in the root folder", async ({ adminAPP }) => {
+	test("[48443] User is able to create folder in the root folder", async ({ adminAPP }) => {
 		const folderName: string = getRandomName("FolderAUT");
 
 		await adminAPP.surveysPage.clickCreateFolderBtn();
