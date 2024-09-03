@@ -56,6 +56,6 @@ steps:
     condition: succeededOrFailed()
     inputs:
       targetPath: 'allure-report'
-      artifact: '$(artifactName)'
+      artifact: 'allure-report'
       publishLocation: 'pipeline'
     displayName: 'Publish Playwright report'
