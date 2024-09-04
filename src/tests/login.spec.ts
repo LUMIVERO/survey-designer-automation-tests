@@ -11,7 +11,7 @@ test.describe("Authentication", () => {
 		APP = new Application(page);
 	});
 
-	test("User is able to log in and log out", async () => {
+	test("[48442] User is able to log in and log out", async () => {
 		const username: string = process.env.USERNAME_ADMIN;
 		await APP.loginPage.visit();
 		await APP.loginPage.login({

@@ -1,4 +1,7 @@
+import { AzureReporterOptions } from "@alex_neo/playwright-azure-reporter/dist/playwright-azure-reporter";
 import { defineConfig, devices } from "@playwright/test";
+import * as process from "node:process";
+
 
 /**
  * Read environment variables from file.
@@ -23,7 +26,28 @@ export default defineConfig({
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: [
 		["html", { open: "never" }],
-		["allure-playwright"]
+		["allure-playwright"],
+		[
+			"@alex_neo/playwright-azure-reporter",
+			{
+				orgUrl: "https://dev.azure.com/Dooblo",
+				token: process.env.AZURE_TOKEN,
+				planId: 48439,
+				projectName: "Survey Designer",
+				environment: "AQA",
+				testRunTitle: "Playwright Test Run",
+				publishTestResultsMode: "testRun",
+				uploadAttachments: true,
+				attachmentsType: ["screenshot", "video", "trace"],
+				testRunConfig: {
+					owner: {
+						displayName: "Marina Bidenko",
+					},
+					comment: "Playwright Test Run",
+					configurationIds: [7],
+				},
+			} as AzureReporterOptions,
+		],
 	],
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
@@ -38,7 +62,6 @@ export default defineConfig({
 	projects: [
 		{ name: "setup", testMatch: /.*\.setup\.ts/ },
 		{
-			retries: 3,
 			name: "chromium",
 			use: {
 				...devices["Desktop Chrome"],

@@ -1,4 +1,5 @@
-import { Locator, test } from "@playwright/test";
+import { waitAfterAction } from "@helpers/promise.helpers";
+import { Locator, test, expect } from "@playwright/test";
 import { DeleteFolderOptions } from "@typedefs/ui/folder.typedefs";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
@@ -51,10 +52,10 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 			const { surveyName, newSurveyName } = options;
 			const surveyRow = await this.surveysTable.getRowByName(surveyName);
 
-			const waitForPopover = this.waitForPopover();
-			await surveyRow.actionsMenu.click();
-			await waitForPopover;
-			await this.clickPopoverDuplicateBtn();
+			await expect(async () => {
+				await surveyRow.actionsMenu.click();
+				await this.clickPopoverDuplicateBtn();
+			}).toPass();
 
 			await this.dialogWithInput.asserInputDataIsCorrect(surveyName + "_copy");
 			newSurveyName && await this.dialogWithInput.fillItemName(newSurveyName);
@@ -68,11 +69,15 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 			const folderRow = await this.surveysTable.getRowByName(name);
 			await folderRow.actionsMenu.click();
 			await this.waitForPopover();
-			await this.clickPopoverDeleteBtn();
-			await this.page.waitForResponse((response) => {
-				return response.request().method() === "DELETE"
-					&& new RegExp(foldersUrl.folder).test(response.url());
-			});
+			await waitAfterAction(
+				async () => await this.clickPopoverDeleteBtn(),
+				async () => {
+					await this.page.waitForResponse((response) => {
+						return response.request().method() === "DELETE"
+							&& new RegExp(foldersUrl.folder).test(response.url());
+					});
+				}
+			);
 		});
 	}
 

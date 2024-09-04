@@ -1,31 +1,71 @@
+import { ApiApplication } from "@api/apiApplication";
 import { Locator } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import {
-  RadioAnswer,
-  SliderAnswer,
-  BaseAnswer,
-  OpenEndedAnswer,
-  ListAnswer,
-  GridAnswer,
-  EmptyAnswer
+	RadioAnswer,
+	SliderAnswer,
+	BaseAnswer,
+	OpenEndedAnswer,
+	ListAnswer,
+	GridAnswer,
+	EmptyAnswer,
+	HighlightBordersAnswer,
+	AutoCompleteList
 } from "@ui/components/questions/designQuestions/answers";
-
 
 export function getAnswerType(questionType: QuestionType): new (container: Locator) => BaseAnswer {
 	switch (questionType) {
-    case QuestionType.RadioButton:
-      return RadioAnswer;
-    case QuestionType.Slider:
-      return SliderAnswer;
-    case QuestionType.OpenEnded:
-      return OpenEndedAnswer;
-    case QuestionType.List:
-      return ListAnswer;
-    case QuestionType.Grid:
-      return GridAnswer;
-    case QuestionType.Empty:
-      return EmptyAnswer;
-    default:
-      throw new Error(`Unknown question type: ${questionType}`);
-  }
+		case QuestionType.RadioButton:
+			return RadioAnswer;
+		case QuestionType.Slider:
+			return SliderAnswer;
+		case QuestionType.OpenEnded:
+			return OpenEndedAnswer;
+		case QuestionType.List:
+			return ListAnswer;
+		case QuestionType.Grid:
+			return GridAnswer;
+		case QuestionType.Empty:
+			return EmptyAnswer;
+		case QuestionType.HighlightBorders:
+			return HighlightBordersAnswer;
+		case QuestionType.AutocompleteList:
+			return AutoCompleteList;
+		default:
+			throw new Error(`Unknown question type: ${questionType}`);
+	}
+}
+
+export function getQuestionTestCaseId(questionType: QuestionType): number {
+	switch (questionType) {
+		case QuestionType.RadioButton:
+			return 48450;
+		case QuestionType.Slider:
+			return 49511;
+		case QuestionType.OpenEnded:
+			return 49512;
+		case QuestionType.List:
+			return 49510;
+		case QuestionType.Grid:
+			return 49513;
+		case QuestionType.Empty:
+			return 49514;
+		case QuestionType.HighlightBorders:
+			return 49515;
+		case QuestionType.AutocompleteList:
+			return 49516;
+		default:
+			throw new Error(`Unknown question type: ${questionType}`);
+	}
+}
+
+export async function deleteSurveysByName(apiService: ApiApplication, pattern: string = "SurveyAUT-") {
+	const { items: [{ surveys }] } = await apiService.folder.getFolders();
+
+	await Promise.all(surveys.map(async survey => {
+			if (survey.name.startsWith(pattern)) {
+				return await apiService.survey.deleteSurvey({ surveyId: survey.id });
+			}
+		}
+	));
 }

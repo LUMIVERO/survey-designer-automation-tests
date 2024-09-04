@@ -19,7 +19,7 @@ test.describe("Folder", async () => {
 		skipDelete = false;
 	});
 
-	test("User is able to create folder in the root folder", async ({ adminAPP }) => {
+	test("[48443] User is able to create folder in the root folder and open it", async ({ adminAPP }) => {
 		const folderName: string = getRandomName("FolderAUT");
 
 		await adminAPP.surveysPage.clickCreateFolderBtn();
@@ -44,7 +44,7 @@ test.describe("Folder", async () => {
 		await folderRow.assertSurveyCountInFolder(0);
 	});
 
-	test.describe("Edit folder's name and delete the folder", async () => {
+	test.describe("Rename and delete folder", async () => {
 		let folder: FolderResponse;
 		let folderRow: ItemRow;
 
@@ -60,7 +60,7 @@ test.describe("Folder", async () => {
 			folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(name);
 		});
 
-		test("User is able to edit folder's name", async () => {
+		test("[48446] User is able to rename the folder", async () => {
 			const { name } = folder;
 			await folderRow.assertItemNameCorrect(name);
 			const newFolderName: string = "Renamed-" + name;
@@ -70,7 +70,7 @@ test.describe("Folder", async () => {
 			await folderRow.assertItemUpdatedAt(folderUpdatedDate);
 		});
 
-		test("User is able to delete folder without surveys", async ({ adminAPP, apiService }) => {
+		test("[48880] User is able to delete folder without surveys", async ({ adminAPP, apiService }) => {
 			skipDelete = true;
 			const subFolder = await apiService.folder.createFolder({
 				name: "SubFolderAUT", parentFolderId: folderId
@@ -82,7 +82,7 @@ test.describe("Folder", async () => {
 			await apiService.folder.assertFolderWasDeleted(subFolder.id);
 		});
 
-		test("User is not able to delete folder with surveys", async ({ apiService, adminAPP }) => {
+		test("[49509] User is not able to delete folder with surveys", async ({ apiService, adminAPP }) => {
 			const survey = await apiService.survey.createSurvey({
 				name: "SurveyAUT", folderId
 			});

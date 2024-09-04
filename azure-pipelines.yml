@@ -20,10 +20,11 @@ steps:
     displayName: 'Install Playwright browsers'
 
   - script: |
-      echo BASE_URL='https://qdtstaging.dooblo.net' >> .env
+      echo BASE_URL='https://staging.stg.qllaborate.com' >> .env
       echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
       echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
       echo TENANT1='$(TENANT1)' >> .env
+      echo AZURE_TOKEN='$(AZURE_TOKEN)' >> .env
     displayName: 'Create .env file'
 
   - script: npm run chromium
@@ -31,6 +32,13 @@ steps:
 
   - task: PublishAllureReport@1
     condition: succeededOrFailed()
+    inputs:
+      searchFolder: 'allure-results'
+      testResultsFormat: 'allure'
+      testResultsFiles: '*-result.json'
+      mergeTestResults: true
+      failTaskOnFailedTests: true
+      testRunTitle: 'My End-To-End Tests'
     displayName: "Publish Allure report"
 
   - script: |
@@ -38,16 +46,20 @@ steps:
       echo "##vso[task.setvariable variable=timestamp]$timestamp"
       echo "Timestamp: $timestamp"
     displayName: 'Generate timestamp'
+    condition: succeededOrFailed()
 
   - script: |
       artifactName="playwright-report-$(Build.BuildId)-$(timestamp)"
       echo "##vso[task.setvariable variable=artifactName]$artifactName"
       echo "Artifact name: $artifactName"
     displayName: 'Set artifact name'
+    condition: succeededOrFailed()
+
 
   - task: PublishPipelineArtifact@1
     condition: succeededOrFailed()
     inputs:
-      targetPath: 'playwright-report'
+      targetPath: playwright-report
       artifact: '$(artifactName)'
+      publishLocation: 'pipeline'
     displayName: 'Publish Playwright report'
