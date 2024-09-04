@@ -51,7 +51,7 @@ test.describe("Surveys list", async () => {
 			await surveyRow.assertItemUpdatedAt(surveyUpdatedDate);
 		});
 
-		test.only("[48447] User is able to duplicate the survey", async ({ adminAPP, apiService, survey }) => {
+		test("[48447] User is able to duplicate the survey", async ({ adminAPP, apiService, survey }) => {
 			const { name } = survey;
 			const duplicatedSurveyName: string = name + "_copy";
 
