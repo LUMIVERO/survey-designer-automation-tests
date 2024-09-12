@@ -51,31 +51,31 @@ test.describe("Surveys list", async () => {
 			await surveyRow.assertItemUpdatedAt(surveyUpdatedDate);
 		});
 
+		//TODO: add questions and chapters to the original survey + assert these items are duplicated with the new survey
 		test("[48447] User is able to duplicate the survey", async ({ adminAPP, apiService, survey }) => {
 			const { name } = survey;
 			const duplicatedSurveyName: string = name + "_copy";
 
 			await surveyRow.assertItemNameCorrect(name);
 			await adminAPP.surveysPage.duplicateSurvey({ surveyName: name });
+			await adminAPP.surveysPage.dialogWithInput.waitForDialogHidden();
+			await adminAPP.surveysPage.surveysTable.assertItemInList(name, { exact: true });
+			await adminAPP.surveysPage.surveysTable.assertItemInList(duplicatedSurveyName);
+
+			const duplicatedSurveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(duplicatedSurveyName);
+			await duplicatedSurveyRow.click();
 			await adminAPP.surveyDetailsPage.waitForOpened();
 			const duplicatedSurveyId = await adminAPP.surveyDetailsPage.getIdFromPageUrl();
 
 			try {
 				await adminAPP.surveyDetailsPage.assertSurveyNameCorrect(duplicatedSurveyName);
-
 				await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs();
 				await adminAPP.surveysPage.waitForOpened();
-
-				await adminAPP.surveysPage.reload(); //TODO: remove when surveys list update is fixed
-
-				await adminAPP.surveysPage.surveysTable.assertItemInList(name, { exact: true });
-				await adminAPP.surveysPage.surveysTable.assertItemInList(duplicatedSurveyName);
 			} catch (e) {
 				throw e;
 			} finally {
 				await apiService.survey.deleteSurvey({ surveyId: duplicatedSurveyId });
 			}
-
 		});
 	});
 });
