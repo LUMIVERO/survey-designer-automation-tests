@@ -50,7 +50,10 @@ export class Folder {
 	): Promise<FolderResponse> {
 
 		const response = await this.request.post(foldersUrl.folders, {
-			data: options
+			data: {
+				...options,
+				index: 0,
+			}
 		});
 
 		await raiseForStatus(response);

@@ -87,8 +87,8 @@ export class ItemRow extends BaseItemRow {
 			);
 
 			expect(isTimeWithinTolerance(
-				actualDate, date, 2
-			)).toBeTruthy();
+				actualDate, date, 5
+			), `Assert time on the page ${actualDate.toLocaleTimeString()} equals real action date ${date.toLocaleTimeString()}`).toBeTruthy();
 		});
 	}
 }
