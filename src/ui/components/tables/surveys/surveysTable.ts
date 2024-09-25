@@ -1,4 +1,5 @@
 import { expect, Locator, Page, test } from "@playwright/test";
+import { AssertIsVisible } from "@typedefs/playwright/expect.typedefs";
 import { HeaderRow, ItemRow } from "src/ui/components/tables/surveys/itemRows";
 
 export class SurveysTable {
@@ -10,9 +11,9 @@ export class SurveysTable {
 	constructor(readonly page: Page) {
 	}
 
-	async assertItemInList(name: string, options?: { exact?: boolean }): Promise<void> {
+	async assertItemInList(name: string, options?: { exact?: boolean } & AssertIsVisible): Promise<void> {
 		await test.step(`Assert item '${name}' is displayed in the survey list`, async () => {
-			await expect(this.rows.getByTitle(name, options)).toBeVisible();
+			await expect(this.rows.getByTitle(name, options)).toBeVisible(options);
 		});
 	}
 

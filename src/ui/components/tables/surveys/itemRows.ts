@@ -10,15 +10,15 @@ export class BaseItemRow {
 	readonly nameInput: Locator = this.name.locator("input");
 	readonly timestamp: Locator = this.rowContainer.locator(".time-stamp");
 	readonly comments: Locator = this.rowContainer.locator(".comments");
-	readonly actionsMenu: Locator = this.rowContainer.locator(".actions-menu>i");
+	readonly actionsMenu: Locator = this.rowContainer.locator(".actions-menu i");
 
 	constructor(readonly rowContainer: Locator) {
 		this.page = rowContainer.page();
 	}
 
-	async click() {
+	async click(): Promise<void> {
 		await test.step("Click on item row", async () => {
-			await this.rowContainer.click();
+			await this.itemType.click();
 		});
 	}
 }

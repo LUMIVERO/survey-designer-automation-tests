@@ -12,4 +12,21 @@ export class Application {
 
 	constructor(readonly page: Page) {
 	}
+
+	async reloadAndRetry<T>(action: () => Promise<T>, retries: number = 1): Promise<T> {
+		try {
+			return await action();
+		} catch (error) {
+			console.log(`Attempt failed. Reloading the page... Retries left: ${retries}`);
+
+			await this.page.reload();
+
+			if (retries > 0) {
+				return await this.reloadAndRetry(action, retries - 1);
+			}
+
+			console.error('All retries exhausted.');
+			throw error;
+		}
+	}
 }

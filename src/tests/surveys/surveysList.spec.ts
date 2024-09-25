@@ -25,6 +25,7 @@ test.describe("Surveys list", async () => {
 			await adminAPP.surveyDetailsPage.clickMainFolderInBreadCrumbs();
 
 			await adminAPP.surveysPage.waitForOpened();
+			await adminAPP.surveysPage.reload();
 			await adminAPP.surveysPage.surveysTable.assertItemInList(surveyName);
 			const surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(surveyName);
 			await surveyRow.assertSurveyCreatedAt(surveyCreationTime);

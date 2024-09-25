@@ -2,6 +2,7 @@ import { waitAfterAction } from "@helpers/promise.helpers";
 import { Locator, test, expect } from "@playwright/test";
 import { DeleteFolderOptions } from "@typedefs/ui/folder.typedefs";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
+import { ActionMenu } from "@ui/components/actionMenu";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
 import { foldersUrl } from "src/constants/urls/apiUrls";
@@ -14,8 +15,8 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 	readonly createFolderBtn: Locator = this.page.locator(".qdt-btn-primary-outlined", { hasText: "New Folder" });
 	readonly dialogWithInput: DialogWithInput = new DialogWithInput(this.page);
 	readonly surveysTable: SurveysTable = new SurveysTable(this.page);
-	readonly actionMenuPopover: Locator = this.page.locator(".k-popover-body");
-	readonly popoverActionBtn: Locator = this.actionMenuPopover.locator("button");
+	readonly actionMenu: ActionMenu = new ActionMenu(this.page);
+
 
 	async clickCreateSurveyBtn(): Promise<void> {
 		await test.step("Click [New Survey] button and assert it is opened", async () => {
@@ -35,7 +36,7 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 
 	async clickPopoverDuplicateBtn(): Promise<void> {
 		await test.step(`Click duplicate button`, async () => {
-			await this.popoverActionBtn.filter({ has: this.page.locator(":visible") }).click();
+			await this.actionMenu.clickDuplicateButton();
 			await this.dialogWithInput.waitForDialogVisible();
 			await this.dialogWithInput.assertDialogHeaderIsCorrect("Duplicate survey");
 		});
@@ -43,7 +44,7 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 
 	async clickPopoverDeleteBtn(): Promise<void> {
 		await test.step(`Click delete button`, async () => {
-			await this.popoverActionBtn.filter({ has: this.page.locator(":visible") }).click();
+			await this.actionMenu.clickDeleteButton();
 		});
 	}
 
@@ -68,7 +69,7 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 		await test.step("Delete folder", async () => {
 			const folderRow = await this.surveysTable.getRowByName(name);
 			await folderRow.actionsMenu.click();
-			await this.waitForPopover();
+			await this.actionMenu.waitFor();
 			await waitAfterAction(
 				async () => await this.clickPopoverDeleteBtn(),
 				async () => {
@@ -92,12 +93,6 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 	async waitForFoldersResponse(): Promise<void> {
 		await test.step("Wait for folders", async () => {
 			await this.page.waitForResponse(new RegExp(foldersUrl.folder));
-		});
-	}
-
-	async waitForPopover(): Promise<void> {
-		await test.step("Wait for action menu popover", async () => {
-			await this.actionMenuPopover.waitFor({ state: "visible" });
 		});
 	}
 }

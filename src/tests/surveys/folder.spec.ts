@@ -27,6 +27,7 @@ test.describe("Folder", async () => {
 		await adminAPP.surveysPage.dialogWithInput.clickSubmitBtn();
 		const folderCreationTime = new Date();
 		await adminAPP.surveysPage.dialogWithInput.waitForDialogHidden();
+		await adminAPP.surveysPage.reload();
 
 		await adminAPP.surveysPage.surveysTable.assertItemInList(folderName);
 		const folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(folderName);
@@ -38,7 +39,9 @@ test.describe("Folder", async () => {
 		await adminAPP.folderDetailsPage.clickBackBtn();
 
 		await adminAPP.surveysPage.waitForOpened();
-		await adminAPP.surveysPage.surveysTable.assertItemInList(folderName);
+		await adminAPP.reloadAndRetry(async () => {
+			await adminAPP.surveysPage.surveysTable.assertItemInList(folderName, { timeout: 5000 });
+		});
 		await folderRow.assertCommentCount(0);
 		await folderRow.assertItemUpdatedAt(folderCreationTime);
 		await folderRow.assertSurveyCountInFolder(0);

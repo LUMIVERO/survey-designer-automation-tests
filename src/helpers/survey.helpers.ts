@@ -69,3 +69,14 @@ export async function deleteSurveysByName(apiService: ApiApplication, pattern: s
 		}
 	));
 }
+
+export async function deleteFoldersByName(apiService: ApiApplication, pattern: string = "FolderAUT-") {
+	const { items: [{ childFolders: folders }] } = await apiService.folder.getFolders();
+
+	await Promise.all(folders.map(async folder => {
+			if (folder.name.startsWith(pattern)) {
+				return await apiService.folder.deleteFolder({ folderId: folder.id });
+			}
+		}
+	));
+}
