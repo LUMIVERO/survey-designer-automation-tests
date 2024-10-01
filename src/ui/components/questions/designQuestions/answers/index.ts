@@ -7,3 +7,4 @@ export { RadioAnswer } from "./radioAnswer";
 export { SliderAnswer } from "./sliderAnswer";
 export { HighlightBordersAnswer } from "./highlightBordersAnswer";
 export { AutoCompleteList } from "./autoCompleteList";
+export { StarBarAnswer } from "./starBarAnswer";

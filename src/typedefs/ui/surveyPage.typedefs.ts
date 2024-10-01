@@ -18,4 +18,5 @@ export enum QuestionType {
 	Empty = "Empty",
 	HighlightBorders = "Highlight Borders",
 	AutocompleteList = "Autocomplete List",
+	StarBar = "Star bar",
 }

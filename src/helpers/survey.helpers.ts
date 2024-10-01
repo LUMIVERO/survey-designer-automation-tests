@@ -10,7 +10,8 @@ import {
 	GridAnswer,
 	EmptyAnswer,
 	HighlightBordersAnswer,
-	AutoCompleteList
+	AutoCompleteList,
+	StarBarAnswer
 } from "@ui/components/questions/designQuestions/answers";
 
 export function getAnswerType(questionType: QuestionType): new (container: Locator) => BaseAnswer {
@@ -31,6 +32,8 @@ export function getAnswerType(questionType: QuestionType): new (container: Locat
 			return HighlightBordersAnswer;
 		case QuestionType.AutocompleteList:
 			return AutoCompleteList;
+		case QuestionType.StarBar:
+			return StarBarAnswer;
 		default:
 			throw new Error(`Unknown question type: ${questionType}`);
 	}
@@ -54,6 +57,8 @@ export function getQuestionTestCaseId(questionType: QuestionType): number {
 			return 49515;
 		case QuestionType.AutocompleteList:
 			return 49516;
+		case QuestionType.StarBar:
+			return 49672;
 		default:
 			throw new Error(`Unknown question type: ${questionType}`);
 	}
