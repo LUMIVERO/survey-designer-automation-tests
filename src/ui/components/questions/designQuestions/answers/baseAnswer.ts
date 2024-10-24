@@ -6,8 +6,8 @@ export abstract class BaseAnswer {
 	abstract assertInputType(): Promise<void>;
 
 	readonly page: Page;
-	readonly answerVariable: Locator = this.container.getByPlaceholder("Variable name");
-	readonly answerTextInput: Locator = this.container.locator(".answer-text input");
+	readonly answerVariable: Locator = this.container.locator(".var-name");
+	readonly answerTextInput: Locator = this.container.locator(".answer-text");
 	readonly deleteAnswerBtn: Locator = this.container.locator(".answer-text button");
 
 	constructor(protected container: Locator) {
@@ -15,11 +15,11 @@ export abstract class BaseAnswer {
 	}
 
 	async getAnswerVariableText(): Promise<string> {
-		return await this.answerVariable.inputValue();
+		return await this.answerVariable.innerText();
 	}
 
 	async getAnswerText(): Promise<string> {
-		return await this.answerTextInput.inputValue();
+		return await this.answerTextInput.innerText();
 	}
 
 	async deleteAnswer(): Promise<void> {

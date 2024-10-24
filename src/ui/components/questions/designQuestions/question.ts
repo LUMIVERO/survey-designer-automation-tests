@@ -6,15 +6,16 @@ import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/bas
 export class Question {
 	readonly page: Page;
 	readonly AnswerType: new (container: Locator) => BaseAnswer;
-	readonly questionVariable: Locator = this.container.getByPlaceholder("Question Variable Name");
+	readonly questionVariable: Locator = this.container.locator(".question-editor-header .var-name");
 	readonly questionTypeText: Locator = this.container.getByTitle("Question type");
-	readonly questionTextArea: Locator = this.container.locator(".question-text textarea");
+	readonly questionTextArea: Locator = this.container.locator(".question-text");
 	readonly addAnswerBtn: Locator = this.container.locator(".answers .button");
 	readonly saveToQBankBtn: Locator = this.container.locator(".actions input");
 	readonly commentsBtn: Locator = this.container.locator(".comments button");
 	readonly commentsCount: Locator = this.container.locator(".comments-count");
 	readonly instructionBnt: Locator = this.container.getByTitle("Instructions");
 	readonly actionsBtn: Locator = this.container.locator(".question-editor-header button");
+	readonly deleteButton: Locator = this.container.locator(".dropdown-list-option");
 
 	readonly deleteBtn = async (): Promise<Locator> => {
 		const actionOptions = this.page.locator(
@@ -44,20 +45,19 @@ export class Question {
 	}
 
 	async getQuestionText(): Promise<string> {
-		return await this.questionTextArea.inputValue();
+		return await this.questionTextArea.innerText();
 	}
 
 	async getQuestionVariableText(): Promise<string> {
-		return await this.questionVariable.inputValue();
+		return await this.questionVariable.innerText();
 	}
 
 	async clickDeleteQuestion(): Promise<void> {
 		await test.step("Delete question", async () => {
 			await this.actionsBtn.click();
 
-			const deleteBtn = await this.deleteBtn();
-			await deleteBtn.waitFor({ state: "visible" });
-			await deleteBtn.click();
+			await this.deleteButton.waitFor({ state: "visible" });
+			await this.deleteButton.click();
 		});
 	}
 

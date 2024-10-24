@@ -11,11 +11,11 @@ export class GridAnswer extends BaseAnswer {
 	}
 
 	async getAnswerVariableText(): Promise<string> {
-		return await this.answerVariable.first().inputValue();
+		return await this.answerVariable.first().innerText();
 	}
 
 	async getAnswerText(): Promise<string> {
-		return await this.answerTextInput.first().inputValue();
+		return await this.answerTextInput.first().innerText();
 	}
 
 	async assertInputType(): Promise<void> {

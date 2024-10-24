@@ -3,7 +3,7 @@ import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/bas
 
 export class StarBarAnswer extends BaseAnswer {
 	readonly input: Locator = this.container.locator(".answer-stars");
-	readonly answerTextInput: Locator = this.container.locator(".topic-text input");
+	readonly answerTextInput: Locator = this.container.locator(".topic-text");
 
 	constructor(container: Locator) {
 		super(container.page().locator(".topic-item").first());

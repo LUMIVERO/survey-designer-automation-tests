@@ -1,5 +1,6 @@
 import { test } from "@fixtures/testScope.fixture";
 import { getQuestionTestCaseId } from "@helpers/survey.helpers";
+import { expect } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 
 test.describe("Create questions of all types", async () => {
@@ -11,10 +12,20 @@ test.describe("Create questions of all types", async () => {
 
 	Object.values(QuestionType).forEach((questionType) => {
 		test(`[${getQuestionTestCaseId(questionType)}] User is able to create & delete ${questionType} question type in the root chapter`, async ({ adminAPP }) => {
-			await adminAPP.surveyDetailsPage.clickAddQuestionBtn();
+			const { surveyDetailsPage } = adminAPP;
+			await surveyDetailsPage.clickSidePanelBtn();
+			const { rootChapter } = surveyDetailsPage;
+			await surveyDetailsPage.clickAddNewBtn(rootChapter);
+			const { addQuestionBtn } = surveyDetailsPage.addNewPopup;
+			await addQuestionBtn.click();
 			await adminAPP.surveyDetailsPage.clickQuestionTypeButton(questionType);
 			const question = adminAPP.surveyDetailsPage.getFirstQuestion(questionType);
 			const answer = question.getFirstAnswer();
+
+			await expect(async () => {
+				await surveyDetailsPage.clickSidePanelBtn();
+				await surveyDetailsPage.assertSidePanelIsVisible({ visible: false });
+			}).toPass();
 
 			await question.hoverQuestion();
 			await question.assertSaveToQBankIsVisible();

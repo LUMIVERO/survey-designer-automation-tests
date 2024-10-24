@@ -3,7 +3,7 @@ import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/bas
 
 export class SliderAnswer extends BaseAnswer {
 	readonly input: Locator = this.page.locator(".range-slider input")
-	readonly answerTextInput: Locator = this.container.locator(".answer-text textarea");
+	readonly answerTextInput: Locator = this.container.locator(".answer-text");
 
 	async assertInputType(): Promise<void>{
 		await test.step("Assert input type is slider", async () => {
