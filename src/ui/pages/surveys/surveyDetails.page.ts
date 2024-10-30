@@ -1,23 +1,21 @@
 import { waitAfterAction } from "@helpers/promise.helpers";
 import { expect, Locator, test } from "@playwright/test";
+import { ClickOptions } from "@typedefs/playwright/actions.typedefs";
 import { Url, QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { BaseDialog } from "@ui/components/dialogs/baseDialog";
+import { Chapter } from "@ui/components/questions/chapter";
 import { Question } from "@ui/components/questions/designQuestions/question";
+import { SidePanel } from "@ui/components/surveys/sidePanel";
 import { surveysUrl } from "src/constants/urls/apiUrls";
 import { surveyUrl } from "src/constants/urls/uiUrls";
 import { BaseDetailsPage } from "../baseDetails.page";
 
 export class SurveyDetailsPage extends BaseDetailsPage {
 	url = surveyUrl.surveysDetails;
-	readonly sidePanel: Locator = this.page.locator(".tree-view-panel");
-	readonly sidePanelBtn: Locator = this.sidePanel.locator(".expander-button");
-	private readonly chaptersSelector: string = ".treeview-chapter";
-	readonly chapters: Locator = this.sidePanel.locator(this.chaptersSelector);
-	readonly rootChapter: Locator = this.sidePanel.locator(`.k-treeview-top${this.chaptersSelector}`);
-	readonly addNewBtn: (chapter: Locator) => Locator = chapter => chapter.locator("button");
 
+	private _chapterNumber: number = 0;
 	readonly pageContentHeader: Locator = this.page.locator(".page-content-header");
-	readonly chapterContainer: Locator = this.page.locator(".chapter-container");
+	readonly chaptersContainers: Locator = this.page.locator(".chapter-container");
 	readonly surveyName: Locator = this.pageContentHeader.locator(".title");
 	readonly questionTypesList: Locator = this.page.locator(".question-types-list");
 	readonly questionTypeButtons: Locator = this.questionTypesList.locator(".question-button-preview");
@@ -25,22 +23,45 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	readonly chapterFooter: Locator = this.page.locator(".container-footer");
 	readonly addQuestionBtn: Locator = this.chapterFooter.locator(".question-btn");
 	readonly dialog: BaseDialog = new BaseDialog(this.page);
+	readonly sidePanel: SidePanel = new SidePanel(this.page);
+
+	get chaptersCount(): number {
+		return this._chapterNumber + 1;
+	}
+
+	get lastChapterName(): string {
+		return `Chapter #${this._chapterNumber}`;
+	}
 
 	get addNewPopup(): {
 		popup: Locator;
 		addQuestionBtn: Locator;
 		addChapterBtn: Locator;
+		clickAddChapterBtn: (options?: ClickOptions) => Promise<void>;
 	} {
 		const popup = this.page.locator(".k-menu-popup:visible");
 		const buttons = popup.locator(".k-item");
 		const addQuestionBtn = buttons.filter({ hasText: "Add question" });
 		const addChapterBtn = buttons.filter({ hasText: "Add chapter" });
+		const clickAddChapterBtn = async (options?: ClickOptions) => {
+			this._chapterNumber++;
+			return await addChapterBtn.click(options);
+		};
 
 		return {
 			popup,
 			addQuestionBtn,
 			addChapterBtn,
+			clickAddChapterBtn,
 		};
+	}
+
+	getChapter(chapterName?: string): Chapter {
+		if (!chapterName) {
+			return new Chapter(this.chaptersContainers.first());
+		}
+
+		return new Chapter(this.chaptersContainers.filter({ hasText: chapterName }));
 	}
 
 	async waitForOpened(options?: Url): Promise<void> {
@@ -67,13 +88,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 
 	async clickSidePanelBtn() {
 		await test.step("Click on the side panel", async () => {
-			await this.sidePanelBtn.click();
-		});
-	}
-
-	async clickAddNewBtn(chapter: Locator) {
-		await test.step("Click on the [Add new] btn", async () => {
-			await this.addNewBtn(chapter).click();
+			await this.sidePanel.sidePanelBtn.click();
 		});
 	}
 
@@ -128,16 +143,6 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	async assertSurveyNameCorrect(name: string): Promise<void> {
 		await test.step(`Assert survey name is correct`, async () => {
 			await expect(this.surveyName).toHaveText(name);
-		});
-	}
-
-	async assertSidePanelIsVisible({ visible = true }): Promise<void> {
-		await test.step(`Assert side panel is ${visible ? "" : "not "}visible`, async () => {
-			if (visible) {
-				await expect(this.sidePanel).toHaveClass(/expanded/);
-			} else {
-				await expect(this.sidePanel).not.toHaveClass(/expanded/);
-			}
 		});
 	}
 }

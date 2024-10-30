@@ -1,6 +1,7 @@
 import { getAnswerType } from "@helpers/survey.helpers";
 import { Locator, Page, expect, test } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
+import { ActionMenuPopup } from "@ui/components/actionPopup";
 import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/baseAnswer";
 
 export class Question {
@@ -15,16 +16,8 @@ export class Question {
 	readonly commentsCount: Locator = this.container.locator(".comments-count");
 	readonly instructionBnt: Locator = this.container.getByTitle("Instructions");
 	readonly actionsBtn: Locator = this.container.locator(".question-editor-header button");
-	readonly deleteButton: Locator = this.container.locator(".dropdown-list-option");
-
-	readonly deleteBtn = async (): Promise<Locator> => {
-		const actionOptions = this.page.locator(
-			`[data-id="${await this.actionsBtn.getAttribute("aria-owns")}"]`
-		);
-
-		return actionOptions.locator("li:has-text(\"Delete\")");
-	};
 	readonly answers: Locator = this.container.locator(".answer-item");
+	readonly actionMenu: ActionMenuPopup;
 
 	constructor(
 		readonly container: Locator,
@@ -32,6 +25,7 @@ export class Question {
 	) {
 		this.page = container.page();
 		this.AnswerType = getAnswerType(questionType);
+		this.actionMenu = new ActionMenuPopup(this.page);
 	}
 
 	getAnswerByText(text: string): BaseAnswer {
@@ -55,9 +49,7 @@ export class Question {
 	async clickDeleteQuestion(): Promise<void> {
 		await test.step("Delete question", async () => {
 			await this.actionsBtn.click();
-
-			await this.deleteButton.waitFor({ state: "visible" });
-			await this.deleteButton.click();
+			await this.actionMenu.clickDeleteBtn();
 		});
 	}
 
