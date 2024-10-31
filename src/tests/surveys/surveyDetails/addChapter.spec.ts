@@ -20,7 +20,7 @@ test.describe("Create chapter", async () => {
 		await surveyDetailsPage.waitForOpened();
 	});
 
-	test.only("[48449, 48882, 49071] User can create, rename and delete a chapter", async ({ adminAPP, apiService }) => {
+	test("[48449, 48882, 49071] User can create, rename and delete a chapter", async ({ adminAPP, apiService }) => {
 		await surveyDetailsPage.clickSidePanelBtn();
 		await sidePanel.getChapter().clickAddNewBtn();
 		const { clickAddChapterBtn, addQuestionBtn } = surveyDetailsPage.addNewPopup;
