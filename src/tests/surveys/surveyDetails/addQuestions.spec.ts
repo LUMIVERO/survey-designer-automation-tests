@@ -13,9 +13,9 @@ test.describe("Create questions of all types", async () => {
 	Object.values(QuestionType).forEach((questionType) => {
 		test(`[${getQuestionTestCaseId(questionType)}] User is able to create & delete ${questionType} question type in the root chapter`, async ({ adminAPP }) => {
 			const { surveyDetailsPage } = adminAPP;
+			const { sidePanel } = surveyDetailsPage;
 			await surveyDetailsPage.clickSidePanelBtn();
-			const { rootChapter } = surveyDetailsPage;
-			await surveyDetailsPage.clickAddNewBtn(rootChapter);
+			await sidePanel.getChapter().clickAddNewBtn();
 			const { addQuestionBtn } = surveyDetailsPage.addNewPopup;
 			await addQuestionBtn.click();
 			await adminAPP.surveyDetailsPage.clickQuestionTypeButton(questionType);
@@ -24,7 +24,7 @@ test.describe("Create questions of all types", async () => {
 
 			await expect(async () => {
 				await surveyDetailsPage.clickSidePanelBtn();
-				await surveyDetailsPage.assertSidePanelIsVisible({ visible: false });
+				await sidePanel.assertSidePanelIsVisible({ visible: false });
 			}).toPass();
 
 			await question.hoverQuestion();

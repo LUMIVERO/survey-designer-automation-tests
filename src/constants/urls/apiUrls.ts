@@ -2,6 +2,11 @@ import { guid } from "../idRegExp";
 
 export const loginUrl = "/api/auth/login";
 
+export const questionsUrl = {
+	questions: "/api/questions",
+  question: `/api/questions/${guid}`,
+}
+
 export const surveysUrl = {
 	surveys: "/api/surveys",
 	survey: `/api/surveys/${guid}`,
