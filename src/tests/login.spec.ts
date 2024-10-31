@@ -2,16 +2,9 @@ import { test, BrowserContext } from "@playwright/test";
 import { Application } from "@ui/application";
 
 test.describe("Authentication", () => {
-	let APP: Application;
-	let context: BrowserContext;
+	test("[48442] User is able to log in and log out", async ({ page }) => {
+		const APP = new Application(page);
 
-	test.beforeAll(async ({ browser }) => {
-		context = await browser.newContext();
-		const page = await context.newPage();
-		APP = new Application(page);
-	});
-
-	test("[48442] User is able to log in and log out", async () => {
 		const username: string = process.env.USERNAME_ADMIN;
 		await APP.loginPage.visit();
 		await APP.loginPage.login({

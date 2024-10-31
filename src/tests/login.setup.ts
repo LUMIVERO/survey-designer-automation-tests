@@ -1,7 +1,6 @@
 import { test as setup } from "@playwright/test";
 import { adminAuthFile } from "src/constants/authPath.data";
 import { Application } from "@ui/application";
-import { loginUrl } from "src/constants/urls/apiUrls";
 
 setup("Log in to the system", async ({ page }) => {
 	const APP = new Application(page);
