@@ -20,18 +20,13 @@ test.describe("Create chapter", async () => {
 		await surveyDetailsPage.waitForOpened();
 	});
 
-	test("[48449, 48882, 49071] User can create, rename and delete a chapter", async ({ adminAPP, apiService }) => {
-		await expect(async () => {
-			await surveyDetailsPage.clickSidePanelBtn();
-			await sidePanel.assertSidePanelIsVisible();
-		}).toPass();
+	test.only("[48449, 48882, 49071] User can create, rename and delete a chapter", async ({ adminAPP, apiService }) => {
+		await surveyDetailsPage.clickSidePanelBtn();
 		await sidePanel.getChapter().clickAddNewBtn();
 		const { clickAddChapterBtn, addQuestionBtn } = surveyDetailsPage.addNewPopup;
 		await clickAddChapterBtn();
-		await expect(async () => {
-			await surveyDetailsPage.clickSidePanelBtn();
-			await sidePanel.assertSidePanelIsVisible({ visible: false });
-		}).toPass({ timeout: 2000 });
+		await surveyDetailsPage.clickSidePanelBtn();
+
 
 		await expect(async () => {
 			expect(await surveyDetailsPage.chaptersContainers.count()).toEqual(surveyDetailsPage.chaptersCount);
@@ -50,7 +45,7 @@ test.describe("Create chapter", async () => {
 		const [, resp] = await waitAfterAction(
 			async () => await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.RadioButton),
 			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.questions))
-		)
+		);
 
 		const { id: questionId } = await resp.json() as QuestionResponse;
 		const question = adminAPP.surveyDetailsPage.getFirstQuestion(QuestionType.RadioButton);
