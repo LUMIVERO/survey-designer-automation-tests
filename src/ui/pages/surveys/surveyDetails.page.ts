@@ -33,16 +33,12 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		return `Chapter #${this._chapterNumber}`;
 	}
 
-	get addNewPopup(): {
-		popup: Locator;
-		addQuestionBtn: Locator;
-		addChapterBtn: Locator;
-		clickAddChapterBtn: (options?: ClickOptions) => Promise<void>;
-	} {
+	get addNewPopup() {
 		const popup = this.page.locator(".k-menu-popup:visible");
 		const buttons = popup.locator(".k-item");
 		const addQuestionBtn = buttons.filter({ hasText: "Add question" });
-		const addChapterBtn = buttons.filter({ hasText: "Add chapter" });
+		const addChapterBtn = buttons.filter({ hasText: "Add chapter", hasNotText: "Add chapter from Qbank" })
+		const addChapterFromQbankBtn = buttons.filter({ hasText: "Add chapter from Qbank" }).first();
 		const clickAddChapterBtn = async (options?: ClickOptions) => {
 			this._chapterNumber++;
 			return await addChapterBtn.click(options);
@@ -52,7 +48,8 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 			popup,
 			addQuestionBtn,
 			addChapterBtn,
-			clickAddChapterBtn,
+			addChapterFromQbankBtn,
+      clickAddChapterBtn,
 		};
 	}
 
