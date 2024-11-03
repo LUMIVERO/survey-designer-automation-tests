@@ -3,12 +3,8 @@ import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/bas
 import { GridTable } from "@ui/components/tables/questions/gridTable";
 
 export class GridAnswer extends BaseAnswer {
-	readonly table: GridTable = new GridTable(this.container.locator("table"));
+	readonly table: GridTable = new GridTable(this.page.locator("table.grid"));
 	readonly input: Locator = this.table.getRow().options.first();
-
-	constructor(container: Locator) {
-		super(container.page().locator(".answers"));
-	}
 
 	async getAnswerVariableText(): Promise<string> {
 		return await this.answerVariable.first().innerText();
@@ -23,5 +19,17 @@ export class GridAnswer extends BaseAnswer {
 			await this.table.assertIsVisible();
 			expect(await this.input.getAttribute("type")).toEqual("checkbox");
 		});
+	}
+
+	async editAnswerText(text: string): Promise<GridAnswer> {
+		await super.editAnswerText(text);
+
+		return new GridAnswer(this.page.locator(this._answerLocator, { hasText: text }));
+	}
+
+	async editAnswerVarText(text: string): Promise<GridAnswer> {
+		await super.editAnswerVarText(text);
+
+		return new GridAnswer(this.page.locator(this._answerLocator, { hasText: text }));
 	}
 }

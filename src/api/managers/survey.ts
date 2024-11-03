@@ -1,19 +1,16 @@
-import { surveysUrl } from "src/constants/urls/apiUrls";
+import { Endpoint } from "@api/abstractEndpoint";
 import { raiseForStatus } from "@helpers/api.helpers";
-import { setIdOnUrl } from "@helpers/url.helpers";
-import { APIRequestContext } from "@playwright/test";
 import { CreateSurveyOptions, SurveyResponse, DeleteSurveyOptions } from "@typedefs/api/survey.typedefs";
+import { surveysUrl } from "src/constants/urls/apiUrls";
 
-export class Survey {
-
-	constructor(readonly request: APIRequestContext) {
-	}
+export class Survey extends Endpoint {
+	readonly url = surveysUrl.surveys;
 
 	async createSurvey(
 		options: CreateSurveyOptions
 	): Promise<SurveyResponse> {
 
-		const response = await this.request.post(surveysUrl.surveys, {
+		const response = await this.request.post(this.url, {
 			data: options
 		});
 
@@ -23,11 +20,11 @@ export class Survey {
 	}
 
 	async deleteSurvey(
-		options: DeleteSurveyOptions
+		{ surveyId }: DeleteSurveyOptions
 	): Promise<void> {
 
 		const response = await this.request.delete(
-			setIdOnUrl(surveysUrl.survey, options.surveyId)
+			this.detailsUrl(surveyId)
 		);
 
 		await raiseForStatus(response);

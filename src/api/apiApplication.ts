@@ -1,6 +1,4 @@
-import { Folder } from "@api/folder";
-import { Question } from "@api/question";
-import { Survey } from "@api/survey";
+import { Folder, Question, Survey } from "@api/managers";
 import { APIRequestContext } from "@playwright/test";
 
 export class ApiApplication {

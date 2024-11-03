@@ -81,8 +81,8 @@ test.describe("Folder", async () => {
 
 			await adminAPP.surveysPage.deleteFolder({ name: folder.name });
 			await adminAPP.surveysPage.surveysTable.assertItemNotInList(folder.name);
-			await apiService.folder.assertFolderWasDeleted(folder.id);
-			await apiService.folder.assertFolderWasDeleted(subFolder.id);
+			await apiService.folder.assertFolderWasDeleted({ folderId: folder.id });
+			await apiService.folder.assertFolderWasDeleted({ folderId: subFolder.id });
 		});
 
 		test("[49509] User is not able to delete folder with surveys", async ({ apiService, adminAPP }) => {

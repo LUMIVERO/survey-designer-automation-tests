@@ -37,6 +37,7 @@ test.describe("Create chapter", async () => {
 		const newChapterName = getRandomName("ChapterAUT");
 		chapter = await chapter.renameChapter(newChapterName);
 		await chapter.assertChapterIsVisible();
+		await adminAPP.page.pause();
 
 		await surveyDetailsPage.clickSidePanelBtn();
 		await sidePanel.getChapter(newChapterName).clickAddNewBtn();
@@ -62,7 +63,7 @@ test.describe("Create chapter", async () => {
 		await question.assertIsVisible(false);
 
 		expect(
-			await apiService.question.checkQuestionDoesNotExist(questionId)
+			await apiService.question.checkQuestionDoesNotExist({ questionId })
 		).toBeTruthy();
 	});
 });

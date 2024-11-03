@@ -1,7 +1,9 @@
 import { Locator, test, expect, Page } from "@playwright/test";
+import { Input } from "@ui/components/input";
 
 export abstract class BaseAnswer {
 	abstract readonly input: Locator;
+	protected _answerLocator = ".answer";
 
 	abstract assertInputType(): Promise<void>;
 
@@ -36,5 +38,23 @@ export abstract class BaseAnswer {
 		await test.step(`Assert answer variable text is "${text}"`, async () => {
 			expect(await this.getAnswerVariableText()).toEqual(text);
 		});
+	}
+
+	async editAnswerText(text: string): Promise<BaseAnswer> {
+		await test.step(`Edit answer text with text - "${text}"`, async () => {
+		  const input = new Input(this.answerTextInput, "Click to write the answer option");
+			await input.fill(text);
+		});
+
+		return this;
+	}
+
+	async editAnswerVarText(text: string): Promise<BaseAnswer> {
+		await test.step(`Edit answer var text with text - "${text}"`, async () => {
+			const input = new Input(this.answerVariable, "Variable name");
+			await input.fill(text);
+		});
+
+		return this;
 	}
 }
