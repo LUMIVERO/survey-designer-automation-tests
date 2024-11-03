@@ -11,7 +11,7 @@ export class GridTable { // TODO: Add implementation for GridTable
 		this.page = container.page();
 	}
 
-	getRow(index: number = 1): GridRow {
+	getRow(index: number = 0): GridRow {
 		return new GridRow(this.rows.nth(index));
 	}
 

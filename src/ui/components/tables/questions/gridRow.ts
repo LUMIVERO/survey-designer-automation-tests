@@ -16,7 +16,7 @@ export class GridRow extends BaseGridRow { // TODO: Add implementation for GridR
 	readonly topic: Locator = this.container.locator(".topic-item");
 	readonly topicVariable: Locator = this.topic.locator(".var-name");
 	readonly topicText: Locator = this.topic.locator(".topic-text");
-	readonly options: Locator = this.container.locator("td>locator");
+	readonly options: Locator = this.container.locator("td>input");
 
 	async assertTopicText(text: string = "Topic #1"): Promise<void> {
 		await test.step(`Assert topic text is "${text}"`, async () => {
