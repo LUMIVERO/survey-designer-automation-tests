@@ -6,7 +6,7 @@ import { Question } from "@ui/components/questions/designQuestions/question";
 import { GridRow } from "@ui/components/tables/questions/gridRow";
 import { questionsUrl } from "src/constants/urls/apiUrls";
 
-test.describe.only("Edit question", async () => {
+test.describe("Edit question", async () => {
 	let question: Question;
 	let answer: GridAnswer;
 	let topic: GridRow;
