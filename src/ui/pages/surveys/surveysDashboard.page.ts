@@ -11,7 +11,7 @@ import { LoggedInBasePage } from "../loggedIn.base.page";
 
 export class SurveysDashboardPage extends LoggedInBasePage {
 	url = surveyUrl.surveysTab;
-	readonly createSurveyBtn: Locator = this.page.locator(".qdt-btn-primary", { hasText: "New Survey" });
+	readonly createSurveyBtn: Locator = this.page.locator(".main-btn", { hasText: "New Survey" });
 	readonly createFolderBtn: Locator = this.page.locator(".qdt-btn-primary-outlined", { hasText: "New Folder" });
 	readonly dialogWithInput: DialogWithInput = new DialogWithInput(this.page);
 	readonly surveysTable: SurveysTable = new SurveysTable(this.page);
