@@ -62,7 +62,54 @@ test.describe("Create chapter", async () => {
 		await question.assertIsVisible(false);
 
 		expect(
-			await apiService.question.checkQuestionDoesNotExist(questionId)
+			await apiService.question.checkQuestionDoesNotExist({ questionId })
 		).toBeTruthy();
+	});
+
+	test("[49955] User can create question in root chapter, add subchapter and question to it", async ({ adminAPP }) => {
+		await surveyDetailsPage.clickSidePanelBtn();
+		await sidePanel.getChapter().clickAddNewBtn();
+		const { clickAddChapterBtn, addQuestionBtn } = surveyDetailsPage.addNewPopup;
+		await addQuestionBtn.click();
+
+		await waitAfterAction(
+			async () => await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.List),
+			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.questions))
+		);
+		const question1 = adminAPP.surveyDetailsPage.getFirstQuestion(QuestionType.List);
+		await question1.assertIsVisible();
+
+		await sidePanel.getChapter().clickAddNewBtn();
+		await clickAddChapterBtn();
+		await surveyDetailsPage.clickSidePanelBtn();
+
+		await expect(async () => {
+			expect(await surveyDetailsPage.chaptersContainers.count()).toEqual(surveyDetailsPage.chaptersCount);
+		}).toPass({ timeout: 2000 });
+		let chapter = surveyDetailsPage.getChapter(surveyDetailsPage.lastChapterName);
+		await chapter.assertChapterIsVisible();
+
+		await surveyDetailsPage.clickSidePanelBtn();
+		await sidePanel.getChapter(surveyDetailsPage.lastChapterName).clickAddNewBtn();
+		await addQuestionBtn.click();
+
+		await waitAfterAction(
+			async () => await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.RadioButton),
+			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.questions))
+		);
+
+		const question2 = adminAPP.surveyDetailsPage.getFirstQuestion(QuestionType.RadioButton);
+		await question2.assertIsVisible();
+		await surveyDetailsPage.clickSidePanelBtn();
+
+		await chapter.clickTreeDotsBtn();
+		await chapter.actionsMenu.waitFor();
+		await chapter.actionsMenu.clickDeleteBtn();
+		await surveyDetailsPage.dialog.waitForDialogVisible();
+		await surveyDetailsPage.dialog.clickSubmitBtn();
+		await surveyDetailsPage.dialog.waitForDialogHidden();
+		await chapter.assertChapterIsVisible({ visible: false });
+		await question2.assertIsVisible(false);
+		await question1.assertIsVisible(true);
 	});
 });

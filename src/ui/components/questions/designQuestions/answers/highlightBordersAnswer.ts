@@ -1,4 +1,4 @@
-import { expect, Locator, test } from "@playwright/test";
+import { Locator } from "@playwright/test";
 import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/baseAnswer";
 
 export class HighlightBordersAnswer extends BaseAnswer {

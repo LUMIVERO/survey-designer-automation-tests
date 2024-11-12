@@ -2,10 +2,12 @@ import { getAnswerType } from "@helpers/survey.helpers";
 import { Locator, Page, expect, test } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { ActionMenuPopup } from "@ui/components/actionPopup";
+import { Input } from "@ui/components/input";
 import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/baseAnswer";
 
 export class Question {
 	readonly page: Page;
+	private _questionLocator: string = ".question-editor";
 	readonly AnswerType: new (container: Locator) => BaseAnswer;
 	readonly questionVariable: Locator = this.container.locator(".question-editor-header .var-name");
 	readonly questionTypeText: Locator = this.container.getByTitle("Question type");
@@ -102,6 +104,24 @@ export class Question {
 	async assertSaveToQBankIsVisible(visible: boolean = true): Promise<void> {
 		await test.step(`Assert save to QBank button is ${visible ? "visible" : "hidden"}`, async () => {
 			await expect(this.saveToQBankBtn).toBeVisible({ visible });
+		});
+	}
+
+	async editQuestionText(text: string): Promise<Question> {
+		return await test.step("Edit Question text", async () => {
+			const input = new Input(this.questionTextArea, "Click to write the question text");
+			await input.fill(text);
+
+			return new Question(this.page.locator(this._questionLocator, { hasText: text }), this.questionType);
+		});
+	}
+
+	async editQuestionVarText(text: string): Promise<Question> {
+		return await test.step("Edit Question var text", async () => {
+			const input = new Input(this.questionVariable, "Question Variable Name");
+			await input.fill(text);
+
+			return new Question(this.page.locator(this._questionLocator, { hasText: text }), this.questionType);
 		});
 	}
 }

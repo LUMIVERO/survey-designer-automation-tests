@@ -37,7 +37,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		const popup = this.page.locator(".k-menu-popup:visible");
 		const buttons = popup.locator(".k-item");
 		const addQuestionBtn = buttons.filter({ hasText: "Add question" });
-		const addChapterBtn = buttons.filter({ hasText: "Add chapter", hasNotText: "Add chapter from Qbank" })
+		const addChapterBtn = buttons.filter({ hasText: "Add chapter", hasNotText: "Add chapter from Qbank" });
 		const addChapterFromQbankBtn = buttons.filter({ hasText: "Add chapter from Qbank" }).first();
 		const clickAddChapterBtn = async (options?: ClickOptions) => {
 			this._chapterNumber++;
@@ -49,7 +49,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 			addQuestionBtn,
 			addChapterBtn,
 			addChapterFromQbankBtn,
-      clickAddChapterBtn,
+			clickAddChapterBtn,
 		};
 	}
 
@@ -134,7 +134,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	getFirstQuestion(
 		questionType: QuestionType
 	): Question {
-		return new Question(this.questions.first(), questionType);
+		return new Question(this.questions.filter({ hasText: questionType }).first(), questionType);
 	}
 
 	async assertSurveyNameCorrect(name: string): Promise<void> {

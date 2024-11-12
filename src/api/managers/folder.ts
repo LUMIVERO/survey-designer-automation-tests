@@ -1,6 +1,6 @@
+import { Endpoint } from "@api/abstractEndpoint";
 import { raiseForStatus } from "@helpers/api.helpers";
-import { setIdOnUrl } from "@helpers/url.helpers";
-import { APIRequestContext, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
 import {
 	GetFolderResponse,
 	DeleteFolderOptions,
@@ -11,13 +11,11 @@ import {
 import { NetworkError } from "@typedefs/api/request.typedefs";
 import { foldersUrl } from "src/constants/urls/apiUrls";
 
-export class Folder {
-
-	constructor(readonly request: APIRequestContext) {
-	}
+export class Folder extends Endpoint {
+	readonly url = foldersUrl.folders;
 
 	async getFolders(): Promise<GetFolderResponse> {
-		const response = await this.request.get(foldersUrl.folders);
+		const response = await this.request.get(this.url);
 
 		await raiseForStatus(response);
 
@@ -25,9 +23,7 @@ export class Folder {
 	}
 
 	async getFolderById({ folderId }: GetFolderOptions): Promise<FolderResponse> {
-		const response = await this.request.get(
-			setIdOnUrl(foldersUrl.folder, folderId)
-		);
+		const response = await this.request.get(this.detailsUrl(folderId));
 
 		await raiseForStatus(response);
 
@@ -35,12 +31,10 @@ export class Folder {
 	}
 
 	async deleteFolder(
-		options: DeleteFolderOptions
+		{ folderId }: DeleteFolderOptions
 	): Promise<void> {
 
-		const response = await this.request.delete(
-			setIdOnUrl(foldersUrl.folder, options.folderId)
-		);
+		const response = await this.request.delete(this.detailsUrl(folderId));
 
 		await raiseForStatus(response);
 	}
@@ -49,7 +43,7 @@ export class Folder {
 		options: CreateFolderOptions
 	): Promise<FolderResponse> {
 
-		const response = await this.request.post(foldersUrl.folders, {
+		const response = await this.request.post(this.url, {
 			data: {
 				...options,
 				index: 0,
@@ -61,7 +55,7 @@ export class Folder {
 		return await response.json();
 	}
 
-	async assertFolderWasDeleted(folderId: string): Promise<void> {
+	async assertFolderWasDeleted({ folderId }: DeleteFolderOptions): Promise<void> {
 		try {
 			const response = await this.getFolderById({ folderId });
 			expect(response.id).toBeFalsy();
@@ -74,5 +68,4 @@ export class Folder {
 			}
 		}
 	}
-
 }
