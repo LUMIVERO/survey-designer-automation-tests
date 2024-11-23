@@ -1,5 +1,6 @@
 import { test } from "@fixtures/testScope.fixture";
 import { waitAfterAction } from "@helpers/promise.helpers";
+import { getRandomName } from "@helpers/random.helpers";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { GridAnswer } from "@ui/components/questions/designQuestions/answers";
 import { Question } from "@ui/components/questions/designQuestions/question";
@@ -70,8 +71,22 @@ test.describe("Edit question", async () => {
 	});
 
 	test("[48502] User can add/delete answer and topic", async ({ adminAPP, apiService }) => {
+
 	});
 
-	test("[48507] User can add, edit, delete instruction for surveyors/scripters", async ({ adminAPP, apiService }) => {
+	test("[48507] User can add, edit, delete instruction for surveyors/scripters", async () => {
+		const surveyorInstructionText: string = getRandomName("Surveyor-");
+		const scripterInstructionText: string = getRandomName("Scripter-");
+
+		await question.assertInstructionIconToBeVisible();
+		await question.clickInstructionBtn();
+		await question.instructionsBox.assertInstructionsBoxIsDisplayed();
+		await question.instructionsBox.fillSurveyorInstruction(surveyorInstructionText);
+
+		await question.instructionsBox.closeInstructions();
+		await question.instructionsBox.assertInstructionsBoxIsDisplayed({ visible: false });
+		await question.clickInstructionBtn();
+		await question.instructionsBox.assertInstructionsBoxIsDisplayed();
+		await question.instructionsBox.assertInstruction("surveyors", surveyorInstructionText);
 	});
 });

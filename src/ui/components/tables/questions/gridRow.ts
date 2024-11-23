@@ -1,5 +1,5 @@
 import { Locator, test, expect, Page } from "@playwright/test";
-import { Input } from "@ui/components/input";
+import { InputOnFocus } from "@ui/components/inputs";
 
 export abstract class BaseGridRow { // TODO: Add implementation for GridRow
 	readonly page: Page;
@@ -32,14 +32,14 @@ export class GridRow extends BaseGridRow { // TODO: Add implementation for GridR
 
 	async editTopicText(text: string): Promise<void> {
 		await test.step(`Edit topic var text to "${text}"`, async () => {
-			const input = new Input(this.topicText, "Click to write the topic option");
+			const input = new InputOnFocus(this.topicText, "Click to write the topic option");
 			await input.fill(text);
 		});
 	}
 
 	async editTopicVarText(text: string): Promise<void> {
 		await test.step(`Edit topic var text to "${text}"`, async () => {
-			const input = new Input(this.topicVariable, "Variable name");
+			const input = new InputOnFocus(this.topicVariable, "Variable name");
 			await input.fill(text);
 		});
 	}

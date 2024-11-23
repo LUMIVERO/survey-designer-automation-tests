@@ -2,8 +2,9 @@ import { getAnswerType } from "@helpers/survey.helpers";
 import { Locator, Page, expect, test } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { ActionMenuPopup } from "@ui/components/actionPopup";
-import { Input } from "@ui/components/input";
+import { InputOnFocus } from "@ui/components/inputs";
 import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/baseAnswer";
+import { InstructionsBox } from "@ui/components/questions/instructions";
 
 export class Question {
 	readonly page: Page;
@@ -16,10 +17,11 @@ export class Question {
 	readonly saveToQBankBtn: Locator = this.container.locator(".actions input");
 	readonly commentsBtn: Locator = this.container.locator(".comments button");
 	readonly commentsCount: Locator = this.container.locator(".comments-count");
-	readonly instructionBnt: Locator = this.container.getByTitle("Instructions");
+	readonly instructionBtn: Locator = this.container.getByTitle("Instructions");
 	readonly actionsBtn: Locator = this.container.locator(".question-editor-header button");
 	readonly answers: Locator = this.container.locator(".answer-item");
 	readonly actionMenu: ActionMenuPopup;
+	readonly instructionsBox: InstructionsBox;
 
 	constructor(
 		readonly container: Locator,
@@ -28,6 +30,7 @@ export class Question {
 		this.page = container.page();
 		this.AnswerType = getAnswerType(questionType);
 		this.actionMenu = new ActionMenuPopup(this.page);
+		this.instructionsBox = new InstructionsBox(this.page);
 	}
 
 	getAnswerByText(text: string): BaseAnswer {
@@ -55,6 +58,12 @@ export class Question {
 		});
 	}
 
+	async clickInstructionBtn(): Promise<void> {
+		await test.step("Click [Instructions] btn", async () => {
+			await this.instructionBtn.click();
+		});
+	}
+
 	async hoverQuestion(): Promise<void> {
 		await test.step("Hover question", async () => {
 			await this.container.hover();
@@ -63,7 +72,7 @@ export class Question {
 
 	async assertInstructionIconToBeVisible(): Promise<void> {
 		await test.step(`Assert instruction icon is visible`, async () => {
-			await expect(this.instructionBnt).toBeVisible();
+			await expect(this.instructionBtn).toBeVisible();
 		});
 	}
 
@@ -109,7 +118,7 @@ export class Question {
 
 	async editQuestionText(text: string): Promise<Question> {
 		return await test.step("Edit Question text", async () => {
-			const input = new Input(this.questionTextArea, "Click to write the question text");
+			const input = new InputOnFocus(this.questionTextArea, "Click to write the question text");
 			await input.fill(text);
 
 			return new Question(this.page.locator(this._questionLocator, { hasText: text }), this.questionType);
@@ -118,7 +127,7 @@ export class Question {
 
 	async editQuestionVarText(text: string): Promise<Question> {
 		return await test.step("Edit Question var text", async () => {
-			const input = new Input(this.questionVariable, "Question Variable Name");
+			const input = new InputOnFocus(this.questionVariable, "Question Variable Name");
 			await input.fill(text);
 
 			return new Question(this.page.locator(this._questionLocator, { hasText: text }), this.questionType);

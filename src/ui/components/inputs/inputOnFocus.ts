@@ -1,22 +1,16 @@
-import { Locator, Page, test, expect } from "@playwright/test";
+import { Locator, expect } from "@playwright/test";
+import { Input } from "src/ui/components/inputs/input";
 
-export class Input {
-	readonly page: Page;
+export class InputOnFocus extends Input {
 
-	constructor(readonly locator: Locator, protected placeholder: string = "") {
-		this.page = locator.page();
-	}
-
-	async removeFocusWithTab(): Promise<void> {
-		await test.step("Click out of focus", async () => {
-			await this.page.keyboard.press("Tab");
-		});
+	constructor(locator: Locator, protected placeholder: string = "") {
+		super(locator);
 	}
 
 	async clickInput() {
 		await expect(async () => {
 			await expect(this.locator).toBeVisible();
-			await this.locator.click();
+			await super.clickInput();
 			await this.page.waitForTimeout(200);
 			await expect(this.input).toBeVisible();
 		}).toPass();

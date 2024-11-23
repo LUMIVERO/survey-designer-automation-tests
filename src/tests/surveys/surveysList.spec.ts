@@ -41,7 +41,7 @@ test.describe("Surveys list", async () => {
 			surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(survey.name);
 		});
 
-		test("[49508] User can rename survey", async ({ adminAPP, survey }) => {
+		test("[49508] User can rename survey", async ({ adminAPP, survey, apiService }) => {
 			await adminAPP.surveysPage.waitForFoldersResponse();
 			const { name } = survey;
 			await surveyRow.assertItemNameCorrect(name);
