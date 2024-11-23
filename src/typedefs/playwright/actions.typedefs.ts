@@ -1,11 +1,10 @@
-import { MouseButton, KeyboardModifier, ScreenPoint } from "@typedefs/playwright/service.typedefs";
+import { MouseButton, KeyboardModifier, ScreenPoint, Timeout } from "@typedefs/playwright/service.typedefs";
 
-export type WaitForOptions = {
+export type WaitForOptions = Timeout & {
 	state?: "visible" | "attached" | "detached" | "hidden",
-	timeout?: number
 }
 
-export type ClickOptions = {
+export type ClickOptions = Timeout & {
 	button?: MouseButton;
 	clickCount?: number;
 	delay?: number;
@@ -13,6 +12,5 @@ export type ClickOptions = {
 	modifiers?: Array<KeyboardModifier>;
 	noWaitAfter?: boolean;
 	position?: ScreenPoint;
-	timeout?: number;
 	trial?: boolean;
 }

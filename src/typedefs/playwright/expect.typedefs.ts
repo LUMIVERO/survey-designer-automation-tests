@@ -1,25 +1,22 @@
-export type AssertIsChecked = {
+import { Timeout } from "@typedefs/playwright/service.typedefs";
+
+export type AssertIsChecked = Timeout & {
 	checked?: boolean;
-	timeout?: number;
 }
 
-export type AssertIsVisible = {
+export type AssertIsVisible = Timeout & {
 	visible?: boolean;
-	timeout?: number;
 }
 
-export type AssertIsEnabled = {
+export type AssertIsEnabled = Timeout & {
 	enabled?: boolean;
-	timeout?: number;
 }
 
-export type AssertToHaveAttribute = {
+export type AssertToHaveAttribute = Timeout & {
 	ignoreCase?: boolean;
-	timeout?: number;
 }
 
-export type AssertToHaveText = {
+export type AssertToHaveText = Timeout & {
 	ignoreCase?: boolean;
-	timeout?: number;
 	useInnerText?: boolean;
 }
