@@ -30,15 +30,15 @@ export class InstructionsBox {
 		});
 	}
 
-	async deleteSurveyorInstruction(text: string = ""): Promise<void> {
+	async deleteSurveyorInstruction(): Promise<void> {
 		await test.step("Delete surveyor instruction", async () => {
-			await this.surveyorsInstructionsInput.fill(text);
+			await this.surveyorsInstructionsInput.fill("");
 		});
 	}
 
-	async deleteScripterInstruction(text: string = ""): Promise<void> {
+	async deleteScripterInstruction(): Promise<void> {
 		await test.step("Delete scripter instruction", async () => {
-			await this.scriptersInstructionsInput.fill(text);
+			await this.scriptersInstructionsInput.fill("");
 		});
 	}
 

@@ -17,7 +17,7 @@ export class ActionMenuPopup extends BaseActionMenuPopup {
 
 	async waitFor(options: WaitForOptions = { state: "visible" }): Promise<void> {
 		await test.step("Wait for action menu popover", async () => {
-			await this.actions.waitFor(options);
+			await this.container.waitFor(options);
 		});
 	}
 }
