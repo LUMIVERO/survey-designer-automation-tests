@@ -2,7 +2,7 @@ import { waitAfterAction } from "@helpers/promise.helpers";
 import { Locator, test, expect } from "@playwright/test";
 import { DeleteFolderOptions } from "@typedefs/ui/folder.typedefs";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
-import { ActionMenu } from "@ui/components/actionMenu";
+import { ActionMenu } from "@ui/components/actions/actionMenu";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
 import { foldersUrl } from "src/constants/urls/apiUrls";

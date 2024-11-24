@@ -1,6 +1,6 @@
 import { Locator, Page, expect, test } from "@playwright/test";
 import { AssertIsVisible } from "@typedefs/playwright/expect.typedefs";
-import { ActionMenuPopup } from "@ui/components/actionPopup";
+import { ActionMenuPopup } from "@ui/components/actions/actionPopup";
 
 export class Chapter {
 	private _chaptersLocator: string = ".chapter-container";

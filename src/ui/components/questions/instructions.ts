@@ -30,6 +30,18 @@ export class InstructionsBox {
 		});
 	}
 
+	async deleteSurveyorInstruction(text: string = ""): Promise<void> {
+		await test.step("Delete surveyor instruction", async () => {
+			await this.surveyorsInstructionsInput.fill(text);
+		});
+	}
+
+	async deleteScripterInstruction(text: string = ""): Promise<void> {
+		await test.step("Delete scripter instruction", async () => {
+			await this.scriptersInstructionsInput.fill(text);
+		});
+	}
+
 	async fillScripterInstruction(text: string): Promise<void> {
 		await test.step("Fill scripter instruction", async () => {
 			await this.scriptersInstructionsInput.fill(text);

@@ -1,6 +1,7 @@
 import { test } from "@fixtures/testScope.fixture";
 import { waitAfterAction } from "@helpers/promise.helpers";
 import { getRandomName } from "@helpers/random.helpers";
+import { expect } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { GridAnswer } from "@ui/components/questions/designQuestions/answers";
 import { Question } from "@ui/components/questions/designQuestions/question";
@@ -70,23 +71,86 @@ test.describe("Edit question", async () => {
 		await topic.assertTopicVariableText(topicVarText);
 	});
 
-	test("[48502] User can add/delete answer and topic", async ({ adminAPP, apiService }) => {
+	test("[48502] User can add/delete answer", async () => {
+		const { table } = answer;
+		const { headRow } = table;
 
+		for (let i = await headRow.count() - 1; i > 0; i--) {
+			const col = headRow.nth(i);
+			await col.delete();
+			await expect(col.container).toBeVisible({ visible: false });
+		}
+
+		const col = headRow.nth(0);
+		expect(async () => {
+			await col.openActionMenu();
+			await col.actionMenu.assertIsVisible();
+		}).toPass();
+		await col.actionMenu.assertIsVisible("delete", { visible: false });
+		expect(await headRow.count()).toEqual(1);
+
+		await question.addNewAnswer("Answer");
+		expect(await headRow.count({ timeout: 500 })).toEqual(2);
 	});
+
+	test("[50052] User can add/delete topic", async () => {
+		const { table } = answer;
+
+		for (let i = await table.rows.count() - 1; i > 0; i--) {
+			const row = table.getRow(i);
+			await row.delete();
+			await expect(row.container).toBeVisible({ visible: false });
+		}
+		const row = table.getRow(0);
+		expect(async () => {
+			await row.openActionBtn.click();
+			await row.actionMenu.assertIsVisible();
+		}).toPass();
+		await row.actionMenu.assertIsVisible("delete", { visible: false });
+		expect(await table.rowsCount()).toEqual(1);
+
+		await question.addNewTopic("Topic");
+		expect(await table.rowsCount({ timeout: 500 })).toEqual(2);
+	});
+
 
 	test("[48507] User can add, edit, delete instruction for surveyors/scripters", async () => {
 		const surveyorInstructionText: string = getRandomName("Surveyor-");
 		const scripterInstructionText: string = getRandomName("Scripter-");
 
 		await question.assertInstructionIconToBeVisible();
+		await question.assertInstructionIndicatorIsVisible(false);
 		await question.clickInstructionBtn();
 		await question.instructionsBox.assertInstructionsBoxIsDisplayed();
 		await question.instructionsBox.fillSurveyorInstruction(surveyorInstructionText);
-
 		await question.instructionsBox.closeInstructions();
+		await question.instructionsBox.assertInstructionsBoxIsDisplayed({ visible: false });
+
+		await question.clickInstructionBtn();
+		await question.instructionsBox.assertInstructionsBoxIsDisplayed();
+		await question.instructionsBox.assertInstruction("surveyors", surveyorInstructionText);
+		await question.instructionsBox.fillScripterInstruction(scripterInstructionText);
+		await question.instructionsBox.closeInstructions();
+		await question.assertInstructionIndicatorIsVisible();
+
 		await question.instructionsBox.assertInstructionsBoxIsDisplayed({ visible: false });
 		await question.clickInstructionBtn();
 		await question.instructionsBox.assertInstructionsBoxIsDisplayed();
 		await question.instructionsBox.assertInstruction("surveyors", surveyorInstructionText);
+		await question.instructionsBox.assertInstruction("scripters", scripterInstructionText);
+		await question.assertInstructionIndicatorIsVisible();
+
+		await question.instructionsBox.deleteSurveyorInstruction();
+		await question.instructionsBox.closeInstructions();
+		await question.clickInstructionBtn();
+		await question.instructionsBox.assertInstruction("surveyors", "");
+		await question.instructionsBox.assertInstruction("scripters", scripterInstructionText);
+
+		await question.instructionsBox.deleteScripterInstruction();
+		await question.instructionsBox.closeInstructions();
+		await question.clickInstructionBtn();
+		await question.instructionsBox.assertInstruction("surveyors", "");
+		await question.instructionsBox.assertInstruction("scripters", "");
+		await question.assertInstructionIndicatorIsVisible(false);
 	});
 });
