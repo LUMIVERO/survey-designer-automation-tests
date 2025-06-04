@@ -1,11 +1,9 @@
-import { Page, test, expect } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { Url } from "@typedefs/ui/basePage.typedefs";
+import { BaseComponent } from "@ui/components/baseComponent";
 
-export abstract class BasePage {
+export abstract class BasePage extends BaseComponent {
 	abstract url: string;
-
-	constructor(readonly page: Page) {
-	};
 
 	async visit(url?: string): Promise<void> {
 		url = url ?? this.url;

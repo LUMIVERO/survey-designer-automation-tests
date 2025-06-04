@@ -1,3 +1,4 @@
+import { PathPart } from "@typedefs/common/main.typedefs";
 import { guid } from "src/constants/idRegExp";
 
 export function setIdOnUrl(
@@ -28,4 +29,13 @@ export function getIdFromString(str: string, pattern: string = guid): string {
 	}
 
 	throw new Error(`URL '${str}' does not contain a match for the provided ID pattern '${pattern}'.`);
+}
+
+export function createUrl<T extends Record<string, PathPart>>(service: PathPart, endpoints: T): T {
+	return Object.entries(endpoints).reduce((result, [key, value]) => {
+
+		result[key] = service + value;
+
+		return result;
+	}, {}) as T;
 }
