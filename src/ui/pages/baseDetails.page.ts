@@ -1,6 +1,7 @@
 import { setIdOnUrl, getIdFromString } from "@helpers/url.helpers";
 import { test } from "@playwright/test";
 import { FoldersBreadCrumbs } from "@ui/components/breadCrumbs";
+import { UUID } from "node:crypto";
 import { LoggedInBasePage } from "./loggedIn.base.page";
 
 export abstract class BaseDetailsPage extends LoggedInBasePage {
@@ -31,8 +32,8 @@ export abstract class BaseDetailsPage extends LoggedInBasePage {
 		});
 	}
 
-	async getIdFromPageUrl(): Promise<string> {
-		return getIdFromString(this.page.url());
+	async getIdFromPageUrl(): Promise<UUID> {
+		return getIdFromString(this.page.url()) as UUID;
 	}
 
 	async clickMainFolderInBreadCrumbs(): Promise<void> {

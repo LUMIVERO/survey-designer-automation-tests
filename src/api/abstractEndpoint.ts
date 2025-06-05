@@ -7,6 +7,6 @@ export abstract class Endpoint {
   }
 
 	protected detailsUrl(id: string): string {
-		return `${this.url}/${id}`;
+		return `${this.url}${id}`;
 	}
 }
