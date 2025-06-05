@@ -70,15 +70,13 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 			const folderRow = await this.surveysTable.getRowByName(name);
 			await folderRow.actionsMenu.click();
 			await this.actionMenu.waitFor();
-			await waitAfterAction(
-				async () => await this.clickPopoverDeleteBtn(),
-				async () => {
-					await this.page.waitForResponse((response) => {
-						return response.request().method() === "DELETE"
-							&& new RegExp(foldersUrl.folder).test(response.url());
-					});
-				}
-			);
+			await Promise.all([
+				this.clickPopoverDeleteBtn(),
+				this.page.waitForResponse((response) => {
+					return response.request().method() === "DELETE"
+						&& new RegExp(foldersUrl.folder).test(response.url());
+				})
+			])
 		});
 	}
 
