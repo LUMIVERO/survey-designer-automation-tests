@@ -6,7 +6,6 @@ import { LoggedInBasePage } from "./loggedIn.base.page";
 
 export abstract class BaseDetailsPage extends LoggedInBasePage {
 	public pageId: string | number;
-	readonly breadCrumbs = new FoldersBreadCrumbs(this.page.locator(".breadcrumbs-wrapper"));
 
 	setId(pageId: number | string): string {
 		this.pageId = `${pageId}`;

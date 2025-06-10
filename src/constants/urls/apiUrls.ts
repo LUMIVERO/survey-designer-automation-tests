@@ -12,6 +12,7 @@ export const questionsUrl = createUrl(`/api/areas/${testArea1.id}/questions`, {
 export const surveysUrl = createUrl(`/api/areas/${testArea1.id}/surveys`, {
 	surveys: "/",
 	survey: `/${guid}`,
+	duplicate: `/${guid}/duplicate`,
 });
 
 export const foldersUrl = createUrl(`/api/areas/${testArea1.id}/folders`, {

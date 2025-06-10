@@ -13,7 +13,7 @@ export class DialogWithInput extends BaseDialog {
 
 	async asserInputDataIsCorrect(text: string) {
 		await test.step(`Assert input data is correct - ${text}`, async () => {
-			expect(await this.nameField.inputValue()).toEqual(text);
+			await expect(this.nameField).toHaveValue(text);
 		});
 	}
 }
