@@ -1,6 +1,5 @@
 import { setIdOnUrl, getIdFromString } from "@helpers/url.helpers";
 import { test } from "@playwright/test";
-import { FoldersBreadCrumbs } from "@ui/components/breadCrumbs";
 import { UUID } from "node:crypto";
 import { LoggedInBasePage } from "./loggedIn.base.page";
 

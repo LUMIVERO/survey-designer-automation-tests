@@ -16,7 +16,7 @@ test.describe("Surveys list", async () => {
 	});
 
 	test("User is able to create survey in the root folder and open it @smoke",
-		async ({ adminAPP, apiService }) => {
+		async ({ adminAPP }) => {
 			const surveyName: string = getRandomName("SurveyAUT");
 
 			await adminAPP.surveysPage.clickCreateSurveyBtn();
@@ -56,7 +56,7 @@ test.describe("Surveys list", async () => {
 		});
 
 		//TODO: add questions and chapters to the original survey + assert these items are duplicated with the new survey
-		test("User is able to duplicate the survey", async ({ adminAPP, apiService, survey }) => {
+		test("User is able to duplicate the survey", async ({ adminAPP, survey }) => {
 			const { name } = survey;
 			const duplicatedSurveyName: string = name + "_copy";
 
