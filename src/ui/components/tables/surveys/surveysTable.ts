@@ -23,7 +23,7 @@ export class SurveysTable {
 		});
 	}
 
-	async getRowByName(name: string): Promise<ItemRow> {
-		return new ItemRow(this.rows.filter({ has: this.page.getByTitle(name) }));
+	async getRowByName(name: string, options?: { exact: boolean }): Promise<ItemRow> {
+		return new ItemRow(this.rows.filter({ has: this.page.getByTitle(name, options) }));
 	}
 }

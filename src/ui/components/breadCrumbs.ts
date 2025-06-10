@@ -1,36 +1,33 @@
 import { Locator, Page } from "@playwright/test";
 
-export interface BreadCrumbs {
-	readonly page: Page;
-	readonly container: Locator;
-	readonly breadCrumbs: Locator;
-	readonly items: Locator;
-}
+export class FoldersBreadCrumbs {
+	readonly container: Locator = this.page.locator(".breadcrumbs");
+	readonly items: Locator = this.container.locator(".k-breadcrumb-item");
 
-export class FoldersBreadCrumbs implements BreadCrumbs {
-	readonly breadCrumbs: Locator = this.container.locator(".breadcrumbs");
-	readonly items: Locator = this.breadCrumbs.locator("li");
-	readonly page: Page;
+	constructor(readonly page: Page) {
+	}
 
-	constructor(readonly container: Locator) {
-		this.page = container.page();
+	get rootItem(): Locator {
+		return this.page.locator(".k-breadcrumb-root-item");
+	}
+
+	get areaItem(): Locator {
+		return this.items.nth(1);
+	}
+
+	get mainItem(): Locator {
+		return this.items.nth(2);
 	}
 
 	async clickOnItemName(name: string): Promise<void> {
-		await this.items.filter({ hasText: name }).first().click();
+		await this.items.filter({ hasText: name }).locator("a").click();
+	}
+
+	async clickOnRootItem(): Promise<void> {
+		await this.rootItem.locator("a").click();
 	}
 
 	async clickOnBaseItem(): Promise<void> {
-		await this.items.first().click();
-	}
-}
-
-export class ChapterBreadCrumbs implements BreadCrumbs {
-	readonly breadCrumbs: Locator = this.container.locator(".chapter-breadcrumbs");
-	readonly items: Locator = this.breadCrumbs.locator(".li");
-	readonly page: Page;
-
-	constructor(readonly container: Locator) {
-		this.page = container.page();
+		await this.mainItem.locator("a").click();
 	}
 }

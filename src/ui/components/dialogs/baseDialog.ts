@@ -1,4 +1,5 @@
 import { test, Page, Locator, expect } from "@playwright/test";
+import { WaitForResponse, ResponseBooleanCallback } from "@typedefs/ui/components.typedefs";
 
 export class BaseDialog {
 	readonly dialog: Locator = this.page.locator(".k-window.k-dialog");
@@ -29,9 +30,12 @@ export class BaseDialog {
 		});
 	}
 
-	async clickSubmitBtn() {
+	async clickSubmitBtn({ waitForResponse, callback }: WaitForResponse = { waitForResponse: false }) {
 		await test.step("Click on the [Submit] button on the dialog", async () => {
-			await this.submitBtn.click();
+			await Promise.all([
+				this.submitBtn.click(),
+				waitForResponse && this.waitForSuccessResponse(callback),
+			].filter(Boolean));
 		});
 	}
 
@@ -44,6 +48,12 @@ export class BaseDialog {
 	async assertDialogHeaderIsCorrect(text: string) {
 		await test.step(`Assert dialog header has title - ${text}`, async () => {
 			expect(await this.dialogHeader.innerText()).toEqual(text);
+		});
+	}
+
+	async waitForSuccessResponse(callback?: ResponseBooleanCallback): Promise<void> {
+		await test.step("Wait for success response", async () => {
+			await this.page.waitForResponse(callback || (async response => response.ok()));
 		});
 	}
 }

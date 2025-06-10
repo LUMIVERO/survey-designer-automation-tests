@@ -1,26 +1,27 @@
 import { Locator, Page, test } from "@playwright/test";
 import { WaitForOptions } from "@typedefs/playwright/actions.typedefs";
+import { BaseContainer } from "@ui/components/baseComponent";
 
-export class ActionMenu {
-	readonly actionMenuPopover: Locator = this.page.locator(".k-menu-popup");
-	readonly popoverActionBtn: Locator = this.actionMenuPopover.locator(".k-menu-item");
+export class ActionMenu extends BaseContainer {
+	readonly popoverActionBtn: Locator = this.container.locator(".dropdown-list-option");
 	readonly deleteButton: Locator = this.popoverActionBtn.filter({ hasText: "Delete" });
 	readonly duplicateButton: Locator = this.popoverActionBtn.filter({ hasText: "Duplicate" });
 
-	constructor(readonly page: Page) {
+	constructor(page: Page) {
+		super(page.locator(".popover-container.opened"))
 	}
 
 	async clickDeleteButton(): Promise<void> {
-		await this.deleteButton.filter({ has: this.page.locator(":visible") }).click();
+		await this.deleteButton.click();
 	}
 
 	async clickDuplicateButton(): Promise<void> {
-		await this.duplicateButton.filter({ has: this.page.locator(":visible") }).click();
+		await this.duplicateButton.click();
 	}
 
 	async waitFor(options: WaitForOptions = { state: "visible" }): Promise<void> {
 		await test.step("Wait for action menu popover", async () => {
-			await this.actionMenuPopover.waitFor(options);
+			await this.container.waitFor(options);
 		});
 	}
 }

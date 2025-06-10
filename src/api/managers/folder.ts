@@ -19,7 +19,7 @@ export class Folder extends Endpoint {
 
 		await raiseForStatus(response);
 
-		return await response.json();
+		return response.json();
 	}
 
 	async getFolderById({ folderId }: GetFolderOptions): Promise<FolderResponse> {

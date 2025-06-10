@@ -1,4 +1,5 @@
 import { test, expect, Locator } from "@playwright/test";
+import { FoldersBreadCrumbs } from "@ui/components/breadCrumbs";
 import { UserInfoTab } from "@ui/components/userInfoTab";
 import { BasePage } from "./base.page";
 
@@ -12,6 +13,7 @@ export abstract class LoggedInBasePage extends BasePage {
 	readonly emptyState: Locator = this.page.locator(".surveys-list-empty-state");
 
 	readonly userInfoTab = new UserInfoTab(this.page);
+	readonly breadCrumbs = new FoldersBreadCrumbs(this.page);
 
 	async clickUserInfoDetailsBtn(): Promise<void> {
 		await test.step(`Click user info details`, async () => {

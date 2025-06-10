@@ -1,3 +1,4 @@
+import { UUID } from "node:crypto";
 import { SurveyResponse } from "./survey.typedefs";
 
 export type GetFolderOptions = {
@@ -9,7 +10,7 @@ export type GetFolderResponse = {
 }
 
 export type FolderResponse = {
-	id: string;
+	id: UUID;
 	name: string;
 	order: number;
 	tenantId: string;
@@ -28,5 +29,5 @@ export type DeleteFolderOptions = {
 
 export type CreateFolderOptions = {
 	name: string;
-	parentFolderId: string;
+	parentFolderId: UUID;
 }

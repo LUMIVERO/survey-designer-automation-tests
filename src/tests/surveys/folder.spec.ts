@@ -2,9 +2,10 @@ import { test } from "@fixtures/testScope.fixture";
 import { getRandomName } from "@helpers/random.helpers";
 import { FolderResponse } from "@typedefs/api/folder.typedefs";
 import { ItemRow } from "@ui/components/tables/surveys/itemRows";
+import { UUID } from "node:crypto";
 
 test.describe("Folder", async () => {
-	let folderId: string;
+	let folderId: UUID;
 	let skipDelete: boolean = false;
 
 	test.beforeEach(async ({ adminAPP }) => {
@@ -21,14 +22,12 @@ test.describe("Folder", async () => {
 
 	test("[48443] User is able to create folder in the root folder and open it", async ({ adminAPP }) => {
 		const folderName: string = getRandomName("FolderAUT");
-
 		await adminAPP.surveysPage.clickCreateFolderBtn();
 		await adminAPP.surveysPage.dialogWithInput.fillItemName(folderName);
 		await adminAPP.surveysPage.dialogWithInput.clickSubmitBtn();
 		const folderCreationTime = new Date();
 		await adminAPP.surveysPage.dialogWithInput.waitForDialogHidden();
 		await adminAPP.surveysPage.reload();
-
 		await adminAPP.surveysPage.surveysTable.assertItemInList(folderName);
 		const folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(folderName);
 		await folderRow.click();

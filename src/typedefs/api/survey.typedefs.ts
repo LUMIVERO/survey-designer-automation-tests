@@ -1,17 +1,21 @@
+import { UUID } from "node:crypto";
+
 export type CreateSurveyOptions = {
 	name: string;
 	folderId: string;
 }
 
 export type SurveyResponse = {
-	id: string;
+	id: UUID;
 	name: string;
-	folderId: string;
+	folderId: UUID;
+	status: string;
+	isFavorite: string;
 	createdAt: string;
 	chapters: Array<Record<string, any>>;
 	commentsCount: number;
 }
 
 export type DeleteSurveyOptions = {
-	surveyId: string;
+	surveyId: UUID;
 }

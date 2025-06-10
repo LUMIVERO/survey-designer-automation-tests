@@ -1,18 +1,21 @@
+import { createUrl } from "@helpers/url.helpers";
+import { testArea1 } from "src/constants/env.data";
 import { guid } from "../idRegExp";
 
 export const loginUrl = "/api/auth/login";
 
-export const questionsUrl = {
-	questions: "/api/questions",
-  question: `/api/questions/${guid}`,
-}
+export const questionsUrl = createUrl(`/api/areas/${testArea1.id}/questions`, {
+	questions: "/",
+	question: `/${guid}`,
+});
 
-export const surveysUrl = {
-	surveys: "/api/surveys",
-	survey: `/api/surveys/${guid}`,
-};
+export const surveysUrl = createUrl(`/api/areas/${testArea1.id}/surveys`, {
+	surveys: "/",
+	survey: `/${guid}`,
+	duplicate: `/${guid}/duplicate`,
+});
 
-export const foldersUrl = {
-	folders: "/api/folders",
-	folder: `/api/folders/${guid}`,
-};
+export const foldersUrl = createUrl(`/api/areas/${testArea1.id}/folders`, {
+	folders: "/",
+	folder: `/${guid}`,
+});

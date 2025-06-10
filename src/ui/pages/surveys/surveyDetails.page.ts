@@ -1,4 +1,3 @@
-import { waitAfterAction } from "@helpers/promise.helpers";
 import { expect, Locator, test } from "@playwright/test";
 import { ClickOptions } from "@typedefs/playwright/actions.typedefs";
 import { Url, QuestionType } from "@typedefs/ui/surveyPage.typedefs";
@@ -61,9 +60,8 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		return new Chapter(this.chaptersContainers.filter({ hasText: chapterName }));
 	}
 
-	async waitForOpened(options?: Url): Promise<void> {
-		const { url, waitForResponse } = options ?? {};
-		await super.waitForOpened({ url });
+	async waitForOpened({ waitForResponse }: Url = {}): Promise<void> {
+		await super.waitForOpened();
 
 		waitForResponse &&
 		await this.page.waitForResponse(new RegExp(surveysUrl.survey));
@@ -107,32 +105,28 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 
 		await test.step(`Delete question ${await question.getQuestionText()}`, async () => {
 
-			await waitAfterAction(
-				async () => await question.clickDeleteQuestion(),
-				async () => await this.dialog.waitForDialogVisible()
-			);
+			await Promise.all([
+				question.clickDeleteQuestion(),
+				this.dialog.waitForDialogVisible(),
+			]);
 
 			await this.dialog.assertDialogHeaderIsCorrect("Delete Question");
-
-			await waitAfterAction(
-				async () => await this.dialog.clickSubmitBtn(),
-				async () => await this.dialog.waitForDialogHidden()
-			);
+			await this.dialog.clickSubmitBtn({ waitForResponse: true });
 		});
 	}
 
 	async getQuestionByText(
 		text: string,
-		questionType: QuestionType
+		questionType: QuestionType,
 	): Promise<Question> {
 		return new Question(
 			this.questions.filter({ has: this.page.locator(`[value=${text}]`) }),
-			questionType
+			questionType,
 		);
 	}
 
 	getFirstQuestion(
-		questionType: QuestionType
+		questionType: QuestionType,
 	): Question {
 		return new Question(this.questions.filter({ hasText: questionType }).first(), questionType);
 	}

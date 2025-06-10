@@ -1,11 +1,11 @@
-import { waitAfterAction } from "@helpers/promise.helpers";
 import { Locator, test, expect } from "@playwright/test";
+import { SurveyResponse } from "@typedefs/api/survey.typedefs";
 import { DeleteFolderOptions } from "@typedefs/ui/folder.typedefs";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
 import { ActionMenu } from "@ui/components/actions/actionMenu";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
-import { foldersUrl } from "src/constants/urls/apiUrls";
+import { foldersUrl, surveysUrl } from "src/constants/urls/apiUrls";
 import { surveyUrl } from "src/constants/urls/uiUrls";
 import { LoggedInBasePage } from "../loggedIn.base.page";
 
@@ -48,9 +48,8 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 		});
 	}
 
-	async duplicateSurvey(options: DuplicateSurveyOptions): Promise<void> {
-		await test.step("Duplicate survey", async () => {
-			const { surveyName, newSurveyName } = options;
+	async duplicateSurvey({ surveyName, newSurveyName }: DuplicateSurveyOptions): Promise<SurveyResponse> {
+		return test.step("Duplicate survey", async () => {
 			const surveyRow = await this.surveysTable.getRowByName(surveyName);
 
 			await expect(async () => {
@@ -60,8 +59,18 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 
 			await this.dialogWithInput.asserInputDataIsCorrect(surveyName + "_copy");
 			newSurveyName && await this.dialogWithInput.fillItemName(newSurveyName);
-			await this.dialogWithInput.clickSubmitBtn();
-			await this.dialogWithInput.waitForDialogHidden();
+			const [, , response] = await Promise.all([
+				this.dialogWithInput.clickSubmitBtn(),
+				this.dialogWithInput.waitForDialogHidden(),
+				this.page.waitForResponse(
+					async response =>
+						response.request().method() === "POST"
+						&& new RegExp(surveysUrl.duplicate).test(response.url())
+						&& response.ok(),
+				),
+			]);
+
+			return response.json();
 		});
 	}
 
@@ -70,21 +79,18 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 			const folderRow = await this.surveysTable.getRowByName(name);
 			await folderRow.actionsMenu.click();
 			await this.actionMenu.waitFor();
-			await waitAfterAction(
-				async () => await this.clickPopoverDeleteBtn(),
-				async () => {
-					await this.page.waitForResponse((response) => {
-						return response.request().method() === "DELETE"
-							&& new RegExp(foldersUrl.folder).test(response.url());
-					});
-				}
-			);
+			await Promise.all([
+				this.clickPopoverDeleteBtn(),
+				this.page.waitForResponse((response) => {
+					return response.request().method() === "DELETE"
+						&& new RegExp(foldersUrl.folder).test(response.url());
+				}),
+			]);
 		});
 	}
 
-	async waitForOpened(options?: Url): Promise<void> {
-		const { url, waitForResponse } = options ?? {};
-		await super.waitForOpened({ url });
+	async waitForOpened({ waitForResponse }: Url = {}): Promise<void> {
+		await super.waitForOpened();
 
 		waitForResponse &&
 		await this.waitForFoldersResponse();
