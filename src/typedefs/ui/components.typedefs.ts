@@ -6,3 +6,7 @@ export type WaitForResponse = {
 	waitForResponse: boolean;
 	callback?: ResponseBooleanCallback;
 }
+
+export type ClickOpenable = {
+	shouldOpen: boolean
+}

@@ -1,12 +1,13 @@
-import { Locator, Page, test, expect } from "@playwright/test";
+import { Locator, test, Page } from "@playwright/test";
 import { WaitForOptions } from "@typedefs/playwright/actions.typedefs";
 import { AssertIsVisible } from "@typedefs/playwright/expect.typedefs";
+import { BaseContainer } from "@ui/components/baseComponent";
 
-export abstract class BaseActionMenuPopup {
-	protected readonly container: Locator = this.page.locator(".popover-container.opened");
+export abstract class BaseActionMenuPopup extends BaseContainer {
 	protected readonly actions: Locator = this.container.locator(".dropdown-list-option");
 
-	constructor(readonly page: Page) {
+	constructor(page: Page) {
+		super(page.locator(".popover-container.opened"));
 	}
 
 	async waitFor(options: WaitForOptions = { state: "visible" }): Promise<void> {
@@ -17,7 +18,7 @@ export abstract class BaseActionMenuPopup {
 
 	async assertIsVisible(options?: AssertIsVisible) {
 		await test.step("Assert action menu is visible", async () => {
-			await expect(this.container).toBeVisible(options);
+			await super.assertIsVisible(options);
 		});
 	}
 }

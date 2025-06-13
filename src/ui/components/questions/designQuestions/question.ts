@@ -2,7 +2,7 @@ import { getAnswerType } from "@helpers/survey.helpers";
 import { Locator, Page, expect, test } from "@playwright/test";
 import { AddGridAnswerOptions, AddGridTopicOptions } from "@typedefs/ui/answer.typedefs";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
-import { ActionMenuPopup } from "@ui/components/actions/actionPopup";
+import { ChapterActionMenu } from "@ui/components/actions/actionPopup";
 import { AddNewGridItemActionMenu } from "@ui/components/actions/addNewGridItemActionMenu";
 import { InputOnFocus } from "@ui/components/inputs";
 import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/baseAnswer";
@@ -24,7 +24,7 @@ export class Question {
 	readonly answers: Locator = this.container.locator(".answer-item");
 	readonly addNewAnswerBtn: Locator = this.container.locator(".add-answer-btn button");
 	readonly addNewTopicBtn?: Locator = this.container.locator(".add-topic-btn button");
-	readonly actionMenu: ActionMenuPopup;
+	readonly actionMenu: ChapterActionMenu;
 	readonly addNewGridItemActionMenu: AddNewGridItemActionMenu;
 	readonly instructionsBox: InstructionsBox;
 
@@ -34,7 +34,7 @@ export class Question {
 	) {
 		this.page = container.page();
 		this.AnswerType = getAnswerType(questionType);
-		this.actionMenu = new ActionMenuPopup(this.page);
+		this.actionMenu = new ChapterActionMenu(this.page);
 		this.instructionsBox = new InstructionsBox(this.page);
 		this.addNewGridItemActionMenu = new AddNewGridItemActionMenu(this.page);
 	}
