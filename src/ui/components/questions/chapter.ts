@@ -1,19 +1,18 @@
-import { Locator, Page, expect, test } from "@playwright/test";
+import { Locator, expect, test } from "@playwright/test";
 import { AssertIsVisible } from "@typedefs/playwright/expect.typedefs";
-import { ActionMenuPopup } from "@ui/components/actions/actionPopup";
+import { DashboardRowActionMenu } from "@ui/components/actions/dashboardRowActionMenu";
+import { BaseContainer } from "@ui/components/baseComponent";
 
-export class Chapter {
+export class Chapter extends BaseContainer {
+	static defaultChapterName = "Chapter #1";
 	private _chaptersLocator: string = ".chapter-container";
 	readonly title: Locator = this.container.locator(".title");
 	readonly commentsBtn: Locator = this.container.getByTitle("Start discussion");
 	readonly actions: Locator = this.container.locator(".dropdown-button-container button");
-	readonly actionsMenu: ActionMenuPopup = new ActionMenuPopup(this.page);
+	readonly actionsMenu: DashboardRowActionMenu = new DashboardRowActionMenu(this.page);
 
-	constructor(readonly container: Locator) {
-	}
-
-	get page(): Page {
-		return this.container.page();
+	constructor(container: Locator) {
+		super(container);
 	}
 
 	async renameChapter(name: string): Promise<Chapter> {
@@ -24,7 +23,8 @@ export class Chapter {
 			await this.removeFocusWithTab();
 			await expect(titleInput).toBeHidden();
 
-			return new Chapter(this.page.locator(this._chaptersLocator).filter({ hasText: name }));
+			this.container = this.page.locator(this._chaptersLocator).filter({ hasText: name });
+			return this;
 		});
 	}
 
@@ -34,10 +34,13 @@ export class Chapter {
 		});
 	}
 
-	async clickTreeDotsBtn(): Promise<void> {
+	async clickThreeDotsBtn(): Promise<DashboardRowActionMenu> {
 		await test.step("Click on tree dots button", async () => {
 			await this.actions.click();
+			await this.actionsMenu.waitFor({ state: "attached" });
 		});
+
+		return this.actionsMenu;
 	}
 
 	async assertChapterIsVisible(options: AssertIsVisible = { visible: true }): Promise<void> {

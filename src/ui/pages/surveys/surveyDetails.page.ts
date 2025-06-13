@@ -1,10 +1,12 @@
 import { expect, Locator, test } from "@playwright/test";
 import { ClickOptions } from "@typedefs/playwright/actions.typedefs";
+import { ClickOpenable } from "@typedefs/ui/components.typedefs";
 import { Url, QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { BaseDialog } from "@ui/components/dialogs/baseDialog";
 import { Chapter } from "@ui/components/questions/chapter";
 import { Question } from "@ui/components/questions/designQuestions/question";
 import { SidePanel } from "@ui/components/surveys/sidePanel";
+import { UUID } from "node:crypto";
 import { surveysUrl } from "src/constants/urls/apiUrls";
 import { surveyUrl } from "src/constants/urls/uiUrls";
 import { BaseDetailsPage } from "../baseDetails.page";
@@ -60,11 +62,31 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		return new Chapter(this.chaptersContainers.filter({ hasText: chapterName }));
 	}
 
+	getChapterById(id: UUID): Chapter {
+		return new Chapter(this.chaptersContainers.filter({ has: this.page.locator(`#${id}`)}))
+	}
+
+	async getQuestionByText(
+		text: string,
+		questionType: QuestionType,
+	): Promise<Question> {
+		return new Question(
+			this.questions.filter({ has: this.page.locator(`[value=${text}]`) }),
+			questionType,
+		);
+	}
+
+	getFirstQuestion(
+		questionType: QuestionType,
+	): Question {
+		return new Question(this.questions.filter({ hasText: questionType }).first(), questionType);
+	}
+
 	async waitForOpened({ waitForResponse }: Url = {}): Promise<void> {
 		await super.waitForOpened();
 
 		waitForResponse &&
-		await this.page.waitForResponse(new RegExp(surveysUrl.survey));
+		await this.page.waitForResponse(new RegExp(surveysUrl.details));
 	}
 
 	async clickQuestionTypeButton(questionType: QuestionType): Promise<void> {
@@ -81,11 +103,16 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		});
 	}
 
-	async clickSidePanelBtn() {
-		await test.step("Click on the side panel", async () => {
-			await this.sidePanel.sidePanelBtn.click();
+	async clickSidePanelBtn(options?: ClickOpenable): Promise<SidePanel> {
+		const { shouldOpen = true } = options || {};
+		return test.step("Open side panel", async () => {
+			if (await this.sidePanel.isVisible(!shouldOpen)) {
+				await this.sidePanel.sidePanelBtn.click();
+			}
+			return this.sidePanel;
 		});
 	}
+
 
 	private async determineQuestion(questionOrTypeOrText: Question | QuestionType | string, questionType?: QuestionType): Promise<Question> {
 		if (questionOrTypeOrText instanceof Question) {
@@ -115,25 +142,15 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		});
 	}
 
-	async getQuestionByText(
-		text: string,
-		questionType: QuestionType,
-	): Promise<Question> {
-		return new Question(
-			this.questions.filter({ has: this.page.locator(`[value=${text}]`) }),
-			questionType,
-		);
-	}
-
-	getFirstQuestion(
-		questionType: QuestionType,
-	): Question {
-		return new Question(this.questions.filter({ hasText: questionType }).first(), questionType);
-	}
-
 	async assertSurveyNameCorrect(name: string): Promise<void> {
 		await test.step(`Assert survey name is correct`, async () => {
 			await expect(this.surveyName).toHaveText(name);
+		});
+	}
+
+	async assertChaptersCount(count: number): Promise<void> {
+		await test.step("Assert chapters count on survey page", async () => {
+			await expect(this.chaptersContainers).toHaveCount(count);
 		});
 	}
 }
