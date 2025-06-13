@@ -4,7 +4,7 @@ import { guid } from "src/constants/idRegExp";
 export function setIdOnUrl(
 	url: string,
 	id: number | string,
-	pattern: string = guid
+	pattern: string = guid,
 ): string {
 	const idString = `${id}`;
 
@@ -34,8 +34,24 @@ export function getIdFromString(str: string, pattern: string = guid): string {
 export function createUrl<T extends Record<string, PathPart>>(service: PathPart, endpoints: T): T {
 	return Object.entries(endpoints).reduce((result, [key, value]) => {
 
-		result[key] = service + value;
+		result[key] = value === "/" ? service : service + value;
 
 		return result;
 	}, {}) as T;
+}
+
+export function toQueryParams(params: Record<string, number | string | boolean>): string {
+	return new URLSearchParams(
+		Object.entries(params).reduce((acc, [key, value]) => {
+			acc[key] = String(value);
+			return acc;
+		}, {} as Record<string, string>),
+	).toString();
+}
+
+export function setQuery(url: string, params:  Record<string, number | string | boolean>): string {
+	const query = toQueryParams(params);
+
+	return query ? url + query : url
+
 }
