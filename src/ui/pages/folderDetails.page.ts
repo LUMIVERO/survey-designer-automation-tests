@@ -13,7 +13,7 @@ export class FolderDetailsPage extends BaseDetailsPage {
 		await super.waitForOpened();
 
 		waitForResponse &&
-		await this.page.waitForResponse(new RegExp(foldersUrl.folder));
+		await this.page.waitForResponse(new RegExp(foldersUrl.details));
 	}
 
 	async clickBackBtn(): Promise<void> {

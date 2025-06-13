@@ -12,7 +12,7 @@ import { NetworkError } from "@typedefs/api/request.typedefs";
 import { foldersUrl } from "src/constants/urls/apiUrls";
 
 export class Folder extends Endpoint {
-	readonly url = foldersUrl.folders;
+	readonly url = foldersUrl.root;
 
 	async getFolders(): Promise<GetFolderResponse> {
 		const response = await this.request.get(this.url);

@@ -26,7 +26,7 @@ test.describe("Edit question", async () => {
 
 		await waitAfterAction(
 			async () => await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.Grid),
-			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.questions))
+			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.root))
 		);
 
 		await surveyDetailsPage.clickSidePanelBtn();

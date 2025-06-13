@@ -5,10 +5,10 @@ import { NetworkError } from "@typedefs/api/request.typedefs";
 import { questionsUrl } from "src/constants/urls/apiUrls";
 
 export class Question extends Endpoint {
-	readonly url = questionsUrl.question;
+	readonly url = questionsUrl.details;
 
 	async getQuestions(): Promise<QuestionResponse> {
-		const response = await this.request.get(questionsUrl.questions);
+		const response = await this.request.get(questionsUrl.root);
 
 		await raiseForStatus(response, 200);
 
