@@ -1,11 +1,7 @@
-import { Page, Locator, test } from "@playwright/test";
+import { test } from "@playwright/test";
+import { BaseContainer } from "@ui/components/baseComponent";
 
-export class Input {
-	readonly page: Page;
-
-	constructor(readonly locator: Locator) {
-		this.page = locator.page();
-	}
+export class Input extends BaseContainer {
 
 	async removeFocusWithTab(): Promise<void> {
 		await test.step("Click out of focus", async () => {
@@ -14,12 +10,12 @@ export class Input {
 	}
 
 	async clickInput(): Promise<void> {
-		await this.locator.click();
+		await this.container.click();
 	}
 
 	async fill(text: string): Promise<void> {
 		await this.clickInput();
-		await this.locator.fill(text);
+		await this.container.fill(text);
 		await this.page.waitForTimeout(500);
 		await this.removeFocusWithTab();
 	}

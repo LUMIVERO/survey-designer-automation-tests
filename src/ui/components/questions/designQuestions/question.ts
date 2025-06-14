@@ -4,7 +4,7 @@ import { AddGridAnswerOptions, AddGridTopicOptions } from "@typedefs/ui/answer.t
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { ChapterActionMenu } from "@ui/components/actions/actionPopup";
 import { AddNewGridItemActionMenu } from "@ui/components/actions/addNewGridItemActionMenu";
-import { InputOnFocus } from "@ui/components/inputs";
+import { InputWithPlaceholder } from "@ui/components/inputs";
 import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/baseAnswer";
 import { InstructionsBox } from "@ui/components/questions/instructions";
 
@@ -130,7 +130,7 @@ export class Question {
 
 	async editQuestionText(text: string): Promise<Question> {
 		return await test.step("Edit Question text", async () => {
-			const input = new InputOnFocus(this.questionTextArea, "Click to write the question text");
+			const input = new InputWithPlaceholder(this.questionTextArea, "Click to write the question text");
 			await input.fill(text);
 
 			return new Question(this.page.locator(this._questionLocator, { hasText: text }), this.questionType);
@@ -139,7 +139,7 @@ export class Question {
 
 	async editQuestionVarText(text: string): Promise<Question> {
 		return await test.step("Edit Question var text", async () => {
-			const input = new InputOnFocus(this.questionVariable, "Question Variable Name");
+			const input = new InputWithPlaceholder(this.questionVariable, "Question Variable Name");
 			await input.fill(text);
 
 			return new Question(this.page.locator(this._questionLocator, { hasText: text }), this.questionType);

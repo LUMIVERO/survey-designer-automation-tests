@@ -1,7 +1,7 @@
 import { Locator, expect } from "@playwright/test";
 import { Input } from "src/ui/components/inputs/input";
 
-export class InputOnFocus extends Input {
+export class InputWithPlaceholder extends Input {
 
 	constructor(locator: Locator, protected placeholder: string = "") {
 		super(locator);
@@ -9,7 +9,7 @@ export class InputOnFocus extends Input {
 
 	async clickInput() {
 		await expect(async () => {
-			await expect(this.locator).toBeVisible();
+			await expect(this.container).toBeVisible();
 			await super.clickInput();
 			await this.page.waitForTimeout(200);
 			await expect(this.input).toBeVisible();

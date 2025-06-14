@@ -1,5 +1,5 @@
 import { Locator, test, expect, Page } from "@playwright/test";
-import { InputOnFocus } from "@ui/components/inputs";
+import { InputWithPlaceholder } from "@ui/components/inputs";
 
 export abstract class BaseAnswer {
 	abstract readonly input: Locator;
@@ -42,7 +42,7 @@ export abstract class BaseAnswer {
 
 	async editAnswerText(text: string): Promise<BaseAnswer> {
 		await test.step(`Edit answer text with text - "${text}"`, async () => {
-			const input = new InputOnFocus(this.answerTextInput, "Click to write the answer option");
+			const input = new InputWithPlaceholder(this.answerTextInput, "Click to write the answer option");
 			await input.fill(text);
 		});
 
@@ -51,7 +51,7 @@ export abstract class BaseAnswer {
 
 	async editAnswerVarText(text: string): Promise<BaseAnswer> {
 		await test.step(`Edit answer var text with text - "${text}"`, async () => {
-			const input = new InputOnFocus(this.answerVariable, "Variable name");
+			const input = new InputWithPlaceholder(this.answerVariable, "Variable name");
 			await input.fill(text);
 		});
 
