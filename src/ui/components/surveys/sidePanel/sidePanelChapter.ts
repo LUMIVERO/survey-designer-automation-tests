@@ -1,4 +1,4 @@
-import { Locator, test } from "@playwright/test";
+import { Locator, test, expect } from "@playwright/test";
 import { BaseContainer } from "@ui/components/baseComponent";
 import { AddNewItemSidebarMenu, SidebarActionsMenu } from "./actions";
 
@@ -46,6 +46,12 @@ export class SidePanelChapter extends BaseContainer {
 			if (await this.expandBtn.getAttribute("class").then(classString => classString.includes("collapsed"))) {
 				return this.expandBtn.click();
 			}
+		});
+	}
+
+	async assertChapterName(name: string): Promise<void> {
+		await test.step("Assert chapter name on side panel", async () => {
+			await expect(this.title).toHaveText(name);
 		});
 	}
 

@@ -1,4 +1,5 @@
 import { test } from "@fixtures/testScope.fixture";
+import { getRandomName } from "@helpers/random.helpers";
 import { Chapter } from "@ui/components/questions/chapter";
 import { chaptersUrl } from "src/constants/urls/apiUrls";
 
@@ -8,19 +9,21 @@ test.describe("Create chapter", async () => {
 		await adminAPP.surveyDetailsPage.waitForOpened();
 	});
 
-	test("User can create and delete a chapter in the root chapter", async ({ adminAPP }) => {
+	test("User can create and delete a chapter in the root chapter from sidebar", async ({ adminAPP }) => {
 		const chapterName = Chapter.defaultChapterName;
 		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
 		await sidePanel.getChapter().clickAddNewBtn()
 			.then(menu => menu.clickActionBtn("addChapterOption", { waitForResponse: true }));
 		await sidePanel.assertChaptersCount(2);
-		await sidePanel.getChapter(chapterName).assertIsVisible();
+		const sidePanelChapter = sidePanel.getChapter(chapterName);
+		await sidePanelChapter.assertIsVisible();
 		await adminAPP.surveyDetailsPage.assertChaptersCount(2);
+
 		const chapter = adminAPP.surveyDetailsPage.getChapter(chapterName);
 		await chapter.assertChapterIsVisible();
 
-		await chapter.clickThreeDotsBtn()
-			.then(menu => menu.clickDeleteButton());
+		await sidePanelChapter.clickThreeDotsBtn()
+			.then(menu => menu.clickActionBtn("deleteBtn"));
 		await adminAPP.surveyDetailsPage.dialog.assertDialogHeaderIsCorrect("Delete Chapter");
 		await adminAPP.surveyDetailsPage.dialog.clickSubmitBtn({
 			waitForResponse: true,
@@ -31,13 +34,12 @@ test.describe("Create chapter", async () => {
 		await chapter.assertChapterIsVisible({ visible: false });
 	});
 
-	test("User can delete a chapter from side panel", async ({ adminAPP, apiService, chapterData }) => {
+	test("User can delete a chapter from main area", async ({ adminAPP, apiService, chapterData }) => {
 		const chapterName = Chapter.defaultChapterName;
 		await apiService.chapter.createChapter({ ...chapterData, name: chapterName });
 
-		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
-		await sidePanel.getChapter(chapterName).clickThreeDotsBtn()
-			.then(menu => menu.clickActionBtn("deleteBtn"));
+		await adminAPP.surveyDetailsPage.getChapter(chapterName).clickThreeDotsBtn()
+			.then(menu => menu.clickDeleteButton());
 
 		await adminAPP.surveyDetailsPage.dialog.assertDialogHeaderIsCorrect("Delete Chapter");
 		await adminAPP.surveyDetailsPage.dialog.clickSubmitBtn({
@@ -45,12 +47,11 @@ test.describe("Create chapter", async () => {
 			callback: async (resp) => new RegExp(chaptersUrl.root).test(resp.url()) && resp.request().method() === "DELETE",
 		});
 
-		await sidePanel.assertChaptersCount(1);
 		await adminAPP.surveyDetailsPage.getChapter(chapterName)
 			.assertChapterIsVisible({ visible: false });
 	});
 
-	test("User can create and delete a chapter in the subchapter", async ({ adminAPP, chapter }) => {
+	test("User can create and delete a chapter in the subchapter from sidebar", async ({ adminAPP, chapter }) => {
 		const chapterName = Chapter.defaultChapterName;
 		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
 		const sidePanelChapter = sidePanel.getChapter(chapter.name);
@@ -65,8 +66,8 @@ test.describe("Create chapter", async () => {
 		const subchapter = adminAPP.surveyDetailsPage.getChapter(chapterName);
 		await subchapter.assertChapterIsVisible();
 
-		await subchapter.clickThreeDotsBtn()
-			.then(menu => menu.clickDeleteButton());
+		await sidePanel.getChapter(chapterName).clickThreeDotsBtn()
+			.then(menu => menu.clickActionBtn("deleteBtn"));
 		await adminAPP.surveyDetailsPage.dialog.assertDialogHeaderIsCorrect("Delete Chapter");
 		await adminAPP.surveyDetailsPage.dialog.clickSubmitBtn({
 			waitForResponse: true,
@@ -75,8 +76,39 @@ test.describe("Create chapter", async () => {
 		await subchapter.assertChapterIsVisible({ visible: false });
 	});
 
-	test("User can rename a chapter", async ({ adminAPP, chapter }) => {
-		adminAPP.surveyDetailsPage.getChapter(chapter.name)
+	test("User can rename a root chapter", async ({ adminAPP }) => {
+		const newChapterName = getRandomName("ChapterAUT");
+		const chapterElement = adminAPP.surveyDetailsPage.getChapter();
+		await chapterElement.renameChapter(newChapterName);
+		await chapterElement.assertChapterName(newChapterName);
+
+		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
+		await sidePanel.getChapter(newChapterName).assertChapterName(newChapterName);
+	});
+
+	test("User can rename a subchapter", async ({ adminAPP, chapter }) => {
+		const newChapterName = getRandomName("ChapterAUT");
+		const chapterElement = await adminAPP.surveyDetailsPage.getChapter(chapter.name)
+			.renameChapter(newChapterName);
+		await chapterElement.assertChapterName(newChapterName);
+
+		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
+		await sidePanel.getChapter(newChapterName).assertChapterName(newChapterName);
+		await sidePanel.getChapter(chapter.name).assertIsVisible({ visible: false });
+	});
+
+	test("User can rename a chapter from rich text dialog", async ({ adminAPP, chapter }) => {
+		const newChapterName = getRandomName("ChapterAUT");
+		const dialog = await adminAPP.surveyDetailsPage.getChapter(chapter.name)
+			.clickEditBtn();
+		await dialog.fill(newChapterName);
+		await dialog.clickSubmitBtn();
+
+		await adminAPP.surveyDetailsPage.getChapter(newChapterName)
+			.assertChapterName(newChapterName);
+		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
+		await sidePanel.getChapter(newChapterName).assertChapterName(newChapterName);
+		await sidePanel.getChapter(chapter.name).assertIsVisible({ visible: false });
 	});
 
 	// test("User can create, rename and delete a chapter", async ({ adminAPP, apiService }) => {

@@ -1,14 +1,15 @@
 import { test, Page, Locator, expect, Response } from "@playwright/test";
 import { WaitForResponse, ResponseBooleanCallback } from "@typedefs/ui/components.typedefs";
+import { BaseContainer } from "@ui/components/baseComponent";
 
-export class BaseDialog {
-	protected readonly container: Locator = this.page.locator(".k-window.k-dialog");
+export class BaseDialog extends BaseContainer {
 	readonly dialogHeader: Locator = this.container.locator(".k-dialog-title");
-	readonly xBtn: Locator = this.container.getByTitle("Close");
-	readonly submitBtn: Locator = this.container.locator(".k-button-solid");
-	readonly cancelBtn: Locator = this.container.locator(".k-button-outline");
+	protected xBtn: Locator = this.container.locator(".ti-x");
+	protected submitBtn: Locator = this.container.locator(".k-button-solid");
+	protected cancelBtn: Locator = this.container.locator(".k-button-outline");
 
-	constructor(protected readonly page: Page) {
+	constructor(page: Page) {
+		super(page.locator(".k-window.k-dialog"))
 	};
 
 	async waitForDialogVisible() {

@@ -24,7 +24,8 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	readonly chapterFooter: Locator = this.page.locator(".container-footer");
 	readonly addQuestionBtn: Locator = this.chapterFooter.locator(".question-btn");
 	readonly dialog: BaseDialog = new BaseDialog(this.page);
-	readonly sidePanel: SidePanel = new SidePanel(this.page);
+
+	protected readonly sidePanel: SidePanel = new SidePanel(this.page);
 
 	get chaptersCount(): number {
 		return this._chapterNumber + 1;
