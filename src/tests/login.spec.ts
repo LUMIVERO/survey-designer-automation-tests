@@ -3,7 +3,7 @@ import { Application } from "@ui/application";
 import { ADMIN_CREDS, testArea1 } from "src/constants/env.data";
 
 test.describe("Authentication", () => {
-	test("[48442] User is able to log in and log out", async ({ page }) => {
+	test("User is able to log in and log out", async ({ page }) => {
 		const APP = new Application(page);
 
 		await APP.loginPage.visit();

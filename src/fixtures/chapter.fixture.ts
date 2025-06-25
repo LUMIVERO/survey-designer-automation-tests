@@ -1,4 +1,5 @@
 import { ChapterResponse, CreateChapterOptions } from "@typedefs/api/chapter.typedefs";
+import { getChapterData } from "src/testData/chapter.data";
 import { test as base } from "./survey.fixture";
 
 export const test = base.extend<{
@@ -6,13 +7,7 @@ export const test = base.extend<{
 	chapter: ChapterResponse;
 }>({
 	chapterData: async ({ survey }, use) => {
-		await use({
-			name: "Auto-chapter",
-			index: 0,
-			surveyId: survey.id,
-			parentChapterId: survey.chapters[0].id,
-			description: "Automation",
-		});
+		await use(getChapterData(survey.id, survey.chapters[0].id));
 	},
 	chapter: async ({ apiService, chapterData }, use) => {
 		const chapter = await apiService.chapter.createChapter(chapterData);

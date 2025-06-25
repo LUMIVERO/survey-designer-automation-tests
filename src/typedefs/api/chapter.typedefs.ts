@@ -37,6 +37,6 @@ export type GetChaptersResponse = {
 	items: ChapterResponse[]
 }
 
-export type DeleteChapterOptions = {
+export type ChapterDetailsOptions = {
 	chapterId: UUID;
 }

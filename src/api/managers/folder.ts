@@ -6,7 +6,7 @@ import {
 	DeleteFolderOptions,
 	CreateFolderOptions,
 	FolderResponse,
-	GetFolderOptions
+	GetFolderOptions,
 } from "@typedefs/api/folder.typedefs";
 import { NetworkError } from "@typedefs/api/request.typedefs";
 import { foldersUrl } from "src/constants/urls/apiUrls";
@@ -31,7 +31,7 @@ export class Folder extends Endpoint {
 	}
 
 	async deleteFolder(
-		{ folderId }: DeleteFolderOptions
+		{ folderId }: DeleteFolderOptions,
 	): Promise<void> {
 
 		const response = await this.request.delete(this.detailsUrl(folderId));
@@ -40,14 +40,14 @@ export class Folder extends Endpoint {
 	}
 
 	async createFolder(
-		options: CreateFolderOptions
+		options: CreateFolderOptions,
 	): Promise<FolderResponse> {
 
 		const response = await this.request.post(this.url, {
 			data: {
 				...options,
 				index: 0,
-			}
+			},
 		});
 
 		await raiseForStatus(response);
@@ -55,7 +55,7 @@ export class Folder extends Endpoint {
 		return await response.json();
 	}
 
-	async assertFolderWasDeleted({ folderId }: DeleteFolderOptions): Promise<void> {
+	async assertFolderDoesNotExist({ folderId }: DeleteFolderOptions): Promise<void> {
 		try {
 			const response = await this.getFolderById({ folderId });
 			expect(response.id).toBeFalsy();
