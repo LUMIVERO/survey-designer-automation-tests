@@ -1,16 +1,15 @@
 import { test } from "@fixtures/testScope.fixture";
-import { getQuestionTestCaseId } from "@helpers/survey.helpers";
 import { expect } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 
-test.describe("Create questions", async () => {
+test.describe("Create questions @Sf6b783d5", async () => {
 
 	test.beforeEach(async ({ adminAPP, survey }) => {
 		await adminAPP.surveyDetailsPage.visit(survey.id);
 		await adminAPP.surveyDetailsPage.waitForOpened();
 	});
 
-	test("User can create question in root chapter, add subchapter and question to it", async ({ adminAPP }) => {
+	test("User can create question in root chapter, add subchapter and question to it @Tf16c68eb", async ({ adminAPP }) => {
 		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
 		await sidePanel.getChapter().clickAddNewBtn()
 			.then(menu => menu.clickActionBtn("addQuestionOption" ));
@@ -66,7 +65,7 @@ test.describe("Create questions", async () => {
 
 
 	Object.values(QuestionType).forEach((questionType) => {
-		test.skip(`[${getQuestionTestCaseId(questionType)}] User is able to create & delete ${questionType} question type in the root chapter`, async ({ adminAPP }) => {
+		test.skip(`User is able to create & delete ${questionType} question type in the root chapter`, async ({ adminAPP }) => {
 			const { surveyDetailsPage } = adminAPP;
 			const { sidePanel } = surveyDetailsPage;
 			await surveyDetailsPage.clickSidePanelBtn();

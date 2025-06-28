@@ -2,8 +2,8 @@ import { test } from "@playwright/test";
 import { Application } from "@ui/application";
 import { ADMIN_CREDS, testArea1 } from "src/constants/env.data";
 
-test.describe("Authentication", () => {
-	test("User is able to log in and log out", async ({ page }) => {
+test.describe("Authentication @Sc80b4b04", () => {
+	test("User is able to log in and log out @Tebe222e4", async ({ page }) => {
 		const APP = new Application(page);
 
 		await APP.loginPage.visit();

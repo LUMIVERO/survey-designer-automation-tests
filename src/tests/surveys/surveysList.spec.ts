@@ -3,7 +3,7 @@ import { getRandomName } from "@helpers/random.helpers";
 import { ItemRow } from "@ui/components/tables/surveys/itemRows";
 import { UUID } from "node:crypto";
 
-test.describe("Surveys list", async () => {
+test.describe("Surveys list @Sdf95633b", async () => {
 	let createdSurveys: Array<UUID> = [];
 
 	test.beforeEach(async ({ adminAPP }) => {
@@ -15,7 +15,7 @@ test.describe("Surveys list", async () => {
 		createdSurveys = [];
 	});
 
-	test("User is able to create survey in the root folder and open it @smoke",
+	test("User is able to create survey in the root folder and open it @smoke @Tc0001b0d",
 		async ({ adminAPP }) => {
 			const surveyName: string = getRandomName("SurveyAUT");
 
@@ -44,7 +44,7 @@ test.describe("Surveys list", async () => {
 			surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(survey.name);
 		});
 
-		test("User can rename survey", async ({ adminAPP, survey }) => {
+		test("User can rename survey @T9caeaf8a", async ({ adminAPP, survey }) => {
 			await adminAPP.surveysPage.waitForFoldersResponse();
 			const { name } = survey;
 			await surveyRow.assertItemNameCorrect(name);
@@ -56,7 +56,7 @@ test.describe("Surveys list", async () => {
 		});
 
 		//TODO: add questions and chapters to the original survey + assert these items are duplicated with the new survey
-		test("User is able to duplicate the survey", async ({ adminAPP, survey }) => {
+		test("User is able to duplicate the survey @Tfdd4a948", async ({ adminAPP, survey }) => {
 			const { name } = survey;
 			const duplicatedSurveyName: string = name + "_copy";
 

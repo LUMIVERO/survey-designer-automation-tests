@@ -8,7 +8,7 @@ import { Question } from "@ui/components/questions/designQuestions/question";
 import { GridRow } from "@ui/components/tables/questions/gridRow";
 import { questionsUrl } from "src/constants/urls/apiUrls";
 
-test.describe.skip("Edit question", async () => {
+test.describe.skip("Edit question @Sfbbf57e5", async () => {
 	let question: Question;
 	let answer: GridAnswer;
 	let topic: GridRow;
@@ -35,7 +35,7 @@ test.describe.skip("Edit question", async () => {
 		topic = answer.table.getRow(0);
 	});
 
-	test("[48500, 48503] User can edit text for question, answer and topic", async () => {
+	test("User can edit text for question, answer and topic @T436e2356", async () => {
 		const questionText = "Edit-question";
 		const answerText = "Edit-answer";
 		const topicText = "Edit-topic";
@@ -53,7 +53,7 @@ test.describe.skip("Edit question", async () => {
 		await topic.assertTopicText(topicText);
 	});
 
-	test("[48504] User can edit variables for question, answer and topic", async () => {
+	test("User can edit variables for question, answer and topic @T860e33ed", async () => {
 		const questionVarText = "EditQVar";
 		const answerVarText = "EditAVar";
 		const topicVarText = "EditTVar";
@@ -71,7 +71,7 @@ test.describe.skip("Edit question", async () => {
 		await topic.assertTopicVariableText(topicVarText);
 	});
 
-	test("[48502] User can add/delete answer", async () => {
+	test("User can add/delete answer @T9c1c6d21", async () => {
 		const { table } = answer;
 		const { headRow } = table;
 
@@ -93,7 +93,7 @@ test.describe.skip("Edit question", async () => {
 		expect(await headRow.count({ timeout: 500 })).toEqual(2);
 	});
 
-	test("[50052] User can add/delete topic", async () => {
+	test("User can add/delete topic @Tb0502916", async () => {
 		const { table } = answer;
 
 		for (let i = await table.rows.count() - 1; i > 0; i--) {
@@ -114,7 +114,7 @@ test.describe.skip("Edit question", async () => {
 	});
 
 
-	test("[48507] User can add, edit, delete instruction for surveyors/scripters", async () => {
+	test("User can add, edit, delete instruction for surveyors/scripters @Te5046890", async () => {
 		const surveyorInstructionText: string = getRandomName("Surveyor-");
 		const scripterInstructionText: string = getRandomName("Scripter-");
 

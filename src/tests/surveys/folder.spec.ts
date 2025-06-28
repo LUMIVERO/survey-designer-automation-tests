@@ -4,7 +4,7 @@ import { FolderResponse } from "@typedefs/api/folder.typedefs";
 import { ItemRow } from "@ui/components/tables/surveys/itemRows";
 import { UUID } from "node:crypto";
 
-test.describe("Folder", async () => {
+test.describe("Folder @S406e3299", async () => {
 	let folderId: UUID;
 	let skipDelete: boolean = false;
 
@@ -20,7 +20,7 @@ test.describe("Folder", async () => {
 		skipDelete = false;
 	});
 
-	test("User is able to create folder in the root folder and open it", async ({ adminAPP }) => {
+	test("User is able to create folder in the root folder and open it @Tb17146c1", async ({ adminAPP }) => {
 		const folderName: string = getRandomName("FolderAUT");
 		await adminAPP.surveysPage.clickCreateFolderBtn();
 		await adminAPP.surveysPage.dialogWithInput.fillItemName(folderName);
@@ -62,7 +62,7 @@ test.describe("Folder", async () => {
 			folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(name);
 		});
 
-		test("User is able to rename the folder", async () => {
+		test("User is able to rename the folder @Teaf27fdd", async () => {
 			const { name } = folder;
 			await folderRow.assertItemNameCorrect(name);
 			const newFolderName: string = "Renamed-" + name;
@@ -72,7 +72,7 @@ test.describe("Folder", async () => {
 			await folderRow.assertItemUpdatedAt(folderUpdatedDate);
 		});
 
-		test("User is able to delete folder without surveys", async ({ adminAPP, apiService }) => {
+		test("User is able to delete folder without surveys @T6ab97513", async ({ adminAPP, apiService }) => {
 			skipDelete = true;
 			const subFolder = await apiService.folder.createFolder({
 				name: "SubFolderAUT", parentFolderId: folderId,
@@ -84,7 +84,7 @@ test.describe("Folder", async () => {
 			await apiService.folder.assertFolderDoesNotExist({ folderId: subFolder.id });
 		});
 
-		test("User is not able to delete folder with surveys", async ({ apiService, adminAPP }) => {
+		test("User is not able to delete folder with surveys @Tf24de971", async ({ apiService, adminAPP }) => {
 			const survey = await apiService.survey.createSurvey({
 				name: "SurveyAUT", folderId,
 			});
