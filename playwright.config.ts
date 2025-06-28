@@ -26,28 +26,28 @@ export default defineConfig({
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: [
 		["html", { open: "never" }],
-		["allure-playwright"],
-		[
-			"@alex_neo/playwright-azure-reporter",
-			{
-				orgUrl: "https://dev.azure.com/Dooblo",
-				token: process.env.AZURE_TOKEN,
-				planId: 48439,
-				projectName: "Survey Designer",
-				environment: "AQA",
-				testRunTitle: "Playwright Test Run",
-				publishTestResultsMode: "testRun",
-				uploadAttachments: true,
-				attachmentsType: ["screenshot", "video", "trace"],
-				testRunConfig: {
-					owner: {
-						displayName: "Marina Bidenko",
-					},
-					comment: "Playwright Test Run",
-					configurationIds: [7],
-				},
-			} as AzureReporterOptions,
-		],
+		// ["allure-playwright"],
+		// [
+		// 	"@alex_neo/playwright-azure-reporter",
+		// 	{
+		// 		orgUrl: "https://dev.azure.com/Dooblo",
+		// 		token: process.env.AZURE_TOKEN,
+		// 		planId: 48439,
+		// 		projectName: "Survey Designer",
+		// 		environment: "AQA",
+		// 		testRunTitle: "Playwright Test Run",
+		// 		publishTestResultsMode: "testRun",
+		// 		uploadAttachments: true,
+		// 		attachmentsType: ["screenshot", "video", "trace"],
+		// 		testRunConfig: {
+		// 			owner: {
+		// 				displayName: "Marina Bidenko",
+		// 			},
+		// 			comment: "Playwright Test Run",
+		// 			configurationIds: [7],
+		// 		},
+		// 	} as AzureReporterOptions,
+		// ],
 		['./node_modules/@testomatio/reporter/lib/adapter/playwright.js', {
 			apiKey: process.env.TESTOMATIO,
 		}]
