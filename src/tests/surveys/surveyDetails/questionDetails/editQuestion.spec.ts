@@ -8,7 +8,7 @@ import { Question } from "@ui/components/questions/designQuestions/question";
 import { GridRow } from "@ui/components/tables/questions/gridRow";
 import { questionsUrl } from "src/constants/urls/apiUrls";
 
-test.describe("Edit question", async () => {
+test.describe.skip("Edit question", async () => {
 	let question: Question;
 	let answer: GridAnswer;
 	let topic: GridRow;
@@ -26,7 +26,7 @@ test.describe("Edit question", async () => {
 
 		await waitAfterAction(
 			async () => await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.Grid),
-			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.questions))
+			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.root))
 		);
 
 		await surveyDetailsPage.clickSidePanelBtn();

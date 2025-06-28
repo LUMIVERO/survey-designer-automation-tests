@@ -1,7 +1,7 @@
 import { Locator, test, expect, Page } from "@playwright/test";
 import { Timeout } from "@typedefs/playwright/service.typedefs";
 import { GridActionMenu } from "@ui/components/actions/gridActionMenu";
-import { InputOnFocus } from "@ui/components/inputs";
+import { InputWithPlaceholder } from "@ui/components/inputs";
 import { GridCol } from "@ui/components/tables/questions/gridCol";
 
 export abstract class BaseGridRow { // TODO: Add implementation for GridRow
@@ -52,14 +52,14 @@ export class GridRow extends BaseGridRow { // TODO: Add implementation for GridR
 
 	async editTopicText(text: string): Promise<void> {
 		await test.step(`Edit topic var text to "${text}"`, async () => {
-			const input = new InputOnFocus(this.topicText, "Click to write the topic option");
+			const input = new InputWithPlaceholder(this.topicText, "Click to write the topic option");
 			await input.fill(text);
 		});
 	}
 
 	async editTopicVarText(text: string): Promise<void> {
 		await test.step(`Edit topic var text to "${text}"`, async () => {
-			const input = new InputOnFocus(this.topicVariable, "Variable name");
+			const input = new InputWithPlaceholder(this.topicVariable, "Variable name");
 			await input.fill(text);
 		});
 	}

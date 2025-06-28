@@ -1,25 +1,26 @@
-import { test, Page, Locator, expect } from "@playwright/test";
+import { test, Page, Locator, expect, Response } from "@playwright/test";
 import { WaitForResponse, ResponseBooleanCallback } from "@typedefs/ui/components.typedefs";
+import { BaseContainer } from "@ui/components/baseComponent";
 
-export class BaseDialog {
-	readonly dialog: Locator = this.page.locator(".k-window.k-dialog");
-	readonly dialogHeader: Locator = this.dialog.locator(".k-window-titlebar");
-	readonly xBtn: Locator = this.dialog.locator(".k-button-icon");
-	readonly submitBtn: Locator = this.dialog.locator(".k-button-solid");
-	readonly cancelBtn: Locator = this.dialog.locator(".k-button-outline");
+export class BaseDialog extends BaseContainer {
+	readonly dialogHeader: Locator = this.container.locator(".k-dialog-title");
+	protected xBtn: Locator = this.container.locator(".ti-x");
+	protected submitBtn: Locator = this.container.locator(".k-button-solid");
+	protected cancelBtn: Locator = this.container.locator(".k-button-outline");
 
-	constructor(protected readonly page: Page) {
+	constructor(page: Page) {
+		super(page.locator(".k-window.k-dialog"))
 	};
 
 	async waitForDialogVisible() {
 		await test.step("Wait for the dialog to be visible", async () => {
-			await this.dialog.waitFor({ state: "visible" });
+			await this.container.waitFor({ state: "visible" });
 		});
 	}
 
 	async waitForDialogHidden() {
 		await test.step("Wait for the dialog to be hidden", async () => {
-			await this.dialog.waitFor({ state: "hidden" });
+			await this.container.waitFor({ state: "hidden" });
 		});
 	}
 
@@ -30,12 +31,17 @@ export class BaseDialog {
 		});
 	}
 
-	async clickSubmitBtn({ waitForResponse, callback }: WaitForResponse = { waitForResponse: false }) {
-		await test.step("Click on the [Submit] button on the dialog", async () => {
-			await Promise.all([
-				this.submitBtn.click(),
+	async clickSubmitBtn({
+	  waitForResponse,
+		callback,
+	}: WaitForResponse = { waitForResponse: false }): Promise<Response | void> {
+		return test.step("Click on the [Submit] button on the dialog", async () => {
+			const [response] = await Promise.all([
 				waitForResponse && this.waitForSuccessResponse(callback),
+				this.submitBtn.click(),
 			].filter(Boolean));
+
+			return response;
 		});
 	}
 
@@ -47,13 +53,13 @@ export class BaseDialog {
 
 	async assertDialogHeaderIsCorrect(text: string) {
 		await test.step(`Assert dialog header has title - ${text}`, async () => {
-			expect(await this.dialogHeader.innerText()).toEqual(text);
+			await expect(this.dialogHeader).toHaveText(text);
 		});
 	}
 
-	async waitForSuccessResponse(callback?: ResponseBooleanCallback): Promise<void> {
-		await test.step("Wait for success response", async () => {
-			await this.page.waitForResponse(callback || (async response => response.ok()));
+	protected async waitForSuccessResponse(callback?: ResponseBooleanCallback): Promise<Response> {
+		return test.step("Wait for success response", async () => {
+			return this.page.waitForResponse(callback || (async response => response.ok()));
 		});
 	}
 }

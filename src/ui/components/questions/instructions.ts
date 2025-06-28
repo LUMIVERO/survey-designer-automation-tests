@@ -50,7 +50,7 @@ export class InstructionsBox {
 
 	async assertInstruction(instructions: "surveyors" | "scripters", text: string): Promise<void> {
 		await test.step(`Assert ${instructions} instruction is "${text}"`, async () => {
-			await expect(this[`${instructions}InstructionsInput`].locator).toHaveValue(text);
+			await expect(this[`${instructions}InstructionsInput`].container).toHaveValue(text);
 		});
 	}
 

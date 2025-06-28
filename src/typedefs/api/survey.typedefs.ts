@@ -1,3 +1,4 @@
+import { ChapterResponse } from "@typedefs/api/chapter.typedefs";
 import { UUID } from "node:crypto";
 
 export type CreateSurveyOptions = {
@@ -12,8 +13,14 @@ export type SurveyResponse = {
 	status: string;
 	isFavorite: string;
 	createdAt: string;
-	chapters: Array<Record<string, any>>;
+	chapters: ChapterResponse[];
 	commentsCount: number;
+}
+
+export type GetSurveyOptions = {
+	surveyId: UUID;
+	includeChapters?: boolean;
+	includeFullHierarchy?: boolean;
 }
 
 export type DeleteSurveyOptions = {

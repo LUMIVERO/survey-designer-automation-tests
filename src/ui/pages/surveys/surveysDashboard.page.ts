@@ -2,7 +2,7 @@ import { Locator, test, expect } from "@playwright/test";
 import { SurveyResponse } from "@typedefs/api/survey.typedefs";
 import { DeleteFolderOptions } from "@typedefs/ui/folder.typedefs";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
-import { ActionMenu } from "@ui/components/actions/actionMenu";
+import { DashboardRowActionMenu } from "@ui/components/actions/dashboardRowActionMenu";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
 import { foldersUrl, surveysUrl } from "src/constants/urls/apiUrls";
@@ -15,7 +15,7 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 	readonly createFolderBtn: Locator = this.page.locator(".qdt-btn-primary-outlined", { hasText: "New Folder" });
 	readonly dialogWithInput: DialogWithInput = new DialogWithInput(this.page);
 	readonly surveysTable: SurveysTable = new SurveysTable(this.page);
-	readonly actionMenu: ActionMenu = new ActionMenu(this.page);
+	readonly actionMenu: DashboardRowActionMenu = new DashboardRowActionMenu(this.page);
 
 
 	async clickCreateSurveyBtn(): Promise<void> {
@@ -83,7 +83,7 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 				this.clickPopoverDeleteBtn(),
 				this.page.waitForResponse((response) => {
 					return response.request().method() === "DELETE"
-						&& new RegExp(foldersUrl.folder).test(response.url());
+						&& new RegExp(foldersUrl.details).test(response.url());
 				}),
 			]);
 		});
@@ -98,7 +98,7 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 
 	async waitForFoldersResponse(): Promise<void> {
 		await test.step("Wait for folders", async () => {
-			await this.page.waitForResponse(new RegExp(foldersUrl.folder));
+			await this.page.waitForResponse(new RegExp(foldersUrl.details));
 		});
 	}
 }
