@@ -23,16 +23,16 @@ steps:
   - script: npm install
     displayName: 'Install dependencies'
 
-  - script: npx playwright install
-    displayName: 'Install Playwright browsers'
+  - script: npx playwright install chromium
+    displayName: 'Install Playwright Chromium'
 
   - script: |
       echo BASE_URL='https://staging.stg.qllaborate.com' >> .env
       echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
+      echo EMAIL='$(EMAIL)' >> .env
       echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
       echo TENANT1='$(TENANT1)' >> .env
       echo TESTOMATIO='$(TESTOMATIO)' >> .env
-      cat .env
     displayName: 'Create .env file with secrets'
 
   - script: npm run chromium
