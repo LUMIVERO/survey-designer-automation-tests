@@ -36,5 +36,3 @@ steps:
 
   - script: npm run chromium
     displayName: 'Run Playwright tests (Chromium)'
-    env:
-      TESTOMATIO: $(TESTOMATIO)
