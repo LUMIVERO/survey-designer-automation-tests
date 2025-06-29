@@ -35,5 +35,5 @@ steps:
       echo TESTOMATIO='$(TESTOMATIO)' >> .env
     displayName: 'Create .env file with secrets'
 
-  - script: npm run chromium
+  - script: npx playwright test --project=chromium --reporter=./node_modules/@testomatio/reporter/lib/adapter/playwright.js,line
     displayName: 'Run Playwright tests (Chromium)'
