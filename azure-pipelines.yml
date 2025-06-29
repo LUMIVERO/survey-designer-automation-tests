@@ -32,6 +32,7 @@ steps:
       echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
       echo TENANT1='$(TENANT1)' >> .env
       echo TESTOMATIO='$(TESTOMATIO)' >> .env
+      cat .env
     displayName: 'Create .env file with secrets'
 
   - script: npm run chromium
