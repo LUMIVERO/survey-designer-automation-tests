@@ -26,6 +26,12 @@ export class UserInfoTab extends BaseContainer {
 		});
 	}
 
+	async assertAreaIsVisible(area: string): Promise<void> {
+		await test.step(`Assert area ${area} to be visible`, async () => {
+			await expect(this.areas.filter({ hasText: area })).toBeVisible();
+		});
+	}
+
 	async clickSignOutBtn(): Promise<void> {
 		await test.step("Click [Sign out] button", async () => {
 			await this.signOutBtn.click();

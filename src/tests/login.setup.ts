@@ -11,7 +11,7 @@ setup("Log in to the system", async ({ page }) => {
 		password: process.env.PASSWORD_ADMIN,
 		tenant: process.env.TENANT1
 	});
-	await APP.surveysPage.waitForOpened();
+	await APP.areasPage.waitForOpened();
 
 	await page.context().storageState({ path: adminAuthFile });
 });
