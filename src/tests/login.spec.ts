@@ -8,12 +8,11 @@ test.describe("Authentication @Sc80b4b04", () => {
 
 		await APP.loginPage.visit();
 		await APP.loginPage.login(ADMIN_CREDS);
-		await APP.surveysPage.waitForOpened();
-		await APP.surveysPage.clickUserInfoDetailsBtn();
-		await APP.surveysPage.userInfoTab.assertUserInfo(ADMIN_CREDS);
-		await APP.page.pause();
-		await APP.surveysPage.userInfoTab.assertMainArea(testArea1.name);
-		await APP.surveysPage.userInfoTab.clickSignOutBtn();
+  	await APP.areasPage.waitForOpened();
+		await APP.areasPage.clickUserInfoDetailsBtn();
+		await APP.areasPage.userInfoTab.assertUserInfo(ADMIN_CREDS);
+		await APP.areasPage.userInfoTab.assertAreaIsVisible(testArea1.name);
+		await APP.areasPage.userInfoTab.clickSignOutBtn();
 		await APP.loginPage.waitForOpened();
 	});
 });
