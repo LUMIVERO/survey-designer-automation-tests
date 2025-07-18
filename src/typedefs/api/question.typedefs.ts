@@ -44,7 +44,7 @@ export type QuestionResponse = {
 	id: UUID;
 	variableName: string;
 	text: string;
-	questionType: QuestionType;
+	questionType: keyof QuestionType;
 	renderType: RenderType
 	order: number;
 	chapterId: UUID;

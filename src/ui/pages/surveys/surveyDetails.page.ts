@@ -4,6 +4,7 @@ import { ClickOpenable } from "@typedefs/ui/components.typedefs";
 import { Url, QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { BaseDialog } from "@ui/components/dialogs/baseDialog";
 import { Chapter } from "@ui/components/questions/chapter";
+import { QuestionTypeList, QuestionBankDialog } from "@ui/components/questions/create-question-dialog";
 import { Question } from "@ui/components/questions/designQuestions/question";
 import { SidePanel } from "@ui/components/surveys/sidePanel";
 import { UUID } from "node:crypto";
@@ -18,12 +19,13 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	readonly pageContentHeader: Locator = this.page.locator(".page-content-header");
 	readonly chaptersContainers: Locator = this.page.locator(".chapter-container");
 	readonly surveyName: Locator = this.pageContentHeader.locator(".title");
-	readonly questionTypesList: Locator = this.page.locator(".question-types-list");
-	readonly questionTypeButtons: Locator = this.questionTypesList.locator(".question-button-preview");
 	readonly questions: Locator = this.page.locator(".question-editor");
 	readonly chapterFooter: Locator = this.page.locator(".container-footer");
 	readonly addQuestionBtn: Locator = this.chapterFooter.locator(".question-btn");
+
 	readonly dialog: BaseDialog = new BaseDialog(this.page);
+	readonly questionTypeListDialog: QuestionTypeList = new QuestionTypeList(this.page);
+	readonly questionBankDialog: QuestionBankDialog = new QuestionBankDialog(this.page);
 
 	protected readonly sidePanel: SidePanel = new SidePanel(this.page);
 
@@ -64,7 +66,22 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	}
 
 	getChapterById(id: UUID): Chapter {
-		return new Chapter(this.chaptersContainers.filter({ has: this.page.locator(`#${id}`)}))
+		return new Chapter(this.chaptersContainers.filter({ has: this.page.locator(`#${id}`) }));
+	}
+
+	async addQuestion(questionType: QuestionType): Promise<Question> {
+		return test.step(`Add question ${questionType}`, async () => {
+			const sidePanel = await this.clickSidePanelBtn();
+			await sidePanel.getChapter().clickAddNewBtn()
+				.then(menu => menu.clickActionBtn("addQuestionOption"));
+			const { id } = await this.questionTypeListDialog.selectQuestionType(QuestionType.RadioButton);
+
+			return this.getQuestionById(id, questionType);
+		});
+	}
+
+	getQuestionById(questionId: UUID, questionType: QuestionType): Question {
+		return new Question(this.page.locator(`[data-question-id="${questionId}"]`), questionType);
 	}
 
 	async getQuestionByText(
@@ -83,19 +100,12 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		return new Question(this.questions.filter({ hasText: questionType }).first(), questionType);
 	}
 
+
 	async waitForOpened({ waitForResponse }: Url = {}): Promise<void> {
 		await super.waitForOpened();
 
 		waitForResponse &&
 		await this.page.waitForResponse(new RegExp(surveysUrl.details));
-	}
-
-	async clickQuestionTypeButton(questionType: QuestionType): Promise<void> {
-		await test.step(`Click on the ${questionType} question type`, async () => {
-			await this.questionTypesList.isVisible();
-
-			this.questionTypeButtons.filter({ hasText: new RegExp(`[^a-zA-Z]. ${questionType}`) }).click();
-		});
 	}
 
 	async clickAddQuestionBtn(index: number = 0): Promise<void> {
@@ -113,7 +123,6 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 			return this.sidePanel;
 		});
 	}
-
 
 	private async determineQuestion(questionOrTypeOrText: Question | QuestionType | string, questionType?: QuestionType): Promise<Question> {
 		if (questionOrTypeOrText instanceof Question) {
