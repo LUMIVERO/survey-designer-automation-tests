@@ -79,7 +79,7 @@ test.describe("Folder @S406e3299", async () => {
 			});
 
 			await adminAPP.surveysPage.deleteFolder({ name: folder.name });
-			await adminAPP.surveysPage.surveysTable.assertItemNotInList(folder.name);
+			await adminAPP.surveysPage.surveysTable.assertItemInList(folder.name, { visible: false });
 			await apiService.folder.assertFolderDoesNotExist({ folderId: folder.id });
 			await apiService.folder.assertFolderDoesNotExist({ folderId: subFolder.id });
 		});

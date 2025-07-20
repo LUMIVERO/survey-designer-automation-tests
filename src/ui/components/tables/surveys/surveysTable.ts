@@ -35,13 +35,7 @@ export class SurveysTable {
 
 	async assertItemInList(name: string, options?: { exact?: boolean } & AssertIsVisible): Promise<void> {
 		await test.step(`Assert item '${name}' is displayed in the survey list`, async () => {
-			await expect(this.rows().getByTitle(name, options)).toBeVisible(options);
-		});
-	}
-
-	async assertItemNotInList(name: string, options?: { exact?: boolean }): Promise<void> {
-		await test.step(`Assert item '${name}' is displayed in the survey list`, async () => {
-			await expect(this.rows().getByTitle(name, options)).toBeHidden();
+			await expect(this.getItemLocator(name, options)).toBeVisible(options);
 		});
 	}
 
