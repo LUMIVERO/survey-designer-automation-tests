@@ -1,4 +1,5 @@
-import { Page, Locator, test } from "@playwright/test";
+import { Page, Locator, test, expect } from "@playwright/test";
+import { AssertIsVisible } from "@typedefs/playwright/expect.typedefs";
 
 export class BaseItemRow {
 	readonly page: Page;
@@ -15,6 +16,12 @@ export class BaseItemRow {
 	async click(): Promise<void> {
 		await test.step("Click on item row", async () => {
 			await this.itemType.click();
+		});
+	}
+
+	async assertIsVisible(options?: AssertIsVisible): Promise<void> {
+		await test.step("Assert row is visible", async () => {
+			await expect(this.rowContainer).toBeVisible(options);
 		});
 	}
 }
