@@ -1,7 +1,9 @@
 import { test } from "@fixtures/testScope.fixture";
 import { getRandomName } from "@helpers/random.helpers";
-import { ItemRow } from "@ui/components/tables/surveys/itemRows";
+import { SurveyRow } from "@ui/components/tables/surveys/rows";
 import { UUID } from "node:crypto";
+import { getChapterData } from "src/testData/chapter.data";
+import { getQuestionData } from "src/testData/question.data";
 
 test.describe("Surveys list @Sdf95633b", async () => {
 	let createdSurveys: Array<UUID> = [];
@@ -31,17 +33,41 @@ test.describe("Surveys list @Sdf95633b", async () => {
 
 			await adminAPP.surveysPage.waitForOpened();
 			await adminAPP.surveysPage.surveysTable.assertItemInList(surveyName);
-			const surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(surveyName);
+			const surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(surveyName, { rowType: "survey" });
 			await surveyRow.assertSurveyCreatedAt(surveyCreationTime);
 			await surveyRow.assertCommentCount(0);
 			await surveyRow.assertItemUpdatedAt(surveyCreationTime);
 		});
 
+	test("Survey tab | User can delete a survey @T00049673", async ({ adminAPP, apiService, rootFolder }) => {
+		const survey = await apiService.survey.createSurvey({
+			name: getRandomName("SurveyAUT"),
+			folderId: rootFolder.id,
+		});
+		const [{ id: baseChapterId }] = survey.chapters;
+		const {
+			id: chapterId,
+		} = await apiService.chapter.createChapter(getChapterData(survey.id, baseChapterId));
+		const { id: questionId1 } = await apiService.question.createQuestion(getQuestionData(baseChapterId));
+		const { id: questionId2 } = await apiService.question.createQuestion(getQuestionData(chapterId));
+
+		await adminAPP.page.reload();
+		const surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(survey.name, { rowType: "survey" });
+		await surveyRow.clickActionMenuBtn()
+			.then(menu => menu.clickDeleteButton())
+			.then(dialog => dialog.clickSubmitBtn());
+		await surveyRow.assertIsVisible({ visible: false });
+
+		await apiService.question.assertQuestionDoesNotExist({ questionId: questionId1 });
+		await apiService.question.assertQuestionDoesNotExist({ questionId: questionId2 });
+		await apiService.chapter.assertChapterDoesNotExist({ chapterId });
+	});
+
 	test.describe("Edit survey's name and duplicate the survey", async () => {
-		let surveyRow: ItemRow;
+		let surveyRow: SurveyRow;
 
 		test.beforeEach(async ({ adminAPP, survey }) => {
-			surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(survey.name);
+			surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(survey.name, { rowType: "survey" });
 		});
 
 		test("User can rename survey @T9caeaf8a", async ({ adminAPP, survey }) => {
@@ -58,15 +84,17 @@ test.describe("Surveys list @Sdf95633b", async () => {
 		//TODO: add questions and chapters to the original survey + assert these items are duplicated with the new survey
 		test("User is able to duplicate the survey @Tfdd4a948", async ({ adminAPP, survey }) => {
 			const { name } = survey;
-			const duplicatedSurveyName: string = name + "_copy";
 
 			await surveyRow.assertItemNameCorrect(name);
-			await adminAPP.surveysPage.duplicateSurvey({ surveyName: name }).then((survey => createdSurveys.push(survey.id)));
-			await adminAPP.surveysPage.dialogWithInput.waitForDialogHidden();
+			const {
+				surveyRow: duplicatedSurveyRow,
+				surveyResponse: { name: duplicatedSurveyName, id: duplicatedSurveyId },
+			} = await surveyRow.duplicate();
+			createdSurveys.push(duplicatedSurveyId);
+
 			await adminAPP.surveysPage.surveysTable.assertItemInList(name, { exact: true });
 			await adminAPP.surveysPage.surveysTable.assertItemInList(duplicatedSurveyName);
 
-			const duplicatedSurveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(duplicatedSurveyName);
 			await duplicatedSurveyRow.click();
 			await adminAPP.surveyDetailsPage.waitForOpened();
 

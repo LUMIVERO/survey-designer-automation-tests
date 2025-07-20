@@ -1,6 +1,7 @@
 import { test } from "@fixtures/testScope.fixture";
 import { expect } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
+import { Chapter } from "@ui/components/questions/chapter";
 
 test.describe("Create questions @Sf6b783d5", async () => {
 
@@ -10,57 +11,26 @@ test.describe("Create questions @Sf6b783d5", async () => {
 	});
 
 	test("User can create question in root chapter, add subchapter and question to it @Tf16c68eb", async ({ adminAPP }) => {
-		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
-		await sidePanel.getChapter().clickAddNewBtn()
-			.then(menu => menu.clickActionBtn("addQuestionOption" ));
-		// TODO: add test logic
-		// test("User can create question in root chapter, add subchapter and question to it", async ({ adminAPP }) => {
-		// 	const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
-		// 	await sidePanel.getChapter().clickAddNewBtn()
-		// 		.then(popup => popup.selectOption("addChapterOption", { waitForResponse: true }));
-		//
-		// 	await waitAfterAction(
-		// 		async () => await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.List),
-		// 		async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.questions)),
-		// 	);
-		// 	const question1 = adminAPP.surveyDetailsPage.getFirstQuestion(QuestionType.List);
-		// 	await question1.assertIsVisible();
-		//
-		// 	await sidePanel.getChapter().clickAddNewBtn();
-		// 	await clickAddChapterBtn();
-		// 	await adminAPP.surveyDetailsPage.clickSidePanelBtn();
-		//
-		// 	await expect(async () => {
-		// 		expect(await adminAPP.surveyDetailsPage.chaptersContainers.count()).toEqual(adminAPP.surveyDetailsPage.chaptersCount);
-		// 	}).toPass({ timeout: 2000 });
-		// 	let chapter = adminAPP.surveyDetailsPage.getChapter(adminAPP.surveyDetailsPage.lastChapterName);
-		// 	await chapter.assertChapterIsVisible();
-		//
-		// 	await adminAPP.surveyDetailsPage.clickSidePanelBtn();
-		// 	await sidePanel.getChapter(adminAPP.surveyDetailsPage.lastChapterName).clickAddNewBtn();
-		// 	await addQuestionBtn.click();
-		//
-		// 	await waitAfterAction(
-		// 		async () => await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.RadioButton),
-		// 		async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.questions)),
-		// 	);
-		//
-		// 	const question2 = adminAPP.surveyDetailsPage.getFirstQuestion(QuestionType.RadioButton);
-		// 	await question2.assertIsVisible();
-		// 	await adminAPP.surveyDetailsPage.clickSidePanelBtn();
-		//
-		// 	await chapter.clickTreeDotsBtn();
-		// 	await chapter.actionsMenu.waitFor();
-		// 	await chapter.actionsMenu.clickDeleteBtn();
-		// 	await adminAPP.surveyDetailsPage.dialog.waitForDialogVisible();
-		// 	await adminAPP.surveyDetailsPage.dialog.clickSubmitBtn();
-		// 	await adminAPP.surveyDetailsPage.dialog.waitForDialogHidden();
-		// 	await chapter.assertChapterIsVisible({ visible: false });
-		// 	await question2.assertIsVisible(false);
-		// 	await question1.assertIsVisible(true);
-		// });
-		// await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.RadioButton);
+		const radioButtonsQuestionType = QuestionType.RadioButton;
+		const chapterName = Chapter.defaultChapterName;
 
+		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
+		const rootChapter = sidePanel.getChapter();
+		await rootChapter.clickAddNewBtn()
+			.then(menu => menu.clickActionBtn("addQuestionOption"));
+		const { id: questionId1 } = await adminAPP.surveyDetailsPage.questionTypeListDialog.selectQuestionType(radioButtonsQuestionType);
+		const question1 = adminAPP.surveyDetailsPage.getQuestionById(questionId1, radioButtonsQuestionType);
+		await question1.assertIsVisible();
+
+		await rootChapter.clickAddNewBtn()
+			.then(menu => menu.clickActionBtn("addChapterOption"));
+		const chapter = sidePanel.getChapter(chapterName);
+		await chapter.clickAddNewBtn()
+			.then(menu => menu.clickActionBtn("addQuestionOption"));
+
+		const { id: questionId2 } = await adminAPP.surveyDetailsPage.questionTypeListDialog.selectQuestionType(radioButtonsQuestionType);
+		const question2 = adminAPP.surveyDetailsPage.getQuestionById(questionId2, radioButtonsQuestionType);
+		await question2.assertIsVisible();
 	});
 
 

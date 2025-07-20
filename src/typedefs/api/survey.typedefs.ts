@@ -3,7 +3,7 @@ import { UUID } from "node:crypto";
 
 export type CreateSurveyOptions = {
 	name: string;
-	folderId: string;
+	folderId: UUID;
 }
 
 export type SurveyResponse = {

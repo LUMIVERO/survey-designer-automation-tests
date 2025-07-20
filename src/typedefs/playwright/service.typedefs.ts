@@ -5,3 +5,7 @@ export type KeyboardModifier = "Alt" | "Control" | "ControlOrMeta" | "Meta" | "S
 export type Timeout = {
 	timeout?: number;
 }
+
+export type Exact = {
+	exact?: boolean;
+}
