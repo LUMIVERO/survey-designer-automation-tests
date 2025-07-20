@@ -88,8 +88,9 @@ test.describe("Surveys list @Sdf95633b", async () => {
 			await surveyRow.assertItemNameCorrect(name);
 			const {
 				surveyRow: duplicatedSurveyRow,
-				surveyResponse: { name: duplicatedSurveyName },
+				surveyResponse: { name: duplicatedSurveyName, id: duplicatedSurveyId },
 			} = await surveyRow.duplicate();
+			createdSurveys.push(duplicatedSurveyId);
 
 			await adminAPP.surveysPage.surveysTable.assertItemInList(name, { exact: true });
 			await adminAPP.surveysPage.surveysTable.assertItemInList(duplicatedSurveyName);
