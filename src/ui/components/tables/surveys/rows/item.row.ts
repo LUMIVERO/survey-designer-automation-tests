@@ -1,6 +1,7 @@
 import { isTimeWithinTolerance } from "@helpers/dateTime.helpers";
 import { expect, test, Locator, Page } from "@playwright/test";
 import { AssertIsVisible } from "@typedefs/playwright/expect.typedefs";
+import { Exact } from "@typedefs/playwright/service.typedefs";
 import { DashboardItemActionMenu } from "@ui/components/actions/surveysDashboard/dashboardItemActionMenu";
 import { BaseItemRow } from "@ui/components/tables/surveys/rows/baseItem.row";
 import { parse } from "date-fns";
@@ -19,6 +20,16 @@ export class ItemRow<TMenu extends DashboardItemActionMenu = DashboardItemAction
 		super(container);
 		this.actionsMenu = new MenuClass(this.page);
 	}
+
+	protected static getRowLocator(page: Page, { name, selector, ...options }: Exact & {
+		selector: string,
+		name: string
+	}): Locator {
+		return page.locator(selector).filter({
+			has: page.getByTitle(name, options),
+		});
+	}
+
 
 	async getName(): Promise<string> {
 		return await this.name.getAttribute("title");

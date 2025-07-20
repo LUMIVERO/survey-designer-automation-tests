@@ -1,6 +1,6 @@
 import { test } from "@fixtures/testScope.fixture";
 import { getRandomName } from "@helpers/random.helpers";
-import { ItemRow } from "@ui/components/tables/surveys/rows/item.row";
+import { SurveyRow } from "@ui/components/tables/surveys/rows";
 import { UUID } from "node:crypto";
 import { getChapterData } from "src/testData/chapter.data";
 import { getQuestionData } from "src/testData/question.data";
@@ -64,10 +64,10 @@ test.describe("Surveys list @Sdf95633b", async () => {
 	});
 
 	test.describe("Edit survey's name and duplicate the survey", async () => {
-		let surveyRow: ItemRow;
+		let surveyRow: SurveyRow;
 
 		test.beforeEach(async ({ adminAPP, survey }) => {
-			surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(survey.name);
+			surveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(survey.name, { rowType: "survey" });
 		});
 
 		test("User can rename survey @T9caeaf8a", async ({ adminAPP, survey }) => {
@@ -84,15 +84,16 @@ test.describe("Surveys list @Sdf95633b", async () => {
 		//TODO: add questions and chapters to the original survey + assert these items are duplicated with the new survey
 		test("User is able to duplicate the survey @Tfdd4a948", async ({ adminAPP, survey }) => {
 			const { name } = survey;
-			const duplicatedSurveyName: string = name + "_copy";
 
 			await surveyRow.assertItemNameCorrect(name);
-			await adminAPP.surveysPage.duplicateSurvey({ surveyName: name }).then((survey => createdSurveys.push(survey.id)));
-			await adminAPP.surveysPage.dialogWithInput.waitForDialogHidden();
+			const {
+				surveyRow: duplicatedSurveyRow,
+				surveyResponse: { name: duplicatedSurveyName },
+			} = await surveyRow.duplicate();
+
 			await adminAPP.surveysPage.surveysTable.assertItemInList(name, { exact: true });
 			await adminAPP.surveysPage.surveysTable.assertItemInList(duplicatedSurveyName);
 
-			const duplicatedSurveyRow = await adminAPP.surveysPage.surveysTable.getRowByName(duplicatedSurveyName);
 			await duplicatedSurveyRow.click();
 			await adminAPP.surveyDetailsPage.waitForOpened();
 

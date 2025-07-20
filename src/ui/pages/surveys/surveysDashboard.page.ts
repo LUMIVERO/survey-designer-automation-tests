@@ -1,11 +1,10 @@
-import { Locator, test, expect } from "@playwright/test";
-import { SurveyResponse } from "@typedefs/api/survey.typedefs";
+import { Locator, test } from "@playwright/test";
 import { DeleteFolderOptions } from "@typedefs/ui/folder.typedefs";
-import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
+import { Url } from "@typedefs/ui/surveyPage.typedefs";
 import { DashboardItemActionMenu } from "@ui/components/actions/surveysDashboard/dashboardItemActionMenu";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
-import { foldersUrl, surveysUrl } from "src/constants/urls/apiUrls";
+import { foldersUrl } from "src/constants/urls/apiUrls";
 import { surveyUrl } from "src/constants/urls/uiUrls";
 import { LoggedInBasePage } from "../loggedIn.base.page";
 
@@ -31,44 +30,6 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 			await this.createFolderBtn.click();
 			await this.dialogWithInput.waitForDialogVisible();
 			await this.dialogWithInput.assertDialogHeaderIsCorrect("Create new folder");
-		});
-	}
-
-	async clickPopoverDuplicateBtn(): Promise<void> {
-		await test.step(`Click duplicate button`, async () => {
-			await this.dialogWithInput.waitForDialogVisible();
-			await this.dialogWithInput.assertDialogHeaderIsCorrect("Duplicate survey");
-		});
-	}
-
-
-	async duplicateSurvey({ surveyName, newSurveyName }: DuplicateSurveyOptions): Promise<SurveyResponse> {
-		return test.step("Duplicate survey", async () => {
-			const surveyRow = await this.surveysTable.getRowByName(surveyName, { rowType: "survey" });
-
-			await expect(async () => {
-				await surveyRow.clickActionMenuBtn()
-					.then(menu => menu.clickDuplicateButton())
-					.then(async (dialog) => {
-						await dialog.waitForDialogVisible();
-						await dialog.assertDialogHeaderIsCorrect("Duplicate survey");
-					});
-			}).toPass();
-
-			await this.dialogWithInput.asserInputDataIsCorrect(surveyName + "_copy");
-			newSurveyName && await this.dialogWithInput.fillItemName(newSurveyName);
-			const [, , response] = await Promise.all([
-				this.dialogWithInput.clickSubmitBtn(),
-				this.dialogWithInput.waitForDialogHidden(),
-				this.page.waitForResponse(
-					async response =>
-						response.request().method() === "POST"
-						&& new RegExp(surveysUrl.duplicate).test(response.url())
-						&& response.ok(),
-				),
-			]);
-
-			return response.json();
 		});
 	}
 
