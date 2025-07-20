@@ -2,7 +2,7 @@ import { Locator, test, expect } from "@playwright/test";
 import { SurveyResponse } from "@typedefs/api/survey.typedefs";
 import { DeleteFolderOptions } from "@typedefs/ui/folder.typedefs";
 import { Url, DuplicateSurveyOptions } from "@typedefs/ui/surveyPage.typedefs";
-import { DashboardRowActionMenu } from "@ui/components/actions/dashboardRowActionMenu";
+import { DashboardItemActionMenu } from "@ui/components/actions/surveysDashboard/dashboardItemActionMenu";
 import { DialogWithInput } from "@ui/components/dialogs/dialogWithInput";
 import { SurveysTable } from "@ui/components/tables/surveys/surveysTable";
 import { foldersUrl, surveysUrl } from "src/constants/urls/apiUrls";
@@ -15,7 +15,7 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 	readonly createFolderBtn: Locator = this.page.locator(".qdt-btn-primary-outlined", { hasText: "New Folder" });
 	readonly dialogWithInput: DialogWithInput = new DialogWithInput(this.page);
 	readonly surveysTable: SurveysTable = new SurveysTable(this.page);
-	readonly actionMenu: DashboardRowActionMenu = new DashboardRowActionMenu(this.page);
+	readonly actionMenu: DashboardItemActionMenu = new DashboardItemActionMenu(this.page);
 
 
 	async clickCreateSurveyBtn(): Promise<void> {
@@ -36,25 +36,23 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 
 	async clickPopoverDuplicateBtn(): Promise<void> {
 		await test.step(`Click duplicate button`, async () => {
-			await this.actionMenu.clickDuplicateButton();
 			await this.dialogWithInput.waitForDialogVisible();
 			await this.dialogWithInput.assertDialogHeaderIsCorrect("Duplicate survey");
 		});
 	}
 
-	async clickPopoverDeleteBtn(): Promise<void> {
-		await test.step(`Click delete button`, async () => {
-			await this.actionMenu.clickDeleteButton();
-		});
-	}
 
 	async duplicateSurvey({ surveyName, newSurveyName }: DuplicateSurveyOptions): Promise<SurveyResponse> {
 		return test.step("Duplicate survey", async () => {
-			const surveyRow = await this.surveysTable.getRowByName(surveyName);
+			const surveyRow = await this.surveysTable.getRowByName(surveyName, { rowType: "survey" });
 
 			await expect(async () => {
-				await surveyRow.actionsMenu.click();
-				await this.clickPopoverDuplicateBtn();
+				await surveyRow.clickActionMenuBtn()
+					.then(menu => menu.clickDuplicateButton())
+					.then(async (dialog) => {
+						await dialog.waitForDialogVisible();
+						await dialog.assertDialogHeaderIsCorrect("Duplicate survey");
+					});
 			}).toPass();
 
 			await this.dialogWithInput.asserInputDataIsCorrect(surveyName + "_copy");
@@ -74,18 +72,11 @@ export class SurveysDashboardPage extends LoggedInBasePage {
 		});
 	}
 
-	async deleteFolder({ name }: DeleteFolderOptions) {
+	async deleteFolder({ name }: DeleteFolderOptions): Promise<void> {
 		await test.step("Delete folder", async () => {
-			const folderRow = await this.surveysTable.getRowByName(name);
-			await folderRow.actionsMenu.click();
-			await this.actionMenu.waitFor();
-			await Promise.all([
-				this.clickPopoverDeleteBtn(),
-				this.page.waitForResponse((response) => {
-					return response.request().method() === "DELETE"
-						&& new RegExp(foldersUrl.details).test(response.url());
-				}),
-			]);
+			const folderRow = await this.surveysTable.getRowByName(name, { rowType: "folder" });
+			const actionsMenu = await folderRow.clickActionMenuBtn();
+			await actionsMenu.clickDeleteButton();
 		});
 	}
 

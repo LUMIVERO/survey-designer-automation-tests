@@ -1,5 +1,7 @@
 import { Url as BaseUrl } from "./basePage.typedefs";
 
+export type RowType = "survey" | "folder" | "wave";
+
 export type Url = BaseUrl & {
 	waitForResponse?: boolean
 }

@@ -1,7 +1,7 @@
 import { test } from "@fixtures/testScope.fixture";
 import { getRandomName } from "@helpers/random.helpers";
 import { FolderResponse } from "@typedefs/api/folder.typedefs";
-import { ItemRow } from "@ui/components/tables/surveys/itemRows";
+import { FolderRow } from "@ui/components/tables/surveys/rows";
 import { UUID } from "node:crypto";
 
 test.describe("Folder @S406e3299", async () => {
@@ -29,7 +29,7 @@ test.describe("Folder @S406e3299", async () => {
 		await adminAPP.surveysPage.dialogWithInput.waitForDialogHidden();
 		await adminAPP.surveysPage.reload();
 		await adminAPP.surveysPage.surveysTable.assertItemInList(folderName);
-		const folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(folderName);
+		const folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(folderName, { rowType: "folder" });
 		await folderRow.click();
 
 		folderId = await adminAPP.folderDetailsPage.getIdFromPageUrl();
@@ -43,12 +43,12 @@ test.describe("Folder @S406e3299", async () => {
 		});
 		await folderRow.assertCommentCount(0);
 		await folderRow.assertItemUpdatedAt(folderCreationTime);
-		await folderRow.assertSurveyCountInFolder(0);
+		await folderRow.assertSurveysCount(0);
 	});
 
 	test.describe("Rename and delete folder", async () => {
 		let folder: FolderResponse;
-		let folderRow: ItemRow;
+		let folderRow: FolderRow;
 
 		test.beforeEach(async ({ apiService, adminAPP, rootFolder }) => {
 			const name: string = getRandomName("FolderAUT");
@@ -59,7 +59,7 @@ test.describe("Folder @S406e3299", async () => {
 
 			folderId = folder.id;
 			await adminAPP.surveysPage.surveysTable.assertItemInList(name);
-			folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(name);
+			folderRow = await adminAPP.surveysPage.surveysTable.getRowByName(name, { rowType: "folder" });
 		});
 
 		test("User is able to rename the folder @Teaf27fdd", async () => {
@@ -90,7 +90,7 @@ test.describe("Folder @S406e3299", async () => {
 			});
 
 			await adminAPP.surveysPage.reload();
-			await folderRow.assertActionMenuNotVisible();
+			await folderRow.assertActionMenuBtnIsVisible({ visible: false });
 			await apiService.survey.deleteSurvey({ surveyId: survey.id });
 		});
 	});
