@@ -1,9 +1,9 @@
 import { Locator, expect, test } from "@playwright/test";
 import { AssertIsVisible } from "@typedefs/playwright/expect.typedefs";
-import { DashboardRowActionMenu } from "@ui/components/actions/dashboardRowActionMenu";
 import { BaseContainer } from "@ui/components/baseComponent";
 import { RichTextEditor } from "@ui/components/dialogs/richTextEditor";
 import { Input } from "@ui/components/inputs";
+import { ChapterActionsMenu } from "@ui/components/questions/actions/chapterActionsMenu";
 
 export class Chapter extends BaseContainer {
 	static defaultChapterName = "Chapter #1";
@@ -14,7 +14,7 @@ export class Chapter extends BaseContainer {
 	readonly actions: Locator = this.container.locator(".dropdown-button-container button");
 	readonly editBtn: Locator = this.container.locator(".edit-button");
 
-	readonly actionsMenu: DashboardRowActionMenu = new DashboardRowActionMenu(this.page);
+	readonly actionsMenu: ChapterActionsMenu = new ChapterActionsMenu(this.page);
 	private readonly editTextDialog: RichTextEditor = new RichTextEditor(this.page);
 
 	constructor(container: Locator) {
@@ -30,7 +30,7 @@ export class Chapter extends BaseContainer {
 	}
 
 
-	async clickThreeDotsBtn(): Promise<DashboardRowActionMenu> {
+	async clickThreeDotsBtn(): Promise<ChapterActionsMenu> {
 		await test.step("Click on tree dots button", async () => {
 			await this.actions.click();
 			await this.actionsMenu.waitFor({ state: "attached" });
