@@ -26,7 +26,7 @@ test.describe.skip("Edit question @Sfbbf57e5", async () => {
 
 		await waitAfterAction(
 			async () => await adminAPP.surveyDetailsPage.clickQuestionTypeButton(QuestionType.Grid),
-			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.root))
+			async () => await adminAPP.page.waitForResponse(new RegExp(questionsUrl.root)),
 		);
 
 		await surveyDetailsPage.clickSidePanelBtn();

@@ -35,8 +35,7 @@ test.describe("Create questions @Sf6b783d5", async () => {
 
 
 	Object.values(QuestionType).forEach((questionType) => {
-
-		test(`User is able to create & delete ${questionType} question type in the root chapter`, async ({
+		test(`User is able to create & delete ${questionType} question type in the root chapter @T4ff41f97`, async ({
 			adminAPP: app,
 			apiService,
 		}) => {

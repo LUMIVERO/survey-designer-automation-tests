@@ -1,6 +1,6 @@
 import { test as setup } from "@playwright/test";
-import { adminAuthFile } from "src/constants/authPath.data";
 import { Application } from "@ui/application";
+import { adminAuthFile } from "src/constants/authPath.data";
 
 setup("Log in to the system", async ({ page }) => {
 	const APP = new Application(page);
@@ -9,7 +9,7 @@ setup("Log in to the system", async ({ page }) => {
 	await APP.loginPage.login({
 		username: process.env.USERNAME_ADMIN,
 		password: process.env.PASSWORD_ADMIN,
-		tenant: process.env.TENANT1
+		tenant: process.env.TENANT1,
 	});
 	await APP.areasPage.waitForOpened();
 

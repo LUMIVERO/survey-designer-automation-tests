@@ -8,7 +8,7 @@ test.describe("Authentication @Sc80b4b04", () => {
 
 		await APP.loginPage.visit();
 		await APP.loginPage.login(ADMIN_CREDS);
-  	await APP.areasPage.waitForOpened();
+		await APP.areasPage.waitForOpened();
 		await APP.areasPage.clickUserInfoDetailsBtn();
 		await APP.areasPage.userInfoTab.assertUserInfo(ADMIN_CREDS);
 		await APP.areasPage.userInfoTab.assertAreaIsVisible(testArea1.name);

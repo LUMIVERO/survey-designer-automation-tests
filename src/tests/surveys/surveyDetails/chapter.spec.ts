@@ -37,9 +37,9 @@ test.describe("Chapter @Se1e770f9", async () => {
 	});
 
 	test("User can create and delete a chapter in the subchapter from sidebar @Tfd743665", async ({
-    adminAPP,
-    chapter,
-  }) => {
+		adminAPP,
+		chapter,
+	}) => {
 		const chapterName = Chapter.defaultChapterName;
 		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
 		const sidePanelChapter = sidePanel.getChapter(chapter.name);
@@ -65,8 +65,8 @@ test.describe("Chapter @Se1e770f9", async () => {
 	});
 
 	test("User can create and delete a second chapter in the root chapter from sidebar @T9e4599eb", async ({
-	 adminAPP,
-	 chapter: first,
+		adminAPP,
+		chapter: first,
 	}) => {
 		const chapterName = "Chapter #2";
 		const sidePanel = await adminAPP.surveyDetailsPage.clickSidePanelBtn();
@@ -145,9 +145,9 @@ test.describe("Chapter @Se1e770f9", async () => {
 	});
 
 	test("User can delete a chapter with subchapter and question @Tf82cbe8a", async ({
-	 chapterData,
-	 apiService,
-	 adminAPP,
+		chapterData,
+		apiService,
+		adminAPP,
 	}) => {
 		const { id: chapterId, name: chapterName } = await apiService.chapter.createChapter(chapterData);
 		const { id: subchapterId } = await apiService.chapter.createChapter({
