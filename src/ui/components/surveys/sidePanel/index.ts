@@ -1,2 +1,3 @@
-export * from "./sidePanel"
-export * from "./sidePanelChapter"
+export * from "./sidePanel";
+export * from "./items/sidePanelChapter";
+export * from "./items/sidePanelQuestion";
