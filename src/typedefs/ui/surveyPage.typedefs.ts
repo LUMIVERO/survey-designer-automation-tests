@@ -16,7 +16,6 @@ export enum QuestionType {
 	Slider = "Slider",
 	OpenEnded = "Open-ended",
 	List = "List",
-	Grid = "Grid",
 	Empty = "Empty",
 	HighlightBorders = "Highlight Borders",
 	AutocompleteList = "Autocomplete List",

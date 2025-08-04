@@ -12,7 +12,7 @@ export class Question {
 	readonly page: Page;
 	private _questionLocator: string = ".question-editor";
 	readonly AnswerType: new (container: Locator) => BaseAnswer;
-	readonly questionVariable: Locator = this.container.locator(".question-editor-header .var-name");
+	readonly questionVariable: Locator = this.container.locator(".question-editor-header .var-name[title]");
 	readonly questionTypeText: Locator = this.container.getByTitle("Question type");
 	readonly questionTextArea: Locator = this.container.locator(".question-text");
 	readonly saveToQBankBtn: Locator = this.container.locator(".actions input");
@@ -20,7 +20,7 @@ export class Question {
 	readonly commentsCount: Locator = this.container.locator(".comments-count");
 	readonly instructionBtn: Locator = this.container.getByTitle("Instructions");
 	readonly instructionIndicator: Locator = this.instructionBtn.locator(".insturtions-inidicator");
-	readonly actionsBtn: Locator = this.container.locator(".question-editor-header button");
+	readonly actionsBtn: Locator = this.container.locator(".actions-btn button");
 	readonly answers: Locator = this.container.locator(".answer-item");
 	readonly addNewAnswerBtn: Locator = this.container.locator(".add-answer-btn button");
 	readonly addNewTopicBtn?: Locator = this.container.locator(".add-topic-btn button");

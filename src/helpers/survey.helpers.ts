@@ -11,7 +11,7 @@ import {
 	EmptyAnswer,
 	HighlightBordersAnswer,
 	AutoCompleteList,
-	StarBarAnswer
+	StarBarAnswer,
 } from "@ui/components/questions/designQuestions/answers";
 
 export function getAnswerType(questionType: QuestionType): new (container: Locator) => BaseAnswer {
@@ -39,31 +39,6 @@ export function getAnswerType(questionType: QuestionType): new (container: Locat
 	}
 }
 
-export function getQuestionTestCaseId(questionType: QuestionType): number {
-	switch (questionType) {
-		case QuestionType.RadioButton:
-			return 48450;
-		case QuestionType.Slider:
-			return 49511;
-		case QuestionType.OpenEnded:
-			return 49512;
-		case QuestionType.List:
-			return 49510;
-		case QuestionType.Grid:
-			return 49513;
-		case QuestionType.Empty:
-			return 49514;
-		case QuestionType.HighlightBorders:
-			return 49515;
-		case QuestionType.AutocompleteList:
-			return 49516;
-		case QuestionType.StarBar:
-			return 49672;
-		default:
-			throw new Error(`Unknown question type: ${questionType}`);
-	}
-}
-
 export async function deleteSurveysByName(apiService: ApiApplication, pattern: string = "SurveyAUT-") {
 	const { items: [{ surveys }] } = await apiService.folder.getFolders();
 
@@ -71,7 +46,7 @@ export async function deleteSurveysByName(apiService: ApiApplication, pattern: s
 			if (survey.name.startsWith(pattern)) {
 				return await apiService.survey.deleteSurvey({ surveyId: survey.id });
 			}
-		}
+		},
 	));
 }
 
@@ -82,6 +57,6 @@ export async function deleteFoldersByName(apiService: ApiApplication, pattern: s
 			if (folder.name.startsWith(pattern)) {
 				return await apiService.folder.deleteFolder({ folderId: folder.id });
 			}
-		}
+		},
 	));
 }

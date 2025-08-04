@@ -1,7 +1,7 @@
 import { test } from "@fixtures/testScope.fixture";
-import { expect } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { Chapter } from "@ui/components/questions/chapter";
+import { questionTypeInputAssertions } from "src/testData/questionType.data";
 
 test.describe("Create questions @Sf6b783d5", async () => {
 
@@ -35,37 +35,44 @@ test.describe("Create questions @Sf6b783d5", async () => {
 
 
 	Object.values(QuestionType).forEach((questionType) => {
-		test.skip(`User is able to create & delete ${questionType} question type in the root chapter`, async ({ adminAPP }) => {
-			const { surveyDetailsPage } = adminAPP;
-			const { sidePanel } = surveyDetailsPage;
-			await surveyDetailsPage.clickSidePanelBtn();
-			await sidePanel.getChapter().clickAddNewBtn();
-			const { addQuestionBtn } = surveyDetailsPage.addNewPopup;
-			await addQuestionBtn.click();
-			await adminAPP.surveyDetailsPage.clickQuestionTypeButton(questionType);
-			const question = adminAPP.surveyDetailsPage.getFirstQuestion(questionType);
-			const answer = question.getFirstAnswer();
 
-			await expect(async () => {
-				await surveyDetailsPage.clickSidePanelBtn();
-				await sidePanel.assertSidePanelIsVisible({ visible: false });
-			}).toPass();
+		test(`User is able to create & delete ${questionType} question type in the root chapter`, async ({
+			adminAPP: app,
+			apiService,
+		}) => {
+			const sidePanel = await app.surveyDetailsPage.clickSidePanelBtn();
+			await sidePanel.getChapter().clickAddNewBtn()
+				.then(menu => menu.clickActionBtn("addQuestionOption"));
+			const {
+				id: questionId,
+				...questionResponse
+			} = await app.surveyDetailsPage.questionTypeListDialog.selectQuestionType(questionType);
+			const question = app.surveyDetailsPage.getQuestionById(questionId, questionType);
+			await question.assertIsVisible();
+			await question.assertQuestionText();
+			await question.assertQuestionVariableText();
+			await question.assertQuestionType(questionType);
 
 			await question.hoverQuestion();
 			await question.assertSaveToQBankIsVisible();
-			await question.assertQuestionType(questionType);
-			await question.assertQuestionText();
-			await question.assertQuestionVariableText();
 			await question.assertCommentsCount();
 			await question.assertInstructionIconToBeVisible();
-			await answer.assertInputType();
-			await answer.assertAnswerVariableText();
-			await answer.assertAnswerText();
 
-			await test.step(`User is able to delete ${questionType} question type`, async () => {
-				await adminAPP.surveyDetailsPage.deleteQuestion(question);
+			const answer = question.getFirstAnswer();
+			await answer.assertInputType(questionTypeInputAssertions[questionType]);
+
+			const sidePanelQuestion = sidePanel.getQuestion();
+			await sidePanelQuestion.assertItemName(questionResponse.text);
+			await sidePanelQuestion.assertVarName(questionResponse.variableName);
+
+			await test.step(`User is able to delete ${questionType} question type in root chapter from main area`, async () => {
+				await app.surveyDetailsPage.deleteQuestion(question);
 				await question.assertIsVisible(false);
+
+				await apiService.question.assertQuestionDoesNotExist({ questionId });
 			});
 		});
+
+		// 	TODO: add test - user can delete question from sidebar
 	});
 });

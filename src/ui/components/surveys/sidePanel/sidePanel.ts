@@ -1,6 +1,7 @@
 import { Locator, test, expect } from "@playwright/test";
 import { BaseComponent } from "@ui/components/baseComponent";
-import { SidePanelChapter } from "@ui/components/surveys/sidePanel/sidePanelChapter";
+import { SidePanelChapter } from "@ui/components/surveys/sidePanel/items/sidePanelChapter";
+import { SidePanelQuestion } from "@ui/components/surveys/sidePanel/items/sidePanelQuestion";
 import { boolean } from "casual";
 
 export class SidePanel extends BaseComponent {
@@ -8,6 +9,7 @@ export class SidePanel extends BaseComponent {
 	readonly sidePanelBtn: Locator = this.container.locator(".expander-button");
 	readonly chapters: Locator = this.container.locator("[data-node-type=\"parent\"]");
 	readonly rootChapter: Locator = this.container.locator(".root-node");
+	readonly questions: Locator = this.container.locator("[data-node-type=\"leaf\"]");
 
 	async isVisible(visible = true): Promise<boolean> {
 		return this.container.getAttribute("class")
@@ -19,6 +21,14 @@ export class SidePanel extends BaseComponent {
 			return new SidePanelChapter(this.rootChapter);
 		}
 		return new SidePanelChapter(this.chapters.filter({ hasText: name }));
+	}
+
+	getQuestion(name?: string): SidePanelQuestion {
+		if (!name) {
+			return new SidePanelQuestion(this.questions.first());
+		}
+
+		return new SidePanelQuestion(this.questions.filter({ hasText: name }));
 	}
 
 	async assertSidePanelIsVisible({ visible = true } = { visible: boolean }): Promise<void> {

@@ -1,18 +1,12 @@
-import { Locator, test, expect } from "@playwright/test";
-import { BaseContainer } from "@ui/components/baseComponent";
-import { AddNewItemSidebarMenu, SidebarActionsMenu } from "./actions";
+import { Locator, test } from "@playwright/test";
+import { BaseSidePanelItem } from "@ui/components/surveys/sidePanel/items/baseSidePanelItem";
+import { AddNewItemSidebarMenu } from "src/ui/components/surveys/sidePanel/actions";
 
-export class SidePanelChapter extends BaseContainer {
+export class SidePanelChapter extends BaseSidePanelItem {
 	readonly title: Locator = this.container.locator(".chapter [title]");
 	readonly addNewBtn: Locator = this.container.locator("button", { has: this.page.locator(".ti-plus") });
-	readonly threeDotsBtn: Locator = this.container.locator("button", { has: this.page.locator(".ti-dots-vertical") });
 	readonly expandBtn: Locator = this.container.locator(".ti-triangle-inverted-filled");
 	protected addNewItemSidebarPopup = new AddNewItemSidebarMenu(this.page);
-	protected actionsMenu = new SidebarActionsMenu(this.page);
-
-	constructor(container: Locator) {
-		super(container);
-	}
 
 	async getSubChapter(name: string): Promise<SidePanelChapter> {
 		const locator = await this.getSubChapters()
@@ -31,16 +25,6 @@ export class SidePanelChapter extends BaseContainer {
 		});
 	}
 
-	async clickThreeDotsBtn(): Promise<SidebarActionsMenu> {
-		await test.step("Click on tree dots button", async () => {
-			await this.container.hover();
-			await this.threeDotsBtn.click();
-			await this.actionsMenu.waitFor({ state: "attached" });
-		});
-
-		return this.actionsMenu;
-	}
-
 	async expand(): Promise<void> {
 		await test.step("Expand chapter", async () => {
 			if (await this.expandBtn.getAttribute("class").then(classString => classString.includes("collapsed"))) {
@@ -50,16 +34,10 @@ export class SidePanelChapter extends BaseContainer {
 	}
 
 	async assertChapterName(name: string): Promise<void> {
-		await test.step("Assert chapter name on side panel", async () => {
-			await expect(this.title).toHaveText(name);
-		});
-	}
-
-	private async getChapterId(): Promise<string> {
-		return this.container.getAttribute("data-node-id");
+		await this.assertItemName(name, "chapter");
 	}
 
 	private async getSubChapters(): Promise<Locator> {
-		return this.page.locator(`[data-parent-id="${await this.getChapterId()}"]`);
+		return this.page.locator(`[data-parent-id="${await this.getItemId()}"]`);
 	}
 }

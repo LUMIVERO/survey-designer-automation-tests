@@ -89,7 +89,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		questionType: QuestionType,
 	): Promise<Question> {
 		return new Question(
-			this.questions.filter({ has: this.page.locator(`[value=${text}]`) }),
+			this.questions.filter({ has: this.page.locator(`[value="${text}"]`) }),
 			questionType,
 		);
 	}
