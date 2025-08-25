@@ -12,28 +12,35 @@ import {
 	HighlightBordersAnswer,
 	AutoCompleteList,
 	StarBarAnswer,
+	Carousel,
+	Numeric,
 } from "@ui/components/questions/designQuestions/answers";
 
 export function getAnswerType(questionType: QuestionType): new (container: Locator) => BaseAnswer {
 	switch (questionType) {
 		case QuestionType.RadioButton:
 			return RadioAnswer;
+		case QuestionType.HighlightBorders:
+			return HighlightBordersAnswer;
+		case QuestionType.AutocompleteList:
+			return AutoCompleteList;
+		case QuestionType.MultiChoiceGrid:
+		case QuestionType.SingleChoiceGrid:
+			return GridAnswer;
 		case QuestionType.Slider:
 			return SliderAnswer;
 		case QuestionType.OpenEnded:
 			return OpenEndedAnswer;
 		case QuestionType.List:
 			return ListAnswer;
-		case QuestionType.Grid:
-			return GridAnswer;
 		case QuestionType.Empty:
 			return EmptyAnswer;
-		case QuestionType.HighlightBorders:
-			return HighlightBordersAnswer;
-		case QuestionType.AutocompleteList:
-			return AutoCompleteList;
 		case QuestionType.StarBar:
 			return StarBarAnswer;
+		case QuestionType.Carousel:
+			return Carousel;
+		case QuestionType.Numeric:
+			return Numeric;
 		default:
 			throw new Error(`Unknown question type: ${questionType}`);
 	}

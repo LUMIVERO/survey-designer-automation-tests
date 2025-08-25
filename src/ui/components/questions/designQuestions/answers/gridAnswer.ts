@@ -14,22 +14,10 @@ export class GridAnswer extends BaseAnswer {
 		return await this.answerTextInput.first().innerText();
 	}
 
-	async assertInputType(): Promise<void> {
+	async assertInputType(options: { type: "radio" | "checkbox" }): Promise<void> {
 		await test.step("Assert input type is grid table", async () => {
 			await this.table.assertIsVisible();
-			expect(await this.input.getAttribute("type")).toEqual("checkbox");
+			expect(await this.input.getAttribute("type")).toEqual(options.type);
 		});
-	}
-
-	async editAnswerText(text: string): Promise<GridAnswer> {
-		await super.editAnswerText(text);
-
-		return new GridAnswer(this.page.locator(this._answerLocator, { hasText: text }));
-	}
-
-	async editAnswerVarText(text: string): Promise<GridAnswer> {
-		await super.editAnswerVarText(text);
-
-		return new GridAnswer(this.page.locator(this._answerLocator, { hasText: text }));
 	}
 }

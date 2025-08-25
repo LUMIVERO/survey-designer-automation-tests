@@ -5,6 +5,7 @@ import { Url, QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { BaseDialog } from "@ui/components/dialogs/baseDialog";
 import { Chapter } from "@ui/components/questions/chapter";
 import { QuestionTypeList, QuestionBankDialog } from "@ui/components/questions/create-question-dialog";
+import { NumericQuestion } from "@ui/components/questions/designQuestions/numericQuestion";
 import { Question } from "@ui/components/questions/designQuestions/question";
 import { SidePanel } from "@ui/components/surveys/sidePanel";
 import { UUID } from "node:crypto";
@@ -80,15 +81,27 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		});
 	}
 
+	private getQuestion(locator: Locator, questionType: QuestionType): Question {
+		switch (questionType) {
+			case QuestionType.Numeric:
+				return new NumericQuestion(locator);
+			default:
+				return new Question(locator, questionType);
+		}
+	}
+
 	getQuestionById(questionId: UUID, questionType: QuestionType): Question {
-		return new Question(this.page.locator(`[data-question-id="${questionId}"]`), questionType);
+		return this.getQuestion(
+			this.page.locator(`[data-question-id="${questionId}"]`),
+			questionType,
+		);
 	}
 
 	async getQuestionByText(
 		text: string,
 		questionType: QuestionType,
 	): Promise<Question> {
-		return new Question(
+		return this.getQuestion(
 			this.questions.filter({ has: this.page.locator(`[value="${text}"]`) }),
 			questionType,
 		);
@@ -97,7 +110,10 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	getFirstQuestion(
 		questionType: QuestionType,
 	): Question {
-		return new Question(this.questions.filter({ hasText: questionType }).first(), questionType);
+		return this.getQuestion(
+			this.questions.filter({ hasText: questionType }).first(),
+			questionType,
+		);
 	}
 
 

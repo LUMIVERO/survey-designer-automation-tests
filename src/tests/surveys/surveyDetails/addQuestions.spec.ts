@@ -33,7 +33,7 @@ test.describe("Create questions @Sf6b783d5", async () => {
 		await question2.assertIsVisible();
 	});
 
-
+	// TODO: add question classes like NumericQuestion for uniq questions;
 	Object.values(QuestionType).forEach((questionType) => {
 		test(`User is able to create & delete ${questionType} question type in the root chapter @T4ff41f97`, async ({
 			adminAPP: app,

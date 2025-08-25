@@ -13,11 +13,15 @@ export type DuplicateSurveyOptions = {
 
 export enum QuestionType {
 	RadioButton = "Radio Button",
-	Slider = "Slider",
-	OpenEnded = "Open-ended",
-	List = "List",
-	Empty = "Empty",
 	HighlightBorders = "Highlight Borders",
 	AutocompleteList = "Autocomplete List",
+	MultiChoiceGrid = "Multi Choice Grid",
+	SingleChoiceGrid = "Single Choice Grid",
+	Carousel = "Carousel",
+	Empty = "Empty",
+	List = "List",
+	Slider = "Slider",
+	OpenEnded = "Open-ended",
+	Numeric = "Numeric",
 	StarBar = "Star bar",
 }

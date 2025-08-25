@@ -8,3 +8,5 @@ export { SliderAnswer } from "./sliderAnswer";
 export { HighlightBordersAnswer } from "./highlightBordersAnswer";
 export { AutoCompleteList } from "./autoCompleteList";
 export { StarBarAnswer } from "./starBarAnswer";
+export { Carousel } from "./carousel";
+export { Numeric } from "./numeric";
