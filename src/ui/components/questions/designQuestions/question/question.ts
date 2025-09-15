@@ -1,9 +1,7 @@
 import { getAnswerType } from "@helpers/survey.helpers";
 import { Locator, Page, expect, test } from "@playwright/test";
-import { AddGridAnswerOptions, AddGridTopicOptions } from "@typedefs/ui/answer.typedefs";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { ChapterActionMenu } from "@ui/components/actions/actionPopup";
-import { AddNewGridItemActionMenu } from "@ui/components/actions/addNewGridItemActionMenu";
 import { InputWithPlaceholder } from "@ui/components/inputs";
 import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/baseAnswer";
 import { InstructionsBox } from "@ui/components/questions/instructions";
@@ -22,10 +20,9 @@ export class Question {
 	readonly instructionIndicator: Locator = this.instructionBtn.locator(".insturtions-inidicator");
 	readonly actionsBtn: Locator = this.container.locator(".actions-btn button");
 	readonly answers: Locator = this.container.locator(".answer-item");
-	readonly addNewAnswerBtn: Locator = this.container.locator(".add-answer-btn button");
-	readonly addNewTopicBtn?: Locator = this.container.locator(".add-topic-btn button");
+	// readonly addNewTopicBtn?: Locator = this.container.locator(".add-topic-btn button");
 	readonly actionMenu: ChapterActionMenu;
-	readonly addNewGridItemActionMenu: AddNewGridItemActionMenu;
+	// readonly addNewGridItemActionMenu: AddNewGridItemActionMenu;
 	readonly instructionsBox: InstructionsBox;
 
 	constructor(
@@ -36,12 +33,12 @@ export class Question {
 		this.AnswerType = getAnswerType(questionType);
 		this.actionMenu = new ChapterActionMenu(this.page);
 		this.instructionsBox = new InstructionsBox(this.page);
-		this.addNewGridItemActionMenu = new AddNewGridItemActionMenu(this.page);
+		// this.addNewGridItemActionMenu = new AddNewGridItemActionMenu(this.page);
 	}
 
 	getAnswerByText(text: string): BaseAnswer {
 		return new this.AnswerType(
-			this.answers.filter({ has: this.page.locator(`[value="${text}"]`) })
+			this.answers.filter({has: this.page.locator(`[value="${text}"]`)})
 		);
 	}
 
@@ -112,19 +109,19 @@ export class Question {
 
 	async assertIsVisible(visible: boolean = true): Promise<void> {
 		await test.step(`Assert question visibility is "${visible ? "visible" : "hidden"}"`, async () => {
-			await expect(this.container).toBeVisible({ visible });
+			await expect(this.container).toBeVisible({visible});
 		});
 	}
 
 	async assertSaveToQBankIsVisible(visible: boolean = true): Promise<void> {
 		await test.step(`Assert save to QBank button is ${visible ? "visible" : "hidden"}`, async () => {
-			await expect(this.saveToQBankBtn).toBeVisible({ visible });
+			await expect(this.saveToQBankBtn).toBeVisible({visible});
 		});
 	}
 
 	async assertInstructionIndicatorIsVisible(visible: boolean = true): Promise<void> {
 		await test.step(`Assert Instruction indicator is ${visible ? "visible" : "hidden"}`, async () => {
-			await expect(this.instructionIndicator).toBeVisible({ visible });
+			await expect(this.instructionIndicator).toBeVisible({visible});
 		});
 	}
 
@@ -133,7 +130,7 @@ export class Question {
 			const input = new InputWithPlaceholder(this.questionTextArea, "Click to write the question text");
 			await input.fill(text);
 
-			return new Question(this.page.locator(this._questionLocator, { hasText: text }), this.questionType);
+			return new Question(this.page.locator(this._questionLocator, {hasText: text}), this.questionType);
 		});
 	}
 
@@ -142,23 +139,23 @@ export class Question {
 			const input = new InputWithPlaceholder(this.questionVariable, "Question Variable Name");
 			await input.fill(text);
 
-			return new Question(this.page.locator(this._questionLocator, { hasText: text }), this.questionType);
+			return new Question(this.page.locator(this._questionLocator, {hasText: text}), this.questionType);
 		});
 	}
 
-	async addNewAnswer(answer: AddGridAnswerOptions): Promise<void> {
-		await expect(async () => {
-			await this.addNewAnswerBtn.click();
-			await this.addNewGridItemActionMenu.assertIsVisible();
-		}).toPass();
-		await this.addNewGridItemActionMenu.add(answer);
-	}
+	// async addNewAnswer(answer: AddGridAnswerOptions): Promise<void> {
+	// 	await expect(async () => {
+	// 		await this.addNewAnswerBtn.click();
+	// 		await this.addNewGridItemActionMenu.assertIsVisible();
+	// 	}).toPass();
+	// 	await this.addNewGridItemActionMenu.add(answer);
+	// }
 
-	async addNewTopic(topic: AddGridTopicOptions): Promise<void> {
-		await expect(async () => {
-			await this.addNewTopicBtn.click();
-			await this.addNewGridItemActionMenu.assertIsVisible();
-		}).toPass();
-		await this.addNewGridItemActionMenu.add(topic);
-	}
+	// async addNewTopic(topic: AddGridTopicOptions): Promise<void> {
+	// 	await expect(async () => {
+	// 		await this.addNewTopicBtn.click();
+	// 		await this.addNewGridItemActionMenu.assertIsVisible();
+	// 	}).toPass();
+	// 	await this.addNewGridItemActionMenu.add(topic);
+	// }
 }

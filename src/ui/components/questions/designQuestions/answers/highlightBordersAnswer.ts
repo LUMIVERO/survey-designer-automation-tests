@@ -8,7 +8,7 @@ export class HighlightBordersAnswer extends BaseAnswer {
 	async assertInputType(options?: AssertInputTypeOptions): Promise<void> {
 		await test.step("Assert input type is highlight border", async () => {
 			await expect(this.input).toBeVisible();
-			await expect(this.input).toHaveClass(/k-textarea/)
+			await expect(this.input).toHaveCSS("border-style", "solid");
 			options?.answerText && await this.assertAnswerText(options.answerText);
 			options?.code && await this.assertAnswerCode(options.code);
 			options?.varText && await this.assertAnswerVariableText(options.varText);

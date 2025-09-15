@@ -5,8 +5,12 @@ import { Url, QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { BaseDialog } from "@ui/components/dialogs/baseDialog";
 import { Chapter } from "@ui/components/questions/chapter";
 import { QuestionTypeList, QuestionBankDialog } from "@ui/components/questions/create-question-dialog";
-import { NumericQuestion } from "@ui/components/questions/designQuestions/numericQuestion";
-import { Question } from "@ui/components/questions/designQuestions/question";
+import {
+	AutoCompleteListQuestion,
+	NumericQuestion,
+	Question,
+	SingleChoiceQuestion
+} from "@ui/components/questions/designQuestions/question";
 import { SidePanel } from "@ui/components/surveys/sidePanel";
 import { UUID } from "node:crypto";
 import { surveysUrl } from "src/constants/urls/apiUrls";
@@ -41,9 +45,9 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	get addNewPopup() {
 		const popup = this.page.locator(".k-menu-popup:visible");
 		const buttons = popup.locator(".k-item");
-		const addQuestionBtn = buttons.filter({ hasText: "Add question" });
-		const addChapterBtn = buttons.filter({ hasText: "Add chapter", hasNotText: "Add chapter from Qbank" });
-		const addChapterFromQbankBtn = buttons.filter({ hasText: "Add chapter from Qbank" }).first();
+		const addQuestionBtn = buttons.filter({hasText: "Add question"});
+		const addChapterBtn = buttons.filter({hasText: "Add chapter", hasNotText: "Add chapter from Qbank"});
+		const addChapterFromQbankBtn = buttons.filter({hasText: "Add chapter from Qbank"}).first();
 		const clickAddChapterBtn = async (options?: ClickOptions) => {
 			this._chapterNumber++;
 			return await addChapterBtn.click(options);
@@ -63,11 +67,11 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 			return new Chapter(this.chaptersContainers.first());
 		}
 
-		return new Chapter(this.chaptersContainers.filter({ hasText: chapterName }));
+		return new Chapter(this.chaptersContainers.filter({hasText: chapterName}));
 	}
 
 	getChapterById(id: UUID): Chapter {
-		return new Chapter(this.chaptersContainers.filter({ has: this.page.locator(`#${id}`) }));
+		return new Chapter(this.chaptersContainers.filter({has: this.page.locator(`#${id}`)}));
 	}
 
 	async addQuestion(questionType: QuestionType): Promise<Question> {
@@ -75,7 +79,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 			const sidePanel = await this.clickSidePanelBtn();
 			await sidePanel.getChapter().clickAddNewBtn()
 				.then(menu => menu.clickActionBtn("addQuestionOption"));
-			const { id } = await this.questionTypeListDialog.selectQuestionType(QuestionType.RadioButton);
+			const {id} = await this.questionTypeListDialog.selectQuestionType(QuestionType.RadioButton);
 
 			return this.getQuestionById(id, questionType);
 		});
@@ -85,6 +89,11 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		switch (questionType) {
 			case QuestionType.Numeric:
 				return new NumericQuestion(locator);
+			case QuestionType.RadioButton:
+			case QuestionType.HighlightBorders:
+				return new SingleChoiceQuestion(locator, questionType);
+			case QuestionType.AutocompleteList:
+				return new AutoCompleteListQuestion(locator, questionType);
 			default:
 				return new Question(locator, questionType);
 		}
@@ -102,7 +111,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		questionType: QuestionType,
 	): Promise<Question> {
 		return this.getQuestion(
-			this.questions.filter({ has: this.page.locator(`[value="${text}"]`) }),
+			this.questions.filter({has: this.page.locator(`[value="${text}"]`)}),
 			questionType,
 		);
 	}
@@ -111,13 +120,13 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		questionType: QuestionType,
 	): Question {
 		return this.getQuestion(
-			this.questions.filter({ hasText: questionType }).first(),
+			this.questions.filter({hasText: questionType}).first(),
 			questionType,
 		);
 	}
 
 
-	async waitForOpened({ waitForResponse }: Url = {}): Promise<void> {
+	async waitForOpened({waitForResponse}: Url = {}): Promise<void> {
 		await super.waitForOpened();
 
 		waitForResponse &&
@@ -131,7 +140,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	}
 
 	async clickSidePanelBtn(options?: ClickOpenable): Promise<SidePanel> {
-		const { shouldOpen = true } = options || {};
+		const {shouldOpen = true} = options || {};
 		return test.step("Open side panel", async () => {
 			if (await this.sidePanel.isVisible(!shouldOpen)) {
 				await this.sidePanel.sidePanelBtn.click();
@@ -164,7 +173,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 			]);
 
 			await this.dialog.assertDialogHeaderIsCorrect("Delete Question");
-			await this.dialog.clickSubmitBtn({ waitForResponse: true });
+			await this.dialog.clickSubmitBtn({waitForResponse: true});
 		});
 	}
 

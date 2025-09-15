@@ -7,7 +7,10 @@ export const questionTypeInputAssertions: Partial<Record<QuestionType, Record<st
 		varText: "A_1_Q_1",
 	},
 	get [QuestionType.HighlightBorders]() {
-		return this[QuestionType.RadioButton]
+		return this[QuestionType.RadioButton];
+	},
+	get [QuestionType.AutocompleteList]() {
+		return this[QuestionType.RadioButton];
 	},
 	[QuestionType.MultiChoiceGrid]: {
 		type: "checkbox",
