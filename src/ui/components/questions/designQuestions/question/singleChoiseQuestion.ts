@@ -1,8 +1,8 @@
-import { Question } from "./question";
+import { BaseQuestion } from "./baseQuestion";
 import { DropdownAddBnt } from "../elements/dropdownAddBnt";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 
-export class SingleChoiceQuestion extends Question {
+export class SingleChoiceQuestion extends BaseQuestion {
 	readonly addNewAnswerBtn = new DropdownAddBnt(this.container);
 
 

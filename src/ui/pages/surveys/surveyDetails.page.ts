@@ -8,7 +8,7 @@ import { QuestionTypeList, QuestionBankDialog } from "@ui/components/questions/c
 import {
 	AutoCompleteListQuestion,
 	NumericQuestion,
-	Question,
+	BaseQuestion,
 	SingleChoiceQuestion
 } from "@ui/components/questions/designQuestions/question";
 import { SidePanel } from "@ui/components/surveys/sidePanel";
@@ -74,7 +74,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		return new Chapter(this.chaptersContainers.filter({has: this.page.locator(`#${id}`)}));
 	}
 
-	async addQuestion(questionType: QuestionType): Promise<Question> {
+	async addQuestion(questionType: QuestionType): Promise<BaseQuestion> {
 		return test.step(`Add question ${questionType}`, async () => {
 			const sidePanel = await this.clickSidePanelBtn();
 			await sidePanel.getChapter().clickAddNewBtn()
@@ -85,7 +85,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		});
 	}
 
-	private getQuestion(locator: Locator, questionType: QuestionType): Question {
+	private getQuestion(locator: Locator, questionType: QuestionType): BaseQuestion {
 		switch (questionType) {
 			case QuestionType.Numeric:
 				return new NumericQuestion(locator);
@@ -95,11 +95,11 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 			case QuestionType.AutocompleteList:
 				return new AutoCompleteListQuestion(locator, questionType);
 			default:
-				return new Question(locator, questionType);
+				return new BaseQuestion(locator, questionType);
 		}
 	}
 
-	getQuestionById(questionId: UUID, questionType: QuestionType): Question {
+	getQuestionById(questionId: UUID, questionType: QuestionType): BaseQuestion {
 		return this.getQuestion(
 			this.page.locator(`[data-question-id="${questionId}"]`),
 			questionType,
@@ -109,7 +109,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 	async getQuestionByText(
 		text: string,
 		questionType: QuestionType,
-	): Promise<Question> {
+	): Promise<BaseQuestion> {
 		return this.getQuestion(
 			this.questions.filter({has: this.page.locator(`[value="${text}"]`)}),
 			questionType,
@@ -118,7 +118,7 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 
 	getFirstQuestion(
 		questionType: QuestionType,
-	): Question {
+	): BaseQuestion {
 		return this.getQuestion(
 			this.questions.filter({hasText: questionType}).first(),
 			questionType,
@@ -149,8 +149,8 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		});
 	}
 
-	private async determineQuestion(questionOrTypeOrText: Question | QuestionType | string, questionType?: QuestionType): Promise<Question> {
-		if (questionOrTypeOrText instanceof Question) {
+	private async determineQuestion(questionOrTypeOrText: BaseQuestion | QuestionType | string, questionType?: QuestionType): Promise<BaseQuestion> {
+		if (questionOrTypeOrText instanceof BaseQuestion) {
 			return questionOrTypeOrText;
 		} else if (typeof questionOrTypeOrText === "string") {
 			return await this.getQuestionByText(questionOrTypeOrText, questionType);
@@ -159,11 +159,11 @@ export class SurveyDetailsPage extends BaseDetailsPage {
 		}
 	}
 
-	async deleteQuestion(question: Question): Promise<void>;
+	async deleteQuestion(question: BaseQuestion): Promise<void>;
 	async deleteQuestion(questionType: QuestionType): Promise<void>;
 	async deleteQuestion(questionText: string, questionType: QuestionType): Promise<void>;
-	async deleteQuestion(questionOrTypeOrText: Question | QuestionType | string, questionType?: QuestionType): Promise<void> {
-		let question: Question = await this.determineQuestion(questionOrTypeOrText, questionType);
+	async deleteQuestion(questionOrTypeOrText: BaseQuestion | QuestionType | string, questionType?: QuestionType): Promise<void> {
+		let question: BaseQuestion = await this.determineQuestion(questionOrTypeOrText, questionType);
 
 		await test.step(`Delete question ${await question.getQuestionText()}`, async () => {
 

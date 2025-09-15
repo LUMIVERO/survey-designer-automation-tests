@@ -1,8 +1,8 @@
 import { Locator, expect } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
-import { Question } from "@ui/components/questions/designQuestions/question";
+import { BaseQuestion } from "@ui/components/questions/designQuestions/question";
 
-export class NumericQuestion extends Question {
+export class NumericQuestion extends BaseQuestion {
 	readonly textBefore: Locator = this.container.locator("[id^=\"text_before_\"]");
 	readonly textAfter: Locator = this.container.locator("[id^=\"text_after_\"]");
 	readonly rangeInput: Locator = this.container.locator(".k-numerictextbox");

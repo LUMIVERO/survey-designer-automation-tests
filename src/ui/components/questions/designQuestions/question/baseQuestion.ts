@@ -6,7 +6,7 @@ import { InputWithPlaceholder } from "@ui/components/inputs";
 import { BaseAnswer } from "@ui/components/questions/designQuestions/answers/baseAnswer";
 import { InstructionsBox } from "@ui/components/questions/instructions";
 
-export class Question {
+export class BaseQuestion {
 	readonly page: Page;
 	private _questionLocator: string = ".question-editor";
 	readonly AnswerType: new (container: Locator) => BaseAnswer;
@@ -125,21 +125,21 @@ export class Question {
 		});
 	}
 
-	async editQuestionText(text: string): Promise<Question> {
+	async editQuestionText(text: string): Promise<BaseQuestion> {
 		return await test.step("Edit Question text", async () => {
 			const input = new InputWithPlaceholder(this.questionTextArea, "Click to write the question text");
 			await input.fill(text);
 
-			return new Question(this.page.locator(this._questionLocator, {hasText: text}), this.questionType);
+			return new BaseQuestion(this.page.locator(this._questionLocator, {hasText: text}), this.questionType);
 		});
 	}
 
-	async editQuestionVarText(text: string): Promise<Question> {
+	async editQuestionVarText(text: string): Promise<BaseQuestion> {
 		return await test.step("Edit Question var text", async () => {
 			const input = new InputWithPlaceholder(this.questionVariable, "Question Variable Name");
 			await input.fill(text);
 
-			return new Question(this.page.locator(this._questionLocator, {hasText: text}), this.questionType);
+			return new BaseQuestion(this.page.locator(this._questionLocator, {hasText: text}), this.questionType);
 		});
 	}
 
