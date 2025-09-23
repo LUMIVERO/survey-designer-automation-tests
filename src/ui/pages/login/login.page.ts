@@ -4,9 +4,9 @@ import { loginUrl } from "src/constants/urls/uiUrls";
 
 export class LoginPage extends BasePage {
 	url = loginUrl;
-	readonly usernameField: Locator = this.page.locator("[name='username']");
-	readonly passwordField: Locator = this.page.locator("[name='password']");
-	readonly tenantField: Locator = this.page.locator("[name='tenant']");
+	readonly usernameField: Locator = this.page.locator(".textbox-container", { hasText: "Username" }).locator("input");
+	readonly passwordField: Locator = this.page.locator(".textbox-container", { hasText: "Password" }).locator("input");
+	readonly tenantField: Locator = this.page.locator(".textbox-container", { hasText: "Organization" }).locator("input");
 	readonly submitBtn: Locator = this.page.locator("[type='submit']");
 
 	async login({ username, password, tenant }: Record<string, string>): Promise<void> {
