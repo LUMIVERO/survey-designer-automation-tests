@@ -57,7 +57,7 @@ export class Chapter extends BaseContainer {
 
 	async assertChapterName(name: string): Promise<void> {
 		await test.step("Assert chapter name", async () => {
-			await expect(this.title).toHaveText(name);
+			await expect(this.title).toHaveText(name, { useInnerText: true });
 		});
 	}
 }

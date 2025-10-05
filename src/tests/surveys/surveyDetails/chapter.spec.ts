@@ -93,7 +93,7 @@ test.describe("Chapter @Se1e770f9", async () => {
 	});
 
 	test("User can rename a root chapter @T68019e22", async ({ adminAPP }) => {
-		const newChapterName = getRandomName("ChapterAUT");
+		const newChapterName = getRandomName("Renamed-ChapterAUT");
 		const chapterElement = adminAPP.surveyDetailsPage.getChapter();
 		await chapterElement.renameChapter(newChapterName);
 		await chapterElement.assertChapterName(newChapterName);

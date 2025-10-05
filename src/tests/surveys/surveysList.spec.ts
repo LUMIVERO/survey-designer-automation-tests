@@ -44,6 +44,7 @@ test.describe("Surveys list @Sdf95633b", async () => {
 			name: getRandomName("SurveyAUT"),
 			folderId: rootFolder.id,
 		});
+		createdSurveys.push(survey.id);
 		const [{ id: baseChapterId }] = survey.chapters;
 		const {
 			id: chapterId,
@@ -56,6 +57,7 @@ test.describe("Surveys list @Sdf95633b", async () => {
 		await surveyRow.clickActionMenuBtn()
 			.then(menu => menu.clickDeleteButton())
 			.then(dialog => dialog.clickSubmitBtn());
+		createdSurveys.pop();
 		await surveyRow.assertIsVisible({ visible: false });
 
 		await apiService.question.assertQuestionDoesNotExist({ questionId: questionId1 });
@@ -75,7 +77,7 @@ test.describe("Surveys list @Sdf95633b", async () => {
 			const { name } = survey;
 			await surveyRow.assertItemNameCorrect(name);
 			const newSurveyName: string = "Renamed-" + name;
-			await surveyRow.renameItem(newSurveyName);
+			await surveyRow.renameItem(newSurveyName, { waitForResponse: true });
 			const surveyUpdatedDate = new Date();
 			await surveyRow.assertItemNameCorrect(newSurveyName);
 			await surveyRow.assertItemUpdatedAt(surveyUpdatedDate);

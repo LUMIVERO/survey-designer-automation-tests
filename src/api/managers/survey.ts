@@ -22,7 +22,7 @@ export class Survey extends Endpoint {
 
 		await raiseForStatus(response);
 
-		return await response.json();
+		return response.json();
 	}
 
 	async getSurvey({ surveyId, ...queryParams }: GetSurveyOptions): Promise<SurveyResponse> {

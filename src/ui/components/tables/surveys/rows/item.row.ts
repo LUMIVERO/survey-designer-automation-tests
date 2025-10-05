@@ -6,6 +6,7 @@ import { DashboardItemActionMenu } from "@ui/components/actions/surveysDashboard
 import { BaseItemRow } from "@ui/components/tables/surveys/rows/baseItem.row";
 import { parse } from "date-fns";
 import { dateTimeFormat } from "src/constants/dateTime.data";
+import { WaitForResponse } from "@typedefs/ui/components.typedefs";
 
 
 export class ItemRow<TMenu extends DashboardItemActionMenu = DashboardItemActionMenu> extends BaseItemRow {
@@ -37,19 +38,31 @@ export class ItemRow<TMenu extends DashboardItemActionMenu = DashboardItemAction
 
 	async clickActionMenuBtn(): Promise<TMenu> {
 		await test.step("Click action menu button", async () => {
-			await this.actionsMenuBtn.click();
-			await this.actionsMenu.waitFor();
+			await expect(async () => {
+				await this.actionsMenuBtn.click();
+				await this.page.waitForTimeout(500);
+				await this.actionsMenu.assertIsVisible();
+			}).toPass();
 		});
 
 		return this.actionsMenu;
 	}
 
-	async renameItem(name: string): Promise<void> {
+	async renameItem(name: string, options?: WaitForResponse): Promise<void> {
 		await test.step("Rename item", async () => {
+			await expect(async () => {
+				await this.nameInput.click();
+				await expect(this.name.locator("span")).toHaveClass(/k-focus/);
+			}).toPass();
+
 			await this.nameInput.fill(name);
 			await this.page.waitForTimeout(500);
-			await this.nameInput.press("Enter");
-			await this.page.waitForTimeout(500);
+			await Promise.all([
+				this.nameInput.press("Enter"),
+				options?.waitForResponse && await this.page.waitForResponse(
+					options?.callback ?? ((response) => response.request().method() === "PUT")
+				)
+			].filter(Boolean));
 		});
 	}
 

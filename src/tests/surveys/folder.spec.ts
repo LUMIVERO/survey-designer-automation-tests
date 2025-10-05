@@ -66,7 +66,7 @@ test.describe("Folder @S406e3299", async () => {
 			const { name } = folder;
 			await folderRow.assertItemNameCorrect(name);
 			const newFolderName: string = "Renamed-" + name;
-			await folderRow.renameItem(newFolderName);
+			await folderRow.renameItem(newFolderName, { waitForResponse: true });
 			const folderUpdatedDate = new Date();
 			await folderRow.assertItemNameCorrect(newFolderName);
 			await folderRow.assertItemUpdatedAt(folderUpdatedDate);
