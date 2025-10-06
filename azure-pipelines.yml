@@ -1,3 +1,13 @@
+parameters:
+  - name: ENV
+    type: string
+    default: 'staging'
+    values:
+      - dev
+      - dev2
+      - staging
+      - prod
+
 trigger: none
 
 schedules:
@@ -27,7 +37,8 @@ steps:
     displayName: 'Install Playwright Chromium'
 
   - script: |
-      echo BASE_URL='https://staging.stg.qllaborate.com' >> .env
+      echo ENV=$(ENV) >> .env
+      echo BASE_URL="https://[ENV].stg.qllaborate.com" >> .env
       echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
       echo EMAIL='$(EMAIL)' >> .env
       echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
