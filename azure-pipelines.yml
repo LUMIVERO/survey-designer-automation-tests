@@ -38,11 +38,11 @@ steps:
     displayName: 'Install Playwright Chromium'
 
   - script: |
-      echo ENV='$(ENV)' >> .env
-      if [ "$(ENV)" == "prod" ]; then
+      echo ENV=${{ parameters.ENV }} >> .env
+      if [ ${{ parameters.ENV }} == "prod" ]; then
         echo BASE_URL="https://qllaborate.com" >> .env
       else
-        echo BASE_URL="https://$(ENV).stg.qllaborate.com" >> .env
+        echo BASE_URL="https://[ENV].stg.qllaborate.com" >> .env
       fi
       echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
       echo EMAIL='$(EMAIL)' >> .env
