@@ -3,8 +3,9 @@ parameters:
     type: string
     default: 'staging'
     values:
-      - dev
+      - dev1
       - dev2
+      - dev3
       - staging
       - prod
 
@@ -37,8 +38,12 @@ steps:
     displayName: 'Install Playwright Chromium'
 
   - script: |
-      echo ENV=$(ENV) >> .env
-      echo BASE_URL="https://[ENV].stg.qllaborate.com" >> .env
+      echo ENV='$(ENV)' >> .env
+      if [ "$(ENV)" == "prod" ]; then
+        echo BASE_URL="https://qllaborate.com" >> .env
+      else
+        echo BASE_URL="https://$(ENV).stg.qllaborate.com" >> .env
+      fi
       echo USERNAME_ADMIN='$(USERNAME_ADMIN)' >> .env
       echo EMAIL='$(EMAIL)' >> .env
       echo PASSWORD_ADMIN='$(PASSWORD_ADMIN)' >> .env
