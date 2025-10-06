@@ -8,7 +8,6 @@ import * as process from "node:process";
  * https://github.com/motdotla/dotenv
  */
 require("dotenv").config();
-
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -48,11 +47,12 @@ export default defineConfig({
 		// 		},
 		// 	} as AzureReporterOptions,
 		// ],
-		['./node_modules/@testomatio/reporter/lib/adapter/playwright.js', {
+		["./node_modules/@testomatio/reporter/lib/adapter/playwright.js", {
 			apiKey: process.env.TESTOMATIO,
 		}]
 	],
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+	globalSetup: require.resolve("./env-setup.ts"),
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
 		baseURL: process.env.BASE_URL,
@@ -63,7 +63,8 @@ export default defineConfig({
 
 	/* Configure projects for major browsers */
 	projects: [
-		{ name: "setup", testMatch: /.*\.setup\.ts/ },
+		{ name: "setup", testMatch: /.*\.setup\.ts/, teardown: "teardown" },
+		{ name: "teardown", testMatch: /.*\.teardown\.ts/ },
 		{
 			name: "chromium",
 			use: {
