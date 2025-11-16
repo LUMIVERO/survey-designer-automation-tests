@@ -1,4 +1,11 @@
 import { Url as BaseUrl } from "./basePage.typedefs";
+import {
+	AutoCompleteListQuestion,
+	BaseQuestion,
+	NumericQuestion,
+	SingleChoiceQuestion
+} from "@ui/components/questions/designQuestions/question";
+import { EmptyQuestion } from "@ui/components/questions/designQuestions/question/emptyQuestion";
 
 export type RowType = "survey" | "folder" | "wave";
 
@@ -24,4 +31,19 @@ export enum QuestionType {
 	OpenEnded = "Open-ended",
 	Numeric = "Numeric",
 	StarBar = "Star bar",
+}
+
+export interface QuestionComponent {
+	[QuestionType.RadioButton]: SingleChoiceQuestion;
+	[QuestionType.HighlightBorders]: BaseQuestion;
+	[QuestionType.AutocompleteList]: AutoCompleteListQuestion;
+	[QuestionType.MultiChoiceGrid]: BaseQuestion;
+	[QuestionType.SingleChoiceGrid]: SingleChoiceQuestion;
+	[QuestionType.Carousel]: BaseQuestion;
+	[QuestionType.Empty]: EmptyQuestion;
+	[QuestionType.List]: BaseQuestion;
+	[QuestionType.Slider]: BaseQuestion;
+	[QuestionType.OpenEnded]: BaseQuestion;
+	[QuestionType.Numeric]: NumericQuestion;
+	[QuestionType.StarBar]: BaseQuestion;
 }

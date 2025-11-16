@@ -5,8 +5,8 @@ export class DropdownAddBnt extends BaseContainer {
 	readonly addNewBtn = this.container.locator(".main-btn");
 	readonly dropdownBtn = this.container.locator(".arrow-btn");
 
-	constructor(questionContainer: Locator) {
-		super(questionContainer.locator(".dropdown-button-container"));
+	constructor(questionContainer: Locator, additionalClass?: string) {
+		super(questionContainer.locator(".dropdown-button-container" + additionalClass ? `.${additionalClass}` : ""));
 	}
 
 	async click(): Promise<void> {

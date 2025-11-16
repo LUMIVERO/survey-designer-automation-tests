@@ -4,12 +4,12 @@ import { getRandomName } from "@helpers/random.helpers";
 import { expect } from "@playwright/test";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { GridAnswer } from "@ui/components/questions/designQuestions/answers";
-import { Question } from "@ui/components/questions/designQuestions/question";
+import { BaseQuestion } from "@ui/components/questions/designQuestions/question";
 import { GridRow } from "@ui/components/tables/questions/gridRow";
 import { questionsUrl } from "src/constants/urls/apiUrls";
 
 test.describe.skip("Edit question @Sfbbf57e5", async () => {
-	let question: Question;
+	let question: BaseQuestion;
 	let answer: GridAnswer;
 	let topic: GridRow;
 

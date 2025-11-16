@@ -2,6 +2,7 @@ import { test } from "@fixtures/testScope.fixture";
 import { QuestionType } from "@typedefs/ui/surveyPage.typedefs";
 import { Chapter } from "@ui/components/questions/chapter";
 import { questionTypeInputAssertions } from "src/testData/questionType.data";
+import { BaseQuestion } from "@ui/components/questions/designQuestions/question";
 
 test.describe("Create questions @Sf6b783d5", async () => {
 
@@ -36,9 +37,9 @@ test.describe("Create questions @Sf6b783d5", async () => {
 	// TODO: add question classes like NumericQuestion for uniq questions;
 	Object.values(QuestionType).forEach((questionType) => {
 		test(`User is able to create & delete ${questionType} question type in the root chapter @T4ff41f97`, async ({
-			adminAPP: app,
-			apiService,
-		}) => {
+																																																									adminAPP: app,
+																																																									apiService,
+																																																								}) => {
 			const sidePanel = await app.surveyDetailsPage.clickSidePanelBtn();
 			await sidePanel.getChapter().clickAddNewBtn()
 				.then(menu => menu.clickActionBtn("addQuestionOption"));
@@ -57,8 +58,10 @@ test.describe("Create questions @Sf6b783d5", async () => {
 			await question.assertCommentsCount();
 			await question.assertInstructionIconToBeVisible();
 
-			const answer = question.getFirstAnswer();
-			await answer.assertInputType(questionTypeInputAssertions[questionType]);
+			if (question instanceof BaseQuestion) {
+				const answer = question.getFirstAnswer();
+				await answer.assertInputType(questionTypeInputAssertions[questionType]);
+			}
 
 			const sidePanelQuestion = sidePanel.getQuestion();
 			await sidePanelQuestion.assertItemName(questionResponse.text);

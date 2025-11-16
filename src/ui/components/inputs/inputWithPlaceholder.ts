@@ -3,6 +3,8 @@ import { Input } from "src/ui/components/inputs/input";
 
 export class InputWithPlaceholder extends Input {
 
+	protected input = this.page.getByPlaceholder(this.placeholder);
+
 	constructor(locator: Locator, protected placeholder: string = "") {
 		super(locator);
 	}
@@ -14,10 +16,6 @@ export class InputWithPlaceholder extends Input {
 			await this.page.waitForTimeout(200);
 			await expect(this.input).toBeVisible();
 		}).toPass();
-	}
-
-	get input(): Locator {
-		return this.page.getByPlaceholder(this.placeholder);
 	}
 
 	async fill(text: string): Promise<void> {

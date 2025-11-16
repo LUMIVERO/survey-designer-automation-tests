@@ -1,2 +1,3 @@
-export { InputWithPlaceholder } from "src/ui/components/inputs/inputWithPlaceholder";
+export { InputWithPlaceholder } from "./inputWithPlaceholder";
 export { Input } from "./input";
+export { InputWithActiveMode } from "./inputWithActiveMode";
