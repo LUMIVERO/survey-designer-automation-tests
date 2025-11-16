@@ -1,0 +1,57 @@
+name: Playwright Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENV:
+        description: 'Environment to run tests'
+        required: false
+        default: 'staging'
+        type: choice
+        options:
+          - dev1
+          - dev2
+          - dev3
+          - staging
+          - prod
+
+  schedule:
+    - cron: "0 7 * * *"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+
+      - name: Create .env file with secrets
+        run: |
+          echo ENV=${{ github.event.inputs.ENV || 'staging' }} >> .env
+
+          if [ "${{ github.event.inputs.ENV }}" = "prod" ]; then
+            echo BASE_URL="https://qllaborate.com" >> .env
+          else
+            echo BASE_URL="https://${{ github.event.inputs.ENV }}.stg.qllaborate.com" >> .env
+          fi
+
+          echo USERNAME_ADMIN='${{ secrets.USERNAME_ADMIN }}' >> .env
+          echo EMAIL='${{ secrets.EMAIL }}' >> .env
+          echo PASSWORD_ADMIN='${{ secrets.PASSWORD_ADMIN }}' >> .env
+          echo TENANT1='${{ secrets.TENANT1 }}' >> .env
+          echo TESTOMATIO='${{ secrets.TESTOMATIO }}' >> .env
+
+      - name: Run Playwright tests (Chromium)
+        run: npx playwright test --project=chromium --reporter=./node_modules/@testomatio/reporter/lib/adapter/playwright.js,line
